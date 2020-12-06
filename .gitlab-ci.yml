@@ -1,0 +1,42 @@
+stages:
+  - lint
+  - build
+  - test
+
+lint:
+  stage: lint
+  image: ubuntu:latest
+  before_script:
+    - apt-get update --yes
+    - apt-get install --yes clang-format cppcheck
+  script:
+    - ./scripts/lint.sh
+  timeout: 3 minutes
+
+build:
+  stage: build
+  image: python:latest
+  before_script:
+    - apt-get update --yes
+    - apt-get install --yes cmake
+    - pip install conan
+    - conan profile new default --detect
+    - conan profile update settings.compiler.libcxx=libstdc++11 default
+  script:
+    - ./scripts/setup.sh
+    - cmake --build build
+  artifacts:
+    paths:
+      - build
+  timeout: 3 minutes
+
+test:
+  stage: test
+  image: ubuntu:latest
+  before_script:
+    - apt-get update --yes
+    - apt-get install --yes cmake
+  script:
+    - cd build
+    - ctest --verbose
+  timeout: 3 minutes
