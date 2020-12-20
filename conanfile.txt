@@ -1,5 +1,6 @@
 [requires]
     catch2/2.13.3
+    cli11/1.9.1
 
 [generators]
     cmake
