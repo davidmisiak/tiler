@@ -4,4 +4,5 @@
 mkdir build
 cd build
 conan install ..
-cmake .. -DBUILD_TESTS=ON -DCMAKE_BUILD_TYPE=Debug
+cmake ..
+cmake --build .

@@ -11,18 +11,11 @@ Building Tiler requires these dependencies:
 - [Conan](https://conan.io/) package manager
 - a C/C++ compiler (a recent version of GCC is recommended)
 
-When the dependencies are met, clone this repository and run:
-
-```bash
-mkdir build
-cd build
-conan install ..
-cmake ..
-cmake --build .
-```
+When the dependencies are met, clone this repository and run `./scripts/release.sh`.
 
 Your freshly compiled Tiler executable should be located at `build/bin/tiler`. You can configure
-build options using eg. `ccmake` before running `cmake --build`.
+build options using eg. `ccmake` before running `cmake --build` (see
+[release.sh](./scripts/release.sh)).
 
 This setup is tested on Linux with GCC 10.2.0, but it should work on other platforms, too (maybe
 with some minor tweaks).
@@ -33,12 +26,13 @@ In addition to CMake and Conan (see [Build Instructions](#build-instructions)), 
 
 - [ClangFormat](https://clang.llvm.org/docs/ClangFormat.html) code formatter (version 10 or later)
 - [Cppcheck](http://cppcheck.sourceforge.net/) static code analysis tool
+- [GDB](https://www.gnu.org/software/gdb/) debugger (optional)
 
 Regarding the actual development, using [VS Code](https://code.visualstudio.com/) with the [C/C++
 extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools) is recommended -
-this way, you can use Setup, Lint, Build, Run and Test tasks (and utilize provided
-`example.settings.json`). If you intend to use other editor/IDE, all commands to run can be found at
-[tasks.json](./.vscode/tasks.json).
+this way, you can use `Setup`, `Lint`, `Build`, `Run` and `Test` tasks, the built-in debugging UI
+and utilize proposed [VS Code settings](./.vscode/example.settings.json). If you intend to use other
+editor/IDE, all commands to run can be found at [tasks.json](./.vscode/tasks.json).
 
 ---
 
