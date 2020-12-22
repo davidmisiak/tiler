@@ -2,14 +2,14 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Lint",
-            "type": "shell",
-            "command": "./scripts/lint.sh",
-        },
-        {
             "label": "Setup",
             "type": "shell",
             "command": "./scripts/setup.sh",
+        },
+        {
+            "label": "Lint",
+            "type": "shell",
+            "command": "./scripts/lint.sh",
         },
         {
             "label": "Build",
@@ -19,22 +19,20 @@
         {
             "label": "Run",
             "type": "shell",
+            "dependsOn": "Build",
             "command": "./build/bin/tiler",
+            "args": [],
         },
         {
             "label": "Test",
             "type": "shell",
+            "dependsOn": "Build",
             "command": "cd build && ctest --verbose",
         },
         {
-            "label": "Build & Run",
+            "label": "Release",
             "type": "shell",
-            "command": "cmake --build build && ./build/bin/tiler",
-        },
-        {
-            "label": "Build & Test",
-            "type": "shell",
-            "command": "cmake --build build && cd build && ctest --verbose",
+            "command": "./scripts/release.sh",
         },
     ]
 }
