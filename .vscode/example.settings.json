@@ -1,4 +1,3 @@
 {
-    "C_Cpp.default.includePath": ["${workspaceFolder}/**", "~/.conan/data/**"],
     "editor.formatOnSave": true
 }
