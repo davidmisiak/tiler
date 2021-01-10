@@ -1,9 +1,8 @@
-#include <iostream>
 #include <vector>
 
 #include "CLI/CLI.hpp"
+#include "help_strings.hpp"
 #include "print.hpp"
-#include "rang.hpp"
 
 int main(int argc, char **argv) {
     CLI::App app{"Tiler - tool for automated solving of polyomino tiling problems\n"};
@@ -42,6 +41,7 @@ int main(int argc, char **argv) {
     CLI::App *command = app.get_subcommands()[0];  // there is always exactly one command
     if (command == solve_command) {
     } else if (command == list_command) {
+        print::normal() << help_strings::kNamedTilesList;
     } else if (command == example_command) {
     }
 
