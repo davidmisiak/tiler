@@ -75,4 +75,4 @@ else()
     message(AUTHOR_WARNING "No compiler warnings set for '${CMAKE_CXX_COMPILER_ID}' compiler.")
 endif()
 
-add_compile_options(${PROJECT_WARNINGS})
+# add ${PROJECT_WARNINGS} where you want
