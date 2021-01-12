@@ -11,7 +11,6 @@ include(cmake/CompilerWarnings.cmake)
 
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
-include_directories(${CONAN_INCLUDE_DIRS})
 
 # load src directory, excluding main.cpp
 include_directories(src)
