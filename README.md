@@ -1,7 +1,37 @@
 # Tiler
 
-Tiler is a CLI tool for automated solving of polyomino tiling problems. It features multiple solver
-backends.
+Tiler is a CLI tool for automated solving of [polyomino](https://en.wikipedia.org/wiki/Polyomino)
+tiling problems. It features multiple solver backends.
+
+## Usage
+
+The CLI takes input (either from command-line or from a file) which defines a board (region
+consisting of unit squares) and polyomino tiles and tries to find a perfect tiling of the board with
+the tiles.
+
+The shape of board as well as of each tile can be provided in any of these formats:
+
+- name, eg. `3L` (see the `list` command for the list of all named shapes)
+- dimensions, eg. `2x4` (applicable only for rectangles)
+- [perimeter - TODO]
+- map, eg. this equivalent of `3x2`:
+  ```
+  xxx
+  xxx
+  ```
+  (useful with the `-f `option)
+
+You should provide a list of shapes, where the first one represents the board and the others the
+tiles. Tile shape may be prefixed with `N:` where `N` is the available number of such tiles
+(unlimited if not provided). See the `example` command for input examples.
+
+Run `tiler -h` and `tiler solve -h` to see all options.
+
+### Limitations
+
+Only continuous shapes without holes or touching corners are allowed.
+
+Solver may rotate the tiles. There is a CLI flag to allow reflections (flipping the tiles over).
 
 ## Build Instructions
 
