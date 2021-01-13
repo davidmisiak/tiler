@@ -28,7 +28,7 @@ build:
   artifacts:
     paths:
       - build
-  timeout: 3 minutes
+  timeout: 5 minutes
 
 test:
   stage: test
