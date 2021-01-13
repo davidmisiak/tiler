@@ -6,6 +6,8 @@
 namespace help_strings {
 
 extern const std::string kNamedTilesList;
+extern const std::string kInputFormats;
+extern const std::string kExampleInput;
 
 }  // namespace help_strings
 
