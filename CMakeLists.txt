@@ -10,8 +10,8 @@ endif()
 include(cmake/CompilerWarnings.cmake)
 
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+set(CONAN_SYSTEM_INCLUDES ON)  # so that compiler warnings don't apply to conan dependencies
 conan_basic_setup()
-include_directories(${CONAN_INCLUDE_DIRS})
 
 # load src directory, excluding main.cpp
 include_directories(src)
@@ -22,10 +22,12 @@ list(REMOVE_ITEM PROJECT_SOURCE ${PROJECT_MAIN})
 # compile "tilerlib" - entire source without main.cpp so we don't have to recompile
 # it when building tests
 add_library(tilerlib STATIC ${PROJECT_SOURCE})
+target_compile_options(tilerlib PRIVATE ${PROJECT_WARNINGS})
 
 # build main executable
 add_executable(tiler ${PROJECT_MAIN})
 target_link_libraries(tiler tilerlib ${CONAN_LIBS})
+target_compile_options(tiler PRIVATE ${PROJECT_WARNINGS})
 
 # build test executable
 option(BUILD_TESTS "Build the testing executable (from the 'test' directory)." OFF)
