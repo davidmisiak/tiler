@@ -2,6 +2,7 @@
     catch2/2.13.3
     cli11/1.9.1
     rang/3.1.0
+    boost/1.75.0
 
 [generators]
     cmake
