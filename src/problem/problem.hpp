@@ -17,7 +17,6 @@ public:
     static Problem create(std::string filename, bool reflection);
     friend std::ostream &operator<<(std::ostream &os, const Problem &problem);
 
-private:
     Board board_;
     std::vector<Tile> tiles_;
 };
