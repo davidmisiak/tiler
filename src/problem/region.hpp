@@ -8,14 +8,7 @@
 
 // Represents a (not necessarily continuous) region of unit squares.
 class Region {
-private:
-    int w_;
-    int h_;
-    std::vector<std::vector<bool>> matrix_;
-
 public:
-    static const std::unordered_map<std::string, std::string> kNamedShapes;
-
     Region() = delete;
 
     // Initializes the region - make sure `matrix` is of dimensions `w` by `h`.
@@ -27,15 +20,52 @@ public:
     static Region parse(std::string s);
 
     // Returns copy of `region` rotated by 90 degrees counterclokwise.
-    static Region rotate(Region region);
+    static Region rotate(const Region &region);
 
     // Returns copy of `region` mirrored by the y-axis.
-    static Region reflect(Region region);
+    static Region reflect(const Region &region);
 
     bool operator==(const Region &other) const;
     friend std::ostream &operator<<(std::ostream &os, const Region &region);
     inline int get_width() const { return w_; };
     inline int get_height() const { return h_; };
+
+    // Returns the number of unit squares occupied by the region.
+    inline int get_size() const { return size_; };
+
+    // Returs the x coordinate of the left-most occupied unit square in the region's top-most
+    // occupied row.
+    inline int get_top_left_x() const { return top_left_x_; };
+
+    // Returs the y coordinate of the region's top-most occupied row.
+    inline int get_top_left_y() const { return top_left_y_; };
+
+    // Checks if all the squares of `region` are also present in `this` region when the top-left
+    // corner of the `region`'s surrounding rectangle is positioned at [`origin_x`, `origin_y`]
+    // coordinates of `this`.
+    bool has_subregion(int origin_x, int origin_y, const Region &region) const;
+
+    // Removes `region` from `this` (see `has_subregion()` for the meaning of the parameters).
+    // Note that you are responsible for checking if this is possible (by running `has_subregion`).
+    void remove_subregion(int origin_x, int origin_y, const Region &region);
+
+    // Adds `region` to `this` (see `has_subregion()` for the meaning of the parameters).
+    // Note that you are responsible for making sure that this is possible.
+    void add_subregion(int origin_x, int origin_y, const Region &region);
+
+    static const std::unordered_map<std::string, std::string> kNamedShapes;
+
+private:
+    // Updates the coordinates of the left-most occupied unit square in the region's top-most
+    // occupied row.
+    void update_top_left(int from_x, int from_y);
+
+    int w_;
+    int h_;
+    std::vector<std::vector<bool>> matrix_;
+    int size_;
+    int top_left_x_;
+    int top_left_y_;
 };
 
 #endif  // TILER_PROBLEM_REGION_HPP_

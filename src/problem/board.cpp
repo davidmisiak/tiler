@@ -5,12 +5,10 @@
 
 #include "problem/region.hpp"
 
-Board::Board(Region region) : region_(region) {}
-
-Board::Board(std::string shape) : region_(Region::parse(shape)) {}
+Board::Board(Region region) : Region(region) {}
 
 std::ostream &operator<<(std::ostream &os, const Board &board) {
-    os << "Board:\n" << board.region_;
-    os << "\n(fits in " << board.region_.get_width() << "x" << board.region_.get_height() << ")";
+    os << "Board:\n" << static_cast<Region>(board);
+    os << "\n(fits in " << board.get_width() << "x" << board.get_height() << ")";
     return os;
 }

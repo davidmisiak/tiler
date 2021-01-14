@@ -7,6 +7,7 @@
 #include "parse_error.hpp"
 #include "print.hpp"
 #include "problem/problem.hpp"
+#include "solvers/simple_solver.hpp"
 
 int main(int argc, char **argv) {
     CLI::App app{"Tiler - tool for automated solving of polyomino tiling problems\n"};
@@ -64,6 +65,12 @@ int main(int argc, char **argv) {
                                             : Problem::create(tiles, reflection);
             if (!quiet) {
                 print::normal() << problem << std::endl;
+            }
+            SimpleSolver solver(problem);
+            if (solver.solve()) {
+                print::success() << "\nTRUE" << std::endl;
+            } else {
+                print::warning() << "\nFALSE" << std::endl;
             }
         } catch (const ParseError &e) {
             print::error() << e.what() << "\nRun with --help for more information." << std::endl;
