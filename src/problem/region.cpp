@@ -11,7 +11,19 @@
 #include "print.hpp"
 
 Region::Region(int w, int h, std::vector<std::vector<bool>> matrix)
-        : w_(w), h_(h), matrix_(matrix) {}
+        : w_(w), h_(h), matrix_(matrix), size_(0), top_left_x_(-1), top_left_y_(-1) {
+    for (int y = 0; y < h_; y++) {
+        for (int x = 0; x < w_; x++) {
+            if (matrix_[y][x]) {
+                size_++;
+                if (top_left_x_ == -1) {
+                    top_left_x_ = x;
+                    top_left_y_ = y;
+                }
+            }
+        }
+    }
+}
 
 Region Region::parse(const std::string s) {
     // named region, eg. "4O"
@@ -46,7 +58,7 @@ Region Region::parse(const std::string s) {
     throw ParseError("Not a valid shape definition:\n" + s);
 }
 
-Region Region::rotate(const Region region) {
+Region Region::rotate(const Region &region) {
     std::vector<std::vector<bool>> rotated(region.w_, std::vector<bool>(region.h_, false));
     for (int y = 0; y < region.h_; y++) {
         for (int x = 0; x < region.w_; x++) {
@@ -56,7 +68,7 @@ Region Region::rotate(const Region region) {
     return Region(region.h_, region.w_, rotated);
 }
 
-Region Region::reflect(const Region region) {
+Region Region::reflect(const Region &region) {
     std::vector<std::vector<bool>> reflected(region.matrix_);
     for (int y = 0; y < region.h_; y++) {
         std::reverse(reflected[y].begin(), reflected[y].end());
@@ -80,6 +92,59 @@ std::ostream &operator<<(std::ostream &os, const Region &region) {
         }
     }
     return os;
+}
+
+bool Region::has_subregion(int origin_x, int origin_y, const Region &region) const {
+    if (origin_x < 0 || origin_y < 0 || origin_x + region.w_ > w_ || origin_y + region.h_ > h_) {
+        return false;
+    }
+    for (int y = 0; y < region.h_; y++) {
+        for (int x = 0; x < region.w_; x++) {
+            if (region.matrix_[y][x] && !matrix_[origin_y + y][origin_x + x]) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+void Region::remove_subregion(int origin_x, int origin_y, const Region &region) {
+    for (int y = 0; y < region.h_; y++) {
+        for (int x = 0; x < region.w_; x++) {
+            if (region.matrix_[y][x]) {
+                matrix_[origin_y + y][origin_x + x] = false;
+            }
+        }
+    }
+    update_top_left(origin_x, origin_y);
+    size_ -= region.size_;
+}
+
+void Region::add_subregion(int origin_x, int origin_y, const Region &region) {
+    for (int y = 0; y < region.h_; y++) {
+        for (int x = 0; x < region.w_; x++) {
+            if (region.matrix_[y][x]) {
+                matrix_[origin_y + y][origin_x + x] = true;
+            }
+        }
+    }
+    update_top_left(origin_x, origin_y);
+    size_ += region.size_;
+}
+
+void Region::update_top_left(int from_x, int from_y) {
+    if (top_left_y_ < from_y || (top_left_y_ == from_y && top_left_x_ < from_x)) {
+        return;
+    }
+    for (int y = from_y; y < h_; y++) {
+        for (int x = 0 /* sic */; x < w_; x++) {
+            if (matrix_[y][x]) {
+                top_left_x_ = x;
+                top_left_y_ = y;
+                return;
+            }
+        }
+    }
 }
 
 // clang-format off
