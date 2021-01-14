@@ -8,14 +8,14 @@
 
 // Represents the board that is expected to be tiled by polyomino tiles.
 class Board {
-private:
-    Region region_;
-
 public:
     Board() = delete;
     Board(Region region);
     Board(std::string shape);
     friend std::ostream &operator<<(std::ostream &os, const Board &board);
+
+private:
+    Region region_;
 };
 
 #endif  // TILER_PROBLEM_BOARD_HPP_

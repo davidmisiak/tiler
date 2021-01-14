@@ -13,10 +13,6 @@
 Region::Region(int w, int h, std::vector<std::vector<bool>> matrix)
         : w_(w), h_(h), matrix_(matrix) {}
 
-bool Region::operator==(const Region &other) const {
-    return w_ == other.w_ && h_ == other.h_ && matrix_ == other.matrix_;
-}
-
 Region Region::parse(const std::string s) {
     // named region, eg. "4O"
     if (kNamedShapes.count(s)) {
@@ -66,6 +62,10 @@ Region Region::reflect(const Region region) {
         std::reverse(reflected[y].begin(), reflected[y].end());
     }
     return Region(region.w_, region.h_, reflected);
+}
+
+bool Region::operator==(const Region &other) const {
+    return w_ == other.w_ && h_ == other.h_ && matrix_ == other.matrix_;
 }
 
 std::ostream &operator<<(std::ostream &os, const Region &region) {

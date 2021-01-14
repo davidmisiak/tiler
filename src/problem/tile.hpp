@@ -10,10 +10,6 @@
 // Represents a polyomino tile with all it's rotations/reflections as well as the available number
 // of pieces of this tile.
 class Tile {
-private:
-    std::vector<Region> regions_;
-    int count_;  // -1 represents infinity
-
 public:
     Tile() = delete;
 
@@ -26,6 +22,10 @@ public:
     static Tile parse(std::string s, bool reflection);
 
     friend std::ostream &operator<<(std::ostream &os, const Tile &tile);
+
+private:
+    std::vector<Region> regions_;
+    int count_;  // -1 represents infinity
 };
 
 #endif  // TILER_PROBLEM_TILE_HPP_

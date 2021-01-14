@@ -8,14 +8,7 @@
 
 // Represents a (not necessarily continuous) region of unit squares.
 class Region {
-private:
-    int w_;
-    int h_;
-    std::vector<std::vector<bool>> matrix_;
-
 public:
-    static const std::unordered_map<std::string, std::string> kNamedShapes;
-
     Region() = delete;
 
     // Initializes the region - make sure `matrix` is of dimensions `w` by `h`.
@@ -36,6 +29,13 @@ public:
     friend std::ostream &operator<<(std::ostream &os, const Region &region);
     inline int get_width() const { return w_; };
     inline int get_height() const { return h_; };
+
+    static const std::unordered_map<std::string, std::string> kNamedShapes;
+
+private:
+    int w_;
+    int h_;
+    std::vector<std::vector<bool>> matrix_;
 };
 
 #endif  // TILER_PROBLEM_REGION_HPP_
