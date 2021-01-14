@@ -15,7 +15,7 @@
 Problem::Problem(Board board, std::vector<Tile> tiles) : board_(board), tiles_(tiles) {}
 
 Problem Problem::create(std::vector<std::string> definitions, bool reflection) {
-    Board board(definitions[0]);
+    Board board = Board::parse(definitions[0]);
     std::vector<Tile> tiles;
     for (size_t i = 1; i < definitions.size(); i++) {
         tiles.push_back(Tile::parse(definitions[i], reflection));
