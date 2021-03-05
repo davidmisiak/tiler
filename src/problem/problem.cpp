@@ -32,6 +32,7 @@ Problem Problem::create(std::string filepath, bool reflection) {
         s = ss.str();
     }
     std::vector<std::string> definitions;
+    // definitions are separated by at least two '\n' characters (ie. at least one empty line)
     const std::regex exp("((.|.\n)+)\n*(\n\n|$)");
     std::smatch matches;
     std::string::const_iterator search_start(s.cbegin());
