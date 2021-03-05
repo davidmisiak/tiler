@@ -15,8 +15,7 @@ public:
     Region(int w, int h, std::vector<std::vector<bool>> matrix);
 
     // Parses the shape definition (name, dimensions or map) and returns corresponding Region.
-    // Note that it expects no leading or trailing whitespace (except of leading spaces when
-    // parsing a shape defined by map).
+    // Extra spaces around map-defined shapes should be handled correctly.
     static Region parse(std::string s);
 
     // Returns copy of `region` rotated by 90 degrees counterclokwise.

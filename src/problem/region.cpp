@@ -9,6 +9,7 @@
 #include "boost/algorithm/string.hpp"
 #include "parse_error.hpp"
 #include "print.hpp"
+#include "utils.hpp"
 
 Region::Region(int w, int h, std::vector<std::vector<bool>> matrix)
         : w_(w), h_(h), matrix_(matrix), size_(0), top_left_x_(-1), top_left_y_(-1) {
@@ -53,7 +54,10 @@ Region Region::parse(const std::string s) {
                 matrix[y][x] = (lines[y][x] == 'x');
             }
         }
-        return Region(w, h, matrix);
+        auto [rw, rh, rmatrix] = utils::remove_margins(w, h, matrix);
+        if (rw != 0 && rh != 0) {
+            return Region(rw, rh, rmatrix);
+        }
     }
     throw ParseError("Not a valid shape definition:\n" + s);
 }
