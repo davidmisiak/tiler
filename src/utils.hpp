@@ -11,8 +11,12 @@ namespace utils {
 std::tuple<int, int, std::vector<std::vector<bool>>> remove_margins(
         int w, int h, std::vector<std::vector<bool>> matrix);
 
-// Checks if the region of true cells in `matrix` is continuous.
+// Checks if the region of true cells in `matrix` is continuous (only edge-adjacent neighbors are
+// taken into account).
 bool is_continuous(int w, int h, std::vector<std::vector<bool>> matrix);
+
+// Checks if the region of true cells in `matrix` has a "hole" - at least one false cell inside it.
+bool has_hole(int w, int h, std::vector<std::vector<bool>> matrix);
 
 }  // namespace utils
 
