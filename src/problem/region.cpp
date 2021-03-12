@@ -11,7 +11,7 @@
 #include "print.hpp"
 #include "utils.hpp"
 
-Region::Region(int w, int h, std::vector<std::vector<bool>> matrix)
+Region::Region(int w, int h, utils::BoolMatrix matrix)
         : w_(w), h_(h), matrix_(matrix), size_(0), top_left_x_(-1), top_left_y_(-1) {
     for (int y = 0; y < h_; y++) {
         for (int x = 0; x < w_; x++) {
@@ -36,7 +36,7 @@ Region Region::parse_raw(const std::string s) {
     if (std::regex_match(s, dimensions_matches, std::regex("([1-9][0-9]*)x([1-9][0-9]*)"))) {
         int w = std::stoi(dimensions_matches[1]);
         int h = std::stoi(dimensions_matches[2]);
-        std::vector<std::vector<bool>> matrix(h, std::vector<bool>(w, true));
+        utils::BoolMatrix matrix(h, std::vector<bool>(w, true));
         return Region(w, h, matrix);
     }
     // region map, eg."xx\nxx"
@@ -48,7 +48,7 @@ Region Region::parse_raw(const std::string s) {
             w = std::max(w, static_cast<int>(line.size()));
         }
         int h = static_cast<int>(lines.size());
-        std::vector<std::vector<bool>> matrix(h, std::vector<bool>(w, false));
+        utils::BoolMatrix matrix(h, std::vector<bool>(w, false));
         for (int y = 0; y < h; y++) {
             for (int x = 0; x < w; x++) {
                 matrix[y][x] = (lines[y][x] == 'x');
@@ -77,7 +77,7 @@ Region Region::parse(const std::string s) {
 }
 
 Region Region::rotate(const Region &region) {
-    std::vector<std::vector<bool>> rotated(region.w_, std::vector<bool>(region.h_, false));
+    utils::BoolMatrix rotated(region.w_, std::vector<bool>(region.h_, false));
     for (int y = 0; y < region.h_; y++) {
         for (int x = 0; x < region.w_; x++) {
             rotated[region.w_ - 1 - x][y] = region.matrix_[y][x];
@@ -87,7 +87,7 @@ Region Region::rotate(const Region &region) {
 }
 
 Region Region::reflect(const Region &region) {
-    std::vector<std::vector<bool>> reflected(region.matrix_);
+    utils::BoolMatrix reflected(region.matrix_);
     for (int y = 0; y < region.h_; y++) {
         std::reverse(reflected[y].begin(), reflected[y].end());
     }

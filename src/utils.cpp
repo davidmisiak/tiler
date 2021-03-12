@@ -10,8 +10,7 @@ namespace {
 // Starts at `start_x`, `start_y` and floods (ie. negates) all accessible cells.
 // Note that the not flooded value is the original value of `matrix[start_y][start_x]` and the
 // flooded value is its negation.
-std::vector<std::vector<bool>> flood_fill(int start_x, int start_y, int w, int h,
-                                          std::vector<std::vector<bool>> matrix) {
+utils::BoolMatrix flood_fill(int start_x, int start_y, int w, int h, utils::BoolMatrix matrix) {
     std::queue<std::pair<int, int>> todo;
     todo.push({start_x, start_y});
     bool value = matrix[start_y][start_x];
@@ -30,7 +29,7 @@ std::vector<std::vector<bool>> flood_fill(int start_x, int start_y, int w, int h
     return matrix;
 }
 
-bool matrix_contains(std::vector<std::vector<bool>> matrix, bool value) {
+bool matrix_contains(utils::BoolMatrix matrix, bool value) {
     for (auto row : matrix) {
         if (std::find(row.begin(), row.end(), value) != row.end()) {
             return true;
@@ -41,8 +40,8 @@ bool matrix_contains(std::vector<std::vector<bool>> matrix, bool value) {
 
 }  // namespace
 
-std::tuple<int, int, std::vector<std::vector<bool>>> utils::remove_margins(
-        int w, int h, std::vector<std::vector<bool>> matrix) {
+std::tuple<int, int, utils::BoolMatrix> utils::remove_margins(int w, int h,
+                                                              utils::BoolMatrix matrix) {
     int max_x = -1;
     int min_x = w;
     int max_y = -1;
@@ -57,7 +56,7 @@ std::tuple<int, int, std::vector<std::vector<bool>>> utils::remove_margins(
             }
         }
     }
-    std::vector<std::vector<bool>> trimmed;
+    utils::BoolMatrix trimmed;
     for (int y = min_y; y <= max_y; y++) {
         std::vector<bool> row(matrix[y].begin() + min_x, matrix[y].begin() + max_x + 1);
         trimmed.push_back(row);
@@ -65,7 +64,7 @@ std::tuple<int, int, std::vector<std::vector<bool>>> utils::remove_margins(
     return {std::max(0, max_x - min_x + 1), std::max(0, max_y - min_y + 1), trimmed};
 }
 
-bool utils::is_continuous(int w, int h, std::vector<std::vector<bool>> matrix) {
+bool utils::is_continuous(int w, int h, utils::BoolMatrix matrix) {
     for (int y = 0; y < h; y++) {
         for (int x = 0; x < w; x++) {
             if (matrix[y][x]) {
@@ -76,7 +75,7 @@ bool utils::is_continuous(int w, int h, std::vector<std::vector<bool>> matrix) {
     return true;  // empty matrix
 }
 
-bool utils::has_hole(int w, int h, std::vector<std::vector<bool>> matrix) {
+bool utils::has_hole(int w, int h, utils::BoolMatrix matrix) {
     for (int x = 0; x < w; x++) {
         if (!matrix[0][x]) matrix = flood_fill(x, 0, w, h, matrix);
         if (!matrix[h - 1][x]) matrix = flood_fill(x, h - 1, w, h, matrix);
