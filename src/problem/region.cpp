@@ -26,7 +26,7 @@ Region::Region(int w, int h, std::vector<std::vector<bool>> matrix)
     }
 }
 
-Region Region::parse(const std::string s) {
+Region Region::parse_raw(const std::string s) {
     // named region, eg. "4O"
     if (kNamedShapes.count(s)) {
         return Region::parse(kNamedShapes.at(s));
@@ -54,12 +54,18 @@ Region Region::parse(const std::string s) {
                 matrix[y][x] = (lines[y][x] == 'x');
             }
         }
-        auto [rw, rh, rmatrix] = utils::remove_margins(w, h, matrix);
-        if (rw != 0 && rh != 0) {
-            return Region(rw, rh, rmatrix);
-        }
+        return Region(w, h, matrix);
     }
     throw ParseError("Not a valid shape definition:\n" + s);
+}
+
+Region Region::parse(const std::string s) {
+    Region raw = parse_raw(s);
+    auto [w, h, matrix] = utils::remove_margins(raw.w_, raw.h_, raw.matrix_);
+    if (w == 0 || h == 0) {
+        throw ParseError("Not a valid shape definition:\n" + s);
+    }
+    return Region(w, h, matrix);
 }
 
 Region Region::rotate(const Region &region) {
