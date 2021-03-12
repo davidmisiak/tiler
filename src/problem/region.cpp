@@ -63,7 +63,12 @@ Region Region::parse(const std::string s) {
     Region raw = parse_raw(s);
     auto [w, h, matrix] = utils::remove_margins(raw.w_, raw.h_, raw.matrix_);
     if (w == 0 || h == 0) {
-        throw ParseError("Not a valid shape definition:\n" + s);
+        throw ParseError(
+                "Not a valid shape definition - a shape appears to be empty.\n"
+                "Check your file with problem assignment for extra spaces.");
+    }
+    if (!utils::is_continuous(w, h, matrix)) {
+        throw ParseError("Not a valid shape definition - shape is not continuous:\n" + s);
     }
     return Region(w, h, matrix);
 }

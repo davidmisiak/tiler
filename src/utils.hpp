@@ -11,6 +11,9 @@ namespace utils {
 std::tuple<int, int, std::vector<std::vector<bool>>> remove_margins(
         int w, int h, std::vector<std::vector<bool>> matrix);
 
+// Checks if the region of true cells in `matrix` is continuous.
+bool is_continuous(int w, int h, std::vector<std::vector<bool>> matrix);
+
 }  // namespace utils
 
 #endif  // TILER_UTILS_HPP_
