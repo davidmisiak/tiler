@@ -40,3 +40,23 @@ TEST_CASE("Continuity check works") {
                                         {1, 0, 0, 0, 1, 0},
                                         {1, 1, 1, 1, 1, 0}}));
 }
+
+TEST_CASE("Holes are checked") {
+    REQUIRE_FALSE(utils::has_hole(0, 0, {}));
+    REQUIRE_FALSE(utils::has_hole(0, 1, {{}}));
+    REQUIRE_FALSE(utils::has_hole(1, 0, {}));
+    REQUIRE_FALSE(utils::has_hole(1, 1, {{0}}));
+    REQUIRE_FALSE(utils::has_hole(1, 1, {{1}}));
+    REQUIRE_FALSE(utils::has_hole(3, 1, {{1, 1, 0}}));
+    REQUIRE_FALSE(utils::has_hole(3, 3, {{0, 0, 0}, {0, 1, 0}, {0, 0, 0}}));
+    REQUIRE_FALSE(utils::has_hole(3, 3, {{1, 1, 0}, {1, 1, 1}, {1, 1, 1}}));
+    REQUIRE(utils::has_hole(3, 3, {{1, 1, 0}, {1, 0, 1}, {1, 1, 1}}));
+    REQUIRE_FALSE(utils::has_hole(3, 3, {{1, 1, 1}, {0, 0, 0}, {1, 1, 1}}));
+    REQUIRE(utils::has_hole(4, 4, {{1, 1, 1, 1}, {1, 1, 0, 1}, {1, 0, 0, 1}, {1, 1, 1, 1}}));
+    REQUIRE(utils::has_hole(6, 5,
+                            {{0, 0, 0, 0, 0, 0},
+                             {0, 1, 1, 1, 0, 0},
+                             {0, 1, 1, 0, 1, 0},
+                             {0, 1, 1, 1, 1, 0},
+                             {0, 0, 0, 0, 0, 0}}));
+}

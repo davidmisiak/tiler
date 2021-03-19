@@ -76,6 +76,9 @@ bool utils::is_continuous(int w, int h, utils::BoolMatrix matrix) {
 }
 
 bool utils::has_hole(int w, int h, utils::BoolMatrix matrix) {
+    if (w == 0 || h == 0) {
+        return false;
+    }
     for (int x = 0; x < w; x++) {
         if (!matrix[0][x]) matrix = flood_fill(x, 0, w, h, matrix);
         if (!matrix[h - 1][x]) matrix = flood_fill(x, h - 1, w, h, matrix);
