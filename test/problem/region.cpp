@@ -1,6 +1,5 @@
 #include "problem/region.hpp"
 
-#include <string>
 #include <vector>
 
 #include "catch2/catch.hpp"
@@ -63,4 +62,74 @@ TEST_CASE("Incorrectly defined regions are not parsed") {
     REQUIRE_THROWS_AS(Region::parse("1xx"), ParseError);
     REQUIRE_THROWS_AS(Region::parse("5x0"), ParseError);
     REQUIRE_THROWS_AS(Region::parse("x\n\nx"), ParseError);
+}
+
+TEST_CASE("Region can be rotated and reflected") {
+    REQUIRE(Region::rotate(Region::parse("x")) == Region::parse("x"));
+    REQUIRE(Region::rotate(Region::parse("xx")) == Region::parse("x\nx"));
+    REQUIRE(Region::rotate(Region::parse("xx\nx\nx")) == Region::parse("x\nxxx"));
+
+    REQUIRE(Region::reflect(Region::parse("x")) == Region::parse("x"));
+    REQUIRE(Region::reflect(Region::parse("xx")) == Region::parse("xx"));
+    REQUIRE(Region::reflect(Region::parse("xx\nx\nx")) == Region::parse("xx\n x\n x"));
+}
+
+TEST_CASE("Region size and top-left getters work") {
+    Region a = Region::parse("x");
+    REQUIRE(a.get_size() == 1);
+    REQUIRE(a.get_top_left_x() == 0);
+    REQUIRE(a.get_top_left_y() == 0);
+
+    Region b = Region::parse("  x\nxxx");
+    REQUIRE(b.get_size() == 4);
+    REQUIRE(b.get_top_left_x() == 2);
+    REQUIRE(b.get_top_left_y() == 0);
+
+    Region c = Region::parse_raw(" \n  x\nxxx");
+    REQUIRE(c.get_size() == 4);
+    REQUIRE(c.get_top_left_x() == 2);
+    REQUIRE(c.get_top_left_y() == 1);
+
+    Region d = Region::parse_raw(" ");
+    REQUIRE(d.get_size() == 0);
+    REQUIRE(d.get_top_left_x() == -1);
+    REQUIRE(d.get_top_left_y() == -1);
+}
+
+TEST_CASE("Subregions can be manipulated") {
+    //    xxxx         xxx
+    //   xxxxx  ->     xxx
+    //  xxxxx       xxxxx
+    Region a = Region::parse("  xxxx\n xxxxx\nxxxxx");
+    Region b = Region::parse(" x\nxx");
+    Region original = a;
+
+    REQUIRE(a.has_subregion(1, 0, b));
+    REQUIRE(a.has_subregion(3, 1, b));
+    REQUIRE_FALSE(a.has_subregion(3, 2, b));
+    REQUIRE_FALSE(a.has_subregion(-1, 1, b));
+    REQUIRE_FALSE(a.has_subregion(0, 0, Region::parse("x")));
+
+    a.remove_subregion(1, 0, b);
+    REQUIRE_FALSE(a.has_subregion(1, 0, b));
+    REQUIRE(a == Region::parse("   xxx\n   xxx\nxxxxx"));
+    REQUIRE(a.get_size() == 11);
+    REQUIRE(a.get_top_left_x() == 3);
+    REQUIRE(a.get_top_left_y() == 0);
+
+    a.add_subregion(1, 0, b);
+    REQUIRE(a.has_subregion(1, 0, b));
+    REQUIRE(a == original);
+    REQUIRE(a.get_size() == 14);
+    REQUIRE(a.get_top_left_x() == 2);
+    REQUIRE(a.get_top_left_y() == 0);
+
+    REQUIRE(a.has_subregion(0, 0, original));
+
+    a.remove_subregion(0, 0, original);
+    REQUIRE_FALSE(a.has_subregion(0, 0, original));
+    REQUIRE(a == Region::parse_raw("      \n      \n      "));
+    REQUIRE(a.get_size() == 0);
+    REQUIRE(a.get_top_left_x() == -1);
+    REQUIRE(a.get_top_left_y() == -1);
 }
