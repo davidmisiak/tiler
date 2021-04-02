@@ -61,7 +61,7 @@ int main(int argc, char **argv) {
     CLI::App *command = app.get_subcommands()[0];  // there is always exactly one command
     if (command == solve_command) {
         try {
-            Problem problem = tiles.empty() ? Problem::create(input_file, reflection)
+            Problem problem = tiles.empty() ? Problem::create_from_file(input_file, reflection)
                                             : Problem::create(tiles, reflection);
             if (!quiet) {
                 print::normal() << problem << std::endl;

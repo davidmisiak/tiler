@@ -163,6 +163,8 @@ void Region::update_top_left(int from_x, int from_y) {
             }
         }
     }
+    top_left_x_ = -1;
+    top_left_y_ = -1;
 }
 
 // clang-format off

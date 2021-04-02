@@ -13,8 +13,16 @@ class Problem {
 public:
     Problem() = delete;
     Problem(Board board, std::vector<Tile> tiles);
-    static Problem create(std::vector<std::string> shapes, bool reflection);
-    static Problem create(std::string filename, bool reflection);
+
+    // Takes list of strings - shape definitions.
+    static Problem create(std::vector<std::string> definitions, bool reflection);
+
+    // Takes shape definitions (separated by at least one empty line) in a single string.
+    static Problem create(std::string content, bool reflection);
+
+    // Reads defintions from a text file.
+    static Problem create_from_file(std::string filepath, bool reflection);
+
     friend std::ostream &operator<<(std::ostream &os, const Problem &problem);
 
     Board board_;

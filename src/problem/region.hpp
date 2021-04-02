@@ -17,13 +17,13 @@ public:
     Region(int w, int h, utils::BoolMatrix matrix);
 
     // Parses the shape definition (name, dimensions or map) and returns corresponding Region.
-    // No extra-whitespace stripping nor continuity checks are done - use this function carefully
-    // and prefer `Region::parse` if possible.
+    // No extra-whitespace stripping nor continuity/hole checks are done - use this function
+    // carefully and prefer `Region::parse` if possible.
     static Region parse_raw(std::string s);
 
     // Parses the shape definition (name, dimensions or map) and returns corresponding Region.
-    // Extra spaces around map-defined shapes are stripped and a continuity check is performed
-    // (resulting in an error if failed).
+    // Extra spaces around map-defined shapes are stripped and a continuity and hole check is
+    // performed (resulting in an error if failed).
     static Region parse(std::string s);
 
     // Returns copy of `region` rotated by 90 degrees counterclokwise.
@@ -57,7 +57,7 @@ public:
     void remove_subregion(int origin_x, int origin_y, const Region &region);
 
     // Adds `region` to `this` (see `has_subregion()` for the meaning of the parameters).
-    // Note that you are responsible for making sure that this is possible.
+    // Note that you are responsible for checking if this is possible (by running `has_subregion`).
     void add_subregion(int origin_x, int origin_y, const Region &region);
 
     static const std::unordered_map<std::string, std::string> kNamedShapes;
