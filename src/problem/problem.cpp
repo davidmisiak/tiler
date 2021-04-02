@@ -23,7 +23,23 @@ Problem Problem::create(std::vector<std::string> definitions, bool reflection) {
     return Problem(board, tiles);
 }
 
-Problem Problem::create(std::string filepath, bool reflection) {
+Problem Problem::create(std::string content, bool reflection) {
+    std::vector<std::string> definitions;
+    // definitions are separated by at least two '\n' characters (ie. at least one empty line)
+    const std::regex exp("((.|.\n)+)\n*(\n\n|$)");
+    std::smatch matches;
+    std::string::const_iterator search_start(content.cbegin());
+    while (std::regex_search(search_start, content.cend(), matches, exp)) {
+        definitions.push_back(matches[1]);
+        search_start = matches.suffix().first;
+    }
+    if (definitions.size() >= 2) {
+        return create(definitions, reflection);
+    }
+    throw ParseError("Not enough shapes defined (at least 2 required).");
+}
+
+Problem Problem::create_from_file(std::string filepath, bool reflection) {
     std::string s;
     {
         std::ifstream file(filepath);
@@ -31,19 +47,7 @@ Problem Problem::create(std::string filepath, bool reflection) {
         ss << file.rdbuf();
         s = ss.str();
     }
-    std::vector<std::string> definitions;
-    // definitions are separated by at least two '\n' characters (ie. at least one empty line)
-    const std::regex exp("((.|.\n)+)\n*(\n\n|$)");
-    std::smatch matches;
-    std::string::const_iterator search_start(s.cbegin());
-    while (std::regex_search(search_start, s.cend(), matches, exp)) {
-        definitions.push_back(matches[1]);
-        search_start = matches.suffix().first;
-    }
-    if (definitions.size() >= 2) {
-        return Problem::create(definitions, reflection);
-    }
-    throw ParseError("Not enough shapes defined (at least 2 required).");
+    return create(s, reflection);
 }
 
 std::ostream &operator<<(std::ostream &os, const Problem &problem) {
