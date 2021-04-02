@@ -24,14 +24,17 @@ public:
     static Tile parse(std::string s, bool reflection);
 
     friend std::ostream &operator<<(std::ostream &os, const Tile &tile);
+
+    // -1 represents infinity
     inline int get_count() { return count_; };
+
     inline TileConstIterator begin() { return regions_.begin(); };
     inline TileConstIterator end() { return regions_.end(); };
     inline void add_count(int d) { count_ == -1 || (count_ += d); };
 
 private:
     std::vector<Region> regions_;
-    int count_;  // -1 represents infinity
+    int count_;
 };
 
 #endif  // TILER_PROBLEM_TILE_HPP_
