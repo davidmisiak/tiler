@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -7,7 +8,9 @@
 #include "parse_error.hpp"
 #include "print.hpp"
 #include "problem/problem.hpp"
+#include "solution/solution.hpp"
 #include "solvers/simple_solver.hpp"
+#include "solvers/solver.hpp"
 
 int main(int argc, char **argv) {
     CLI::App app{"Tiler - tool for automated solving of polyomino tiling problems\n"};
@@ -66,11 +69,15 @@ int main(int argc, char **argv) {
             if (!quiet) {
                 print::normal() << problem << std::endl;
             }
-            SimpleSolver solver(problem);
-            if (solver.solve()) {
-                print::success() << "\nTRUE" << std::endl;
-            } else {
+            std::unique_ptr<Solver> solver = std::make_unique<SimpleSolver>(problem);
+            Solution solution = solver->solve();
+            if (solution.empty()) {
                 print::warning() << "\nFALSE" << std::endl;
+            } else {
+                print::success() << "\nTRUE" << std::endl;
+                for (auto [x, y, region] : solution) {
+                    print::normal() << x << " " << y << "\n" << region << "\n\n";
+                }
             }
         } catch (const ParseError &e) {
             print::error() << e.what() << "\nRun with --help for more information." << std::endl;

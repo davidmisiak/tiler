@@ -2,6 +2,7 @@
 
 #include "problem/problem.hpp"
 #include "problem/tile.hpp"
+#include "solution/solution.hpp"
 
 SimpleSolver::SimpleSolver(Problem problem) : problem_(problem) {}
 
@@ -10,7 +11,13 @@ SimpleSolver::SimpleSolver(Problem problem) : problem_(problem) {}
 // empty unit square of board's top-most row with empty squares. If there is available space for the
 // entire tile, a recursive call is made. If no fit is found, this branch returns false. Note that
 // this algorithm finds a solution if and only if a solution exists.
-bool SimpleSolver::solve() {
+Solution SimpleSolver::solve() {
+    solution_.clear();
+    step();
+    return solution_;
+}
+
+bool SimpleSolver::step() {
     if (problem_.board_.get_size() == 0) {
         return true;
     }
@@ -24,7 +31,8 @@ bool SimpleSolver::solve() {
             if (!problem_.board_.has_subregion(x, y, region)) continue;
             problem_.board_.remove_subregion(x, y, region);
             tile.add_count(-1);
-            if (solve()) {
+            if (step()) {
+                solution_.push_back({x, y, region});
                 return true;
             }
             problem_.board_.add_subregion(x, y, region);
