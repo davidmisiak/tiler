@@ -99,6 +99,8 @@ bool Region::operator==(const Region &other) const {
     return w_ == other.w_ && h_ == other.h_ && matrix_ == other.matrix_;
 }
 
+bool Region::operator<(const Region &other) const { return matrix_ < other.matrix_; }
+
 std::ostream &operator<<(std::ostream &os, const Region &region) {
     if (region.w_ > 70 || region.h_ > 70) {
         os << "(too big to show)";
@@ -149,6 +151,32 @@ void Region::add_subregion(int origin_x, int origin_y, const Region &region) {
     }
     update_top_left(origin_x, origin_y);
     size_ += region.size_;
+}
+
+std::vector<std::pair<int, int>> Region::get_cells() const {
+    std::vector<std::pair<int, int>> cells;
+    for (int y = 0; y < h_; y++) {
+        for (int x = 0; x < w_; x++) {
+            if (matrix_[y][x]) {
+                cells.push_back({x, y});
+            }
+        }
+    }
+    return cells;
+}
+
+std::vector<utils::Edge> Region::get_edges() const {
+    std::vector<utils::Edge> edges;
+    for (int y = 0; y <= h_; y++) {
+        for (int x = 0; x <= w_; x++) {
+            bool curr = (y < h_ && x < w_) ? matrix_[y][x] : false;
+            bool left = (y < h_ && x > 0) ? matrix_[y][x - 1] : false;
+            bool above = (y > 0 && x < w_) ? matrix_[y - 1][x] : false;
+            if (curr ^ left) edges.push_back({x, y, 0, 1});
+            if (curr ^ above) edges.push_back({x, y, 1, 0});
+        }
+    }
+    return edges;
 }
 
 void Region::update_top_left(int from_x, int from_y) {

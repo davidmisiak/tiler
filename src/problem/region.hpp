@@ -33,6 +33,7 @@ public:
     static Region reflect(const Region &region);
 
     bool operator==(const Region &other) const;
+    bool operator<(const Region &other) const;
     friend std::ostream &operator<<(std::ostream &os, const Region &region);
     inline int get_width() const { return w_; };
     inline int get_height() const { return h_; };
@@ -59,6 +60,13 @@ public:
     // Adds `region` to `this` (see `has_subregion()` for the meaning of the parameters).
     // Note that you are responsible for checking if this is possible (by running `has_subregion`).
     void add_subregion(int origin_x, int origin_y, const Region &region);
+
+    // Returns the list of coordinates of the region's cells. Top-left corner of the region's
+    // surrounding rectangle has coordinates (0, 0).
+    std::vector<std::pair<int, int>> get_cells() const;
+
+    // Returs the list of edges defining the region.
+    std::vector<utils::Edge> get_edges() const;
 
     static const std::map<std::string, std::string> kNamedShapes;
 
