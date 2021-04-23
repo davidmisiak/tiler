@@ -6,8 +6,10 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "~/.conan/data/**",
-                // rang's code is not in a subfolder, so it has to be listed on it's own
-                "~/.conan/data/rang/3.1.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include"
+                // source code of these libaries is not contained in additional subfolders, so they
+                // have to be listed on their own
+                "~/.conan/data/rang/3.1.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include",
+                "~/.conan/data/svgwrite/0.2.0/_/_/package/994aaf9c4878fe2a186f8bd6996b8d5961c4c967/include"
             ],
             "compilerPath": "/usr/bin/g++",
             "cStandard": "c17",
