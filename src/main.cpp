@@ -35,6 +35,12 @@ int main(int argc, char **argv) {
                                     "on a separate line.");
     input_file_option->check(CLI::ExistingFile);
 
+    std::string image_file = "";
+    solve_command->add_option("-s,--save", image_file,
+                              "Path to file where the solution (if it exists)\n"
+                              "will be saved as an SVG image. If the file exists,\n"
+                              "it will be overwritten.");
+
     bool reflection = false;
     solve_command->add_flag(
             "-r,--allow-reflection", reflection,
@@ -72,11 +78,14 @@ int main(int argc, char **argv) {
             std::unique_ptr<Solver> solver = std::make_unique<SimpleSolver>(problem);
             Solution solution = solver->solve();
             if (solution.empty()) {
-                print::warning() << "\nFALSE" << std::endl;
+                print::warning() << "FALSE" << std::endl;
             } else {
-                print::success() << "\nTRUE" << std::endl;
-                for (auto [x, y, region] : solution) {
-                    print::normal() << x << " " << y << "\n" << region << "\n\n";
+                print::success() << "TRUE" << std::endl;
+                if (!quiet) {
+                    print::normal() << solution;
+                }
+                if (!image_file.empty()) {
+                    solution.save_image(image_file, problem);
                 }
             }
         } catch (const ParseError &e) {
