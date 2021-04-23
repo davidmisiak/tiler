@@ -192,8 +192,8 @@ const std::unordered_map<std::string, std::string> Region::kNamedShapes{
         "xxx\n"
         " x "},
     {"4Z",
-        " xx\n"
-        "xx "},
+        "xx \n"
+        " xx"},
     {"5A",
         "xxxx\n"
         "  x "},
