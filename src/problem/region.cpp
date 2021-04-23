@@ -50,7 +50,7 @@ Region Region::parse_raw(const std::string s) {
         int h = static_cast<int>(lines.size());
         utils::BoolMatrix matrix(h, std::vector<bool>(w, false));
         for (int y = 0; y < h; y++) {
-            for (int x = 0; x < w; x++) {
+            for (int x = 0; x < std::min(w, static_cast<int>(lines[y].size())); x++) {
                 matrix[y][x] = (lines[y][x] == 'x');
             }
         }
