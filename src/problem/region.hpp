@@ -1,9 +1,9 @@
 #ifndef TILER_PROBLEM_REGION_HPP_
 #define TILER_PROBLEM_REGION_HPP_
 
+#include <map>
 #include <ostream>
 #include <string>
-#include <unordered_map>
 #include <vector>
 
 #include "utils.hpp"
@@ -60,7 +60,7 @@ public:
     // Note that you are responsible for checking if this is possible (by running `has_subregion`).
     void add_subregion(int origin_x, int origin_y, const Region &region);
 
-    static const std::unordered_map<std::string, std::string> kNamedShapes;
+    static const std::map<std::string, std::string> kNamedShapes;
 
 private:
     // Updates the coordinates of the left-most occupied unit square in the region's top-most

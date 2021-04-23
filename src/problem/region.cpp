@@ -1,6 +1,7 @@
 #include "problem/region.hpp"
 
 #include <algorithm>
+#include <map>
 #include <ostream>
 #include <regex>
 #include <string>
@@ -168,7 +169,7 @@ void Region::update_top_left(int from_x, int from_y) {
 }
 
 // clang-format off
-const std::unordered_map<std::string, std::string> Region::kNamedShapes{
+const std::map<std::string, std::string> Region::kNamedShapes{
     {"1", "x"},
     {"2", "xx"},
     {"3I", "xxx"},
