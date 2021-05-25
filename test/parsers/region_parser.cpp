@@ -19,6 +19,8 @@ TEST_CASE("Regions defined by dimensions are parsed") {
     REQUIRE(region_parser::parse("2x4") == Region(2, 4, two_by_four));
     utils::BoolMatrix ten_by_one{std::vector<bool>(10, true)};
     REQUIRE(region_parser::parse("10x1") == Region(10, 1, ten_by_one));
+    utils::BoolMatrix twenty_by_twenty(20, std::vector<bool>(20, true));
+    REQUIRE(region_parser::parse("20x20") == Region(20, 20, twenty_by_twenty));
 }
 
 TEST_CASE("Regions defined by map are parsed") {
@@ -26,6 +28,13 @@ TEST_CASE("Regions defined by map are parsed") {
     REQUIRE(region_parser::parse("x\nx\nx") == Region(1, 3, {{1}, {1}, {1}}));
     REQUIRE(region_parser::parse(" xx\nxx") == Region(3, 2, {{0, 1, 1}, {1, 1, 0}}));
     REQUIRE(region_parser::parse(" xxx\nxx") == Region(4, 2, {{0, 1, 1, 1}, {1, 1, 0, 0}}));
+    REQUIRE(region_parser::parse("xxxxx \n    x \nxxx x \nx   x \nxxxxx ") ==
+            Region(5, 5,
+                   {{1, 1, 1, 1, 1},
+                    {0, 0, 0, 0, 1},
+                    {1, 1, 1, 0, 1},
+                    {1, 0, 0, 0, 1},
+                    {1, 1, 1, 1, 1}}));
 }
 
 TEST_CASE("Regions defined by border are parsed") {

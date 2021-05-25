@@ -29,6 +29,10 @@ TEST_CASE("Unlimited tiles are parsed") {
     Tile f = tile_parser::parse("  xx\n xx", false);
     REQUIRE(*f.begin() == region_parser::parse(" xx\nxx"));
     REQUIRE(f.get_count() == -1);
+
+    Tile g = tile_parser::parse("DRUL", false);
+    REQUIRE(*g.begin() == region_parser::parse("DRUL"));
+    REQUIRE(g.get_count() == -1);
 }
 
 TEST_CASE("Limited tiles are parsed") {
@@ -55,6 +59,10 @@ TEST_CASE("Limited tiles are parsed") {
     Tile f = tile_parser::parse("3:\n  xx\n xx", false);
     REQUIRE(*f.begin() == region_parser::parse(" xx\nxx"));
     REQUIRE(f.get_count() == 3);
+
+    Tile g = tile_parser::parse("10:DRUL", false);
+    REQUIRE(*g.begin() == region_parser::parse("DRUL"));
+    REQUIRE(g.get_count() == 10);
 }
 
 TEST_CASE("Incorrectly defined tiles are not parsed") {

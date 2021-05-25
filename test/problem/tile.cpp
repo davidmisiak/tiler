@@ -4,6 +4,9 @@
 #include "parsers/region_parser.hpp"
 #include "parsers/tile_parser.hpp"
 
+// Tile parser is used here because of readability.
+// It should be tested thoroughly in it's own tests.
+
 TEST_CASE("Tile rotations and reflections are correct") {
     const auto& rp = region_parser::parse;
 

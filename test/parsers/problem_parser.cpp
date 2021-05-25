@@ -23,10 +23,12 @@ TEST_CASE("Problems are parsed") {
             "1:x\n"
             "\n"
             "3L\n"
+            "\n"
+            "DDRRUULL\n"
             "\n";
     Problem bp = problem_parser::parse(b, false);
     REQUIRE(bp.board_ == region_parser::parse("2x2"));
-    REQUIRE(bp.tiles_.size() == 2);
+    REQUIRE(bp.tiles_.size() == 3);
 
     std::string c =
             "xxx\n"
