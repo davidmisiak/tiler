@@ -18,6 +18,9 @@ struct Edge {
     int dx;
     int dy;
 
+    inline bool operator==(const Edge &other) const {
+        return x == other.x && y == other.y && dx == other.dx && dy == other.dy;
+    };
     inline bool operator<(const Edge &other) const {
         return std::tie(x, y, dx, dy) < std::tie(other.x, other.y, other.dx, other.dy);
     };
