@@ -5,6 +5,7 @@
 #include <map>
 #include <string>
 
+#include "parsers/region_parser.hpp"
 #include "print.hpp"
 #include "problem/problem.hpp"
 #include "problem/region.hpp"
@@ -33,7 +34,7 @@ void Solution::save_image(std::string filepath, Problem problem) {
     // but named shapes have fixed colors
     int i = 0;
     for (auto [_, m] : Region::kNamedShapes) {
-        Region region = Region::parse(m);
+        Region region = region_parser::parse(m);
         for (int rot = 0; rot < 4; rot++) {
             colors[region] = kColors[i];
             region = Region::rotate(region);

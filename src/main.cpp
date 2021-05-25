@@ -6,6 +6,7 @@
 #include "CLI/CLI.hpp"
 #include "help_strings.hpp"
 #include "parse_error.hpp"
+#include "parsers/problem_parser.hpp"
 #include "print.hpp"
 #include "problem/problem.hpp"
 #include "solution/solution.hpp"
@@ -70,8 +71,9 @@ int main(int argc, char **argv) {
     CLI::App *command = app.get_subcommands()[0];  // there is always exactly one command
     if (command == solve_command) {
         try {
-            Problem problem = tiles.empty() ? Problem::create_from_file(input_file, reflection)
-                                            : Problem::create(tiles, reflection);
+            Problem problem = tiles.empty()
+                                      ? problem_parser::parse_from_file(input_file, reflection)
+                                      : problem_parser::parse(tiles, reflection);
             if (!quiet) {
                 print::normal() << problem << std::endl;
             }

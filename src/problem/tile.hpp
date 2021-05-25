@@ -2,7 +2,6 @@
 #define TILER_PROBLEM_TILE_HPP_
 
 #include <ostream>
-#include <string>
 #include <vector>
 
 #include "problem/region.hpp"
@@ -18,10 +17,6 @@ public:
     // If `reflection` is set to true, tile will represent not only it's rotations, but also all
     // rotations of the reflected shape.
     Tile(Region region, int count, bool reflection);
-
-    // Parses the tile definitions, consisting of a shape definition optionally prefixed with 'N:'
-    // where N is the number of available pieces (otherwise set to infinity).
-    static Tile parse(std::string s, bool reflection);
 
     friend std::ostream &operator<<(std::ostream &os, const Tile &tile);
 
