@@ -2,15 +2,12 @@
 
 #include <algorithm>
 #include <queue>
+#include <set>
 #include <tuple>
 #include <vector>
 
-namespace {
-
-// Starts at `start_x`, `start_y` and floods (ie. negates) all accessible cells.
-// Note that the not flooded value is the original value of `matrix[start_y][start_x]` and the
-// flooded value is its negation.
-utils::BoolMatrix flood_fill(int start_x, int start_y, int w, int h, utils::BoolMatrix matrix) {
+utils::BoolMatrix utils::flood_fill(int start_x, int start_y, int w, int h,
+                                    utils::BoolMatrix matrix, std::set<utils::Edge> edges) {
     std::queue<std::pair<int, int>> todo;
     todo.push({start_x, start_y});
     bool value = matrix[start_y][start_x];
@@ -18,18 +15,20 @@ utils::BoolMatrix flood_fill(int start_x, int start_y, int w, int h, utils::Bool
     while (!todo.empty()) {
         auto [x, y] = todo.front();
         todo.pop();
-        std::vector<std::pair<int, int>> steps{{x - 1, y}, {x + 1, y}, {x, y - 1}, {x, y + 1}};
-        for (auto [nx, ny] : steps) {
-            if (0 <= nx && nx < w && 0 <= ny && ny < h && matrix[ny][nx] == value) {
-                todo.push({nx, ny});
-                matrix[ny][nx] = !value;
-            }
+        std::vector<std::pair<int, int>> steps{{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        for (auto [sx, sy] : steps) {
+            int nx = x + sx, ny = y + sy;
+            if (nx < 0 || nx >= w || ny < 0 || ny >= h || matrix[ny][nx] != value) continue;
+            if ((sx == -1 || sy == -1) && edges.count({x, y, -sy, -sx})) continue;
+            if ((sx == 1 || sy == 1) && edges.count({nx, ny, sy, sx})) continue;
+            todo.push({nx, ny});
+            matrix[ny][nx] = !value;
         }
     }
     return matrix;
 }
 
-bool matrix_contains(utils::BoolMatrix matrix, bool value) {
+bool utils::matrix_contains(utils::BoolMatrix matrix, bool value) {
     for (auto row : matrix) {
         if (std::find(row.begin(), row.end(), value) != row.end()) {
             return true;
@@ -37,8 +36,6 @@ bool matrix_contains(utils::BoolMatrix matrix, bool value) {
     }
     return false;
 }
-
-}  // namespace
 
 std::tuple<int, int, utils::BoolMatrix> utils::remove_margins(int w, int h,
                                                               utils::BoolMatrix matrix) {
