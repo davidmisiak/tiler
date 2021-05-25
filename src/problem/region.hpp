@@ -22,8 +22,10 @@ public:
     // Returns copy of `region` mirrored by the y-axis.
     static Region reflect(const Region &region);
 
-    bool operator==(const Region &other) const;
-    bool operator<(const Region &other) const;
+    inline bool operator==(const Region &other) const {
+        return w_ == other.w_ && h_ == other.h_ && matrix_ == other.matrix_;
+    };
+    inline bool operator<(const Region &other) const { return matrix_ < other.matrix_; };
     friend std::ostream &operator<<(std::ostream &os, const Region &region);
     inline int get_width() const { return w_; };
     inline int get_height() const { return h_; };

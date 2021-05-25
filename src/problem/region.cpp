@@ -41,12 +41,6 @@ Region Region::reflect(const Region &region) {
     return Region(region.w_, region.h_, reflected);
 }
 
-bool Region::operator==(const Region &other) const {
-    return w_ == other.w_ && h_ == other.h_ && matrix_ == other.matrix_;
-}
-
-bool Region::operator<(const Region &other) const { return matrix_ < other.matrix_; }
-
 std::ostream &operator<<(std::ostream &os, const Region &region) {
     if (region.w_ > 70 || region.h_ > 70) {
         os << "(too big to show)";
