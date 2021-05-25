@@ -1,6 +1,9 @@
 #include "parsers/region_parser.hpp"
 
+#include <algorithm>
+#include <map>
 #include <regex>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -8,6 +11,48 @@
 #include "parse_error.hpp"
 #include "problem/region.hpp"
 #include "utils.hpp"
+
+namespace {
+
+Region border_to_region(std::vector<std::pair<int, int>> steps) {
+    int max_u = 0, max_d = 0, max_l = 0, max_r = 0;
+    for (auto [sx, sy] : steps) {
+        if (sx < 0) max_l++;
+        if (sx > 0) max_r++;
+        if (sy < 0) max_u++;
+        if (sy > 0) max_d++;
+    }
+    int w = std::max(max_l, max_r) + 1;
+    int h = std::max(max_u, max_d) + 1;
+    int x = w;
+    int y = h;
+    std::set<std::pair<int, int>> visited;
+    std::set<utils::Edge> edges;
+    for (auto [sx, sy] : steps) {
+        if (visited.count({x, y})) {
+            throw ParseError("Not a valid shape definition - border intersection detected:\n");
+        }
+        visited.insert({x, y});
+        int new_x = x + sx;
+        int new_y = y + sy;
+        utils::Edge e = (sx < 0 || sy < 0) ? utils::Edge{new_x, new_y, -sx, -sy}
+                                           : utils::Edge{x, y, sx, sy};
+        edges.insert(e);
+        x = new_x;
+        y = new_y;
+    }
+    if (x != w || y != h) {
+        throw ParseError("Not a valid shape definition - path is not correcty closed:\n");
+    }
+
+    utils::BoolMatrix matrix(2 * h, std::vector<bool>(2 * w, false));
+    auto [cx, cy] = *std::min_element(visited.begin(), visited.end());
+    matrix = utils::flood_fill(cx, cy, 2 * w, 2 * h, matrix, edges);
+    auto [rw, rh, rmatrix] = utils::remove_margins(2 * w, 2 * h, matrix);
+    return Region(rw, rh, rmatrix);
+}
+
+}  // namespace
 
 Region region_parser::parse_raw(const std::string s) {
     // named region, eg. "4O"
@@ -38,6 +83,19 @@ Region region_parser::parse_raw(const std::string s) {
             }
         }
         return Region(w, h, matrix);
+    }
+    // border path, eg. "DDRRULUL"
+    if (std::regex_match(s, std::regex("[UDLR]+"))) {
+        std::map<char, std::pair<int, int>> directions = {
+                {'U', {0, -1}}, {'D', {0, 1}}, {'L', {-1, 0}}, {'R', {1, 0}}};
+        std::vector<std::pair<int, int>> steps;
+        std::transform(s.begin(), s.end(), std::back_inserter(steps),
+                       [&](const char& c) { return directions[c]; });
+        try {
+            return border_to_region(steps);
+        } catch (const ParseError& e) {
+            throw ParseError(e.what() + s);
+        }
     }
     throw ParseError("Not a valid shape definition:\n" + s);
 }
