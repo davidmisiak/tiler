@@ -2,9 +2,6 @@
 
 #include <algorithm>
 #include <ostream>
-#include <regex>
-#include <string>
-#include <vector>
 
 #include "parse_error.hpp"
 #include "problem/region.hpp"
@@ -20,18 +17,6 @@ Tile::Tile(Region region, int count, bool reflection) : count_(count) {
         }
         current = Region::reflect(current);
     }
-}
-
-Tile Tile::parse(std::string s, bool reflection) {
-    if (s.find(":") == std::string::npos) {
-        return Tile(Region::parse(s), -1, reflection);
-    }
-    std::smatch matches;
-    if (std::regex_match(s, matches, std::regex("([1-9][0-9]*):\n?([^:]+)"))) {
-        int count = std::stoi(matches[1]);
-        return Tile(Region::parse(matches[2]), count, reflection);
-    }
-    throw ParseError("Not a valid tile definition:\n" + s);
 }
 
 std::ostream &operator<<(std::ostream &os, const Tile &tile) {

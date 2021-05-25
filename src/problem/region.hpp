@@ -16,16 +16,6 @@ public:
     // Initializes the region - make sure `matrix` is of dimensions `w` by `h`.
     Region(int w, int h, utils::BoolMatrix matrix);
 
-    // Parses the shape definition (name, dimensions or map) and returns corresponding Region.
-    // No extra-whitespace stripping nor continuity/hole checks are done - use this function
-    // carefully and prefer `Region::parse` if possible.
-    static Region parse_raw(std::string s);
-
-    // Parses the shape definition (name, dimensions or map) and returns corresponding Region.
-    // Extra spaces around map-defined shapes are stripped and a continuity and hole check is
-    // performed (resulting in an error if failed).
-    static Region parse(std::string s);
-
     // Returns copy of `region` rotated by 90 degrees counterclokwise.
     static Region rotate(const Region &region);
 
@@ -37,6 +27,7 @@ public:
     friend std::ostream &operator<<(std::ostream &os, const Region &region);
     inline int get_width() const { return w_; };
     inline int get_height() const { return h_; };
+    inline utils::BoolMatrix get_matrix() const { return matrix_; };
 
     // Returns the number of unit squares occupied by the region.
     inline int get_size() const { return size_; };
