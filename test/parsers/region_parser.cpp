@@ -28,6 +28,20 @@ TEST_CASE("Regions defined by map are parsed") {
     REQUIRE(region_parser::parse(" xxx\nxx") == Region(4, 2, {{0, 1, 1, 1}, {1, 1, 0, 0}}));
 }
 
+TEST_CASE("Regions defined by border are parsed") {
+    REQUIRE(region_parser::parse("DRUL") == Region(1, 1, {{1}}));
+    REQUIRE(region_parser::parse("DDDRUUUL") == Region(1, 3, {{1}, {1}, {1}}));
+    REQUIRE(region_parser::parse("ULLDLDRRUR") == Region(3, 2, {{0, 1, 1}, {1, 1, 0}}));
+    REQUIRE(region_parser::parse("LURURRRDLLDL") == Region(4, 2, {{0, 1, 1, 1}, {1, 1, 0, 0}}));
+    REQUIRE(region_parser::parse("DDDRRRRRUUUUULLLLLDRRRRDDDLLLURRULLL") ==
+            Region(5, 5,
+                   {{1, 1, 1, 1, 1},
+                    {0, 0, 0, 0, 1},
+                    {1, 1, 1, 0, 1},
+                    {1, 0, 0, 0, 1},
+                    {1, 1, 1, 1, 1}}));
+}
+
 TEST_CASE("Region extra-whitespace trimming is performed") {
     REQUIRE(region_parser::parse("  xx\n xx") == Region(3, 2, {{0, 1, 1}, {1, 1, 0}}));
     REQUIRE(region_parser::parse_raw("  xx\n xx") == Region(4, 2, {{0, 0, 1, 1}, {0, 1, 1, 0}}));
@@ -62,8 +76,14 @@ TEST_CASE("Incorrectly defined regions are not parsed") {
     REQUIRE_THROWS_AS(region_parser::parse("\n"), ParseError);
     REQUIRE_THROWS_AS(region_parser::parse("3"), ParseError);
     REQUIRE_THROWS_AS(region_parser::parse("3l"), ParseError);
-    REQUIRE_THROWS_AS(region_parser::parse("y"), ParseError);
     REQUIRE_THROWS_AS(region_parser::parse("1xx"), ParseError);
+    REQUIRE_THROWS_AS(region_parser::parse("0x5"), ParseError);
     REQUIRE_THROWS_AS(region_parser::parse("5x0"), ParseError);
     REQUIRE_THROWS_AS(region_parser::parse("x\n\nx"), ParseError);
+    REQUIRE_THROWS_AS(region_parser::parse("d"), ParseError);
+    REQUIRE_THROWS_AS(region_parser::parse("D"), ParseError);
+    REQUIRE_THROWS_AS(region_parser::parse("DDRUL"), ParseError);
+    REQUIRE_THROWS_AS(region_parser::parse("DRUUDL"), ParseError);
+    REQUIRE_THROWS_AS(region_parser::parse("DRDRULUL"), ParseError);
+    REQUIRE_THROWS_AS(region_parser::parse("LLURDDRL"), ParseError);
 }
