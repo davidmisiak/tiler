@@ -112,7 +112,7 @@ Region region_parser::parse(const std::string s) {
     if (!utils::is_continuous(w, h, matrix)) {
         throw ParseError("Not a valid shape definition - shape is not continuous:\n" + s);
     }
-    // holes are allowed for now
+    // holes in shape definitions are allowed for now
     // if (utils::has_hole(w, h, matrix)) {
     //     throw ParseError("Not a valid shape definition - shape has a hole:\n" + s);
     // }
