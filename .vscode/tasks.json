@@ -21,7 +21,7 @@
             "type": "shell",
             "dependsOn": "Build",
             "command": "./build/bin/tiler",
-            "args": [],
+            "args": ["solve", "-f", "01.problem", "-s", "solution.svg"],
         },
         {
             "label": "Test",
