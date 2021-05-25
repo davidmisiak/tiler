@@ -24,6 +24,7 @@ TEST_CASE("Regions defined by map are parsed") {
     REQUIRE(Region::parse("x") == Region(1, 1, {{1}}));
     REQUIRE(Region::parse("x\nx\nx") == Region(1, 3, {{1}, {1}, {1}}));
     REQUIRE(Region::parse(" xx\nxx") == Region(3, 2, {{0, 1, 1}, {1, 1, 0}}));
+    REQUIRE(Region::parse(" xxx\nxx") == Region(4, 2, {{0, 1, 1, 1}, {1, 1, 0, 0}}));
 }
 
 TEST_CASE("Region extra-whitespace trimming is performed") {

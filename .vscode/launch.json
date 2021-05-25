@@ -6,7 +6,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/bin/tiler",
-            "args": [],
+            "args": ["solve", "-f", "01.problem", "-s", "solution.svg"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Build",

@@ -51,9 +51,10 @@ Problem Problem::create_from_file(std::string filepath, bool reflection) {
 }
 
 std::ostream &operator<<(std::ostream &os, const Problem &problem) {
-    os << problem.board_ << "\n\nTiles:";
+    os << problem.board_ << "\n\nTILES";
     for (Tile tile : problem.tiles_) {
         os << "\n\n" << tile;
     }
+    os << std::endl;
     return os;
 }

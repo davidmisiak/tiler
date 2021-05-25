@@ -8,6 +8,13 @@ namespace utils {
 
 using BoolMatrix = std::vector<std::vector<bool>>;
 
+struct Edge {
+    int x;
+    int y;
+    int dx;
+    int dy;
+};
+
 // Removes all leading and trailing rows and columns of `matrix` containing only `false` values,
 // returns new width, height and matrix.
 std::tuple<int, int, BoolMatrix> remove_margins(int w, int h, BoolMatrix matrix);

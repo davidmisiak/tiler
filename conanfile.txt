@@ -3,6 +3,7 @@
     cli11/1.9.1
     rang/3.1.0
     boost/1.75.0
+    svgwrite/0.2.0
 
 [generators]
     cmake

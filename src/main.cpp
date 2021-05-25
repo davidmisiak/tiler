@@ -1,4 +1,5 @@
 #include <iostream>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -7,7 +8,9 @@
 #include "parse_error.hpp"
 #include "print.hpp"
 #include "problem/problem.hpp"
+#include "solution/solution.hpp"
 #include "solvers/simple_solver.hpp"
+#include "solvers/solver.hpp"
 
 int main(int argc, char **argv) {
     CLI::App app{"Tiler - tool for automated solving of polyomino tiling problems\n"};
@@ -31,6 +34,12 @@ int main(int argc, char **argv) {
                                     "by an empty line and the optional \"N:\" may be\n"
                                     "on a separate line.");
     input_file_option->check(CLI::ExistingFile);
+
+    std::string image_file = "";
+    solve_command->add_option("-s,--save", image_file,
+                              "Path to file where the solution (if it exists)\n"
+                              "will be saved as an SVG image. If the file exists,\n"
+                              "it will be overwritten.");
 
     bool reflection = false;
     solve_command->add_flag(
@@ -66,11 +75,18 @@ int main(int argc, char **argv) {
             if (!quiet) {
                 print::normal() << problem << std::endl;
             }
-            SimpleSolver solver(problem);
-            if (solver.solve()) {
-                print::success() << "\nTRUE" << std::endl;
+            std::unique_ptr<Solver> solver = std::make_unique<SimpleSolver>(problem);
+            Solution solution = solver->solve();
+            if (solution.empty()) {
+                print::warning() << "FALSE" << std::endl;
             } else {
-                print::warning() << "\nFALSE" << std::endl;
+                print::success() << "TRUE" << std::endl;
+                if (!quiet) {
+                    print::normal() << solution;
+                }
+                if (!image_file.empty()) {
+                    solution.save_image(image_file, problem);
+                }
             }
         } catch (const ParseError &e) {
             print::error() << e.what() << "\nRun with --help for more information." << std::endl;

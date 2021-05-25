@@ -1,6 +1,7 @@
 #include "problem/region.hpp"
 
 #include <algorithm>
+#include <map>
 #include <ostream>
 #include <regex>
 #include <string>
@@ -50,7 +51,7 @@ Region Region::parse_raw(const std::string s) {
         int h = static_cast<int>(lines.size());
         utils::BoolMatrix matrix(h, std::vector<bool>(w, false));
         for (int y = 0; y < h; y++) {
-            for (int x = 0; x < w; x++) {
+            for (int x = 0; x < std::min(w, static_cast<int>(lines[y].size())); x++) {
                 matrix[y][x] = (lines[y][x] == 'x');
             }
         }
@@ -97,6 +98,8 @@ Region Region::reflect(const Region &region) {
 bool Region::operator==(const Region &other) const {
     return w_ == other.w_ && h_ == other.h_ && matrix_ == other.matrix_;
 }
+
+bool Region::operator<(const Region &other) const { return matrix_ < other.matrix_; }
 
 std::ostream &operator<<(std::ostream &os, const Region &region) {
     if (region.w_ > 70 || region.h_ > 70) {
@@ -150,6 +153,32 @@ void Region::add_subregion(int origin_x, int origin_y, const Region &region) {
     size_ += region.size_;
 }
 
+std::vector<std::pair<int, int>> Region::get_cells() const {
+    std::vector<std::pair<int, int>> cells;
+    for (int y = 0; y < h_; y++) {
+        for (int x = 0; x < w_; x++) {
+            if (matrix_[y][x]) {
+                cells.push_back({x, y});
+            }
+        }
+    }
+    return cells;
+}
+
+std::vector<utils::Edge> Region::get_edges() const {
+    std::vector<utils::Edge> edges;
+    for (int y = 0; y <= h_; y++) {
+        for (int x = 0; x <= w_; x++) {
+            bool curr = (y < h_ && x < w_) ? matrix_[y][x] : false;
+            bool left = (y < h_ && x > 0) ? matrix_[y][x - 1] : false;
+            bool above = (y > 0 && x < w_) ? matrix_[y - 1][x] : false;
+            if (curr ^ left) edges.push_back({x, y, 0, 1});
+            if (curr ^ above) edges.push_back({x, y, 1, 0});
+        }
+    }
+    return edges;
+}
+
 void Region::update_top_left(int from_x, int from_y) {
     if (top_left_y_ < from_y || (top_left_y_ == from_y && top_left_x_ < from_x)) {
         return;
@@ -168,7 +197,7 @@ void Region::update_top_left(int from_x, int from_y) {
 }
 
 // clang-format off
-const std::unordered_map<std::string, std::string> Region::kNamedShapes{
+const std::map<std::string, std::string> Region::kNamedShapes{
     {"1", "x"},
     {"2", "xx"},
     {"3I", "xxx"},
@@ -192,8 +221,8 @@ const std::unordered_map<std::string, std::string> Region::kNamedShapes{
         "xxx\n"
         " x "},
     {"4Z",
-        " xx\n"
-        "xx "},
+        "xx \n"
+        " xx"},
     {"5A",
         "xxxx\n"
         "  x "},
