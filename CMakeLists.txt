@@ -23,7 +23,7 @@ list(REMOVE_ITEM PROJECT_SOURCE ${PROJECT_MAIN})
 option(SAT_SOLVER "Include the SAT solver backend (you need to have cryptominisat5 installed)." ON)
 if(SAT_SOLVER)
     add_compile_definitions(SAT_SOLVER)
-    add_link_options(-lcryptominisat5)
+    set(MY_LINK_OPTIONS ${MY_LINK_OPTIONS} -lcryptominisat5)
 else()
     list(REMOVE_ITEM PROJECT_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/src/solvers/sat_solver.cpp")
 endif()
@@ -31,6 +31,7 @@ endif()
 # compile "tilerlib" - entire source without main.cpp so we don't have to recompile
 # it when building tests
 add_library(tilerlib STATIC ${PROJECT_SOURCE})
+target_link_libraries(tilerlib ${MY_LINK_OPTIONS})
 target_compile_options(tilerlib PRIVATE ${PROJECT_WARNINGS})
 
 # build main executable

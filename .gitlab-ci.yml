@@ -15,10 +15,10 @@ lint:
 
 build:
   stage: build
-  image: python:latest
+  image: ubuntu:21.04 # we need cryptominisat
   before_script:
     - apt-get update --yes
-    - apt-get install --yes cmake
+    - DEBIAN_FRONTEND=noninteractive apt-get install --yes python3-pip cmake libcryptominisat5-dev
     - pip install conan
     - conan profile new default --detect
     - conan profile update settings.compiler.libcxx=libstdc++11 default
