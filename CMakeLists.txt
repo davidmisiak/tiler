@@ -19,6 +19,15 @@ file(GLOB_RECURSE PROJECT_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 set(PROJECT_MAIN "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
 list(REMOVE_ITEM PROJECT_SOURCE ${PROJECT_MAIN})
 
+# include/exclude CryptoMiniSat
+option(SAT_SOLVER "Include the SAT solver backend (you need to have cryptominisat5 installed)." ON)
+if(SAT_SOLVER)
+    add_compile_definitions(SAT_SOLVER)
+    add_link_options(-lcryptominisat5)
+else()
+    list(REMOVE_ITEM PROJECT_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/src/solvers/sat_solver.cpp")
+endif()
+
 # compile "tilerlib" - entire source without main.cpp so we don't have to recompile
 # it when building tests
 add_library(tilerlib STATIC ${PROJECT_SOURCE})
