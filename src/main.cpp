@@ -22,6 +22,7 @@ namespace {
 
 const std::string kSimpleSolver = "simple";
 const std::string kSatSolver = "sat";
+const std::vector<std::string> solver_names = {kSimpleSolver, kSatSolver};
 // we don't use an enum for solver names because CLI11's error messages for enums are somewhat ugly
 
 struct Options {
@@ -97,8 +98,8 @@ int main(int argc, char **argv) {
 
     solve_command
             ->add_option("-b,--backend", options.solver_name,
-                         "Selected solver backend (default is 'simple').")
-            ->transform(CLI::IsMember({kSimpleSolver, kSatSolver}));
+                         "Selected solver backend (default is " + options.solver_name + ").")
+            ->transform(CLI::IsMember(solver_names));
 
     solve_command->add_flag(
             "-r,--allow-reflection", options.reflection,
