@@ -15,17 +15,23 @@ public:
     Tile() = delete;
 
     // If `reflection` is set to true, tile will represent not only it's rotations, but also all
-    // rotations of the reflected shape.
+    // rotations of the reflected shape. The value -1 of `count` means infinity.
     Tile(Region region, int count, bool reflection);
 
     friend std::ostream &operator<<(std::ostream &os, const Tile &tile);
 
-    // -1 represents infinity
+    inline int get_size() { return regions_.begin()->get_size(); };
     inline int get_count() { return count_; };
+
+    // Adds `d` to the cell count (`d` may be negative). If the cell count is infinity, no
+    // modification is performed.
+    inline void add_count(int d) { count_ == -1 || (count_ += d); };
+
+    // Set the tile count to `m` if it exceeds `m`.
+    inline void limit_count(int m) { count_ = (count_ == -1) ? m : std::min(count_, m); };
 
     inline TileConstIterator begin() { return regions_.begin(); };
     inline TileConstIterator end() { return regions_.end(); };
-    inline void add_count(int d) { count_ == -1 || (count_ += d); };
 
 private:
     std::vector<Region> regions_;
