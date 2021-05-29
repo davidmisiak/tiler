@@ -11,18 +11,24 @@
 #include "problem/problem.hpp"
 #include "solution/solution.hpp"
 #include "solve_error.hpp"
+#include "solvers/sat_solver.hpp"
 #include "solvers/simple_solver.hpp"
 #include "solvers/solver.hpp"
 
-#ifdef SAT_SOLVER
-#include "solvers/sat_solver.hpp"
+#ifdef CADICAL
+#include "solvers/sat_utils/cadical_wrapper.hpp"
+#endif
+
+#ifdef CRYPTOMINISAT
+#include "solvers/sat_utils/cryptominisat_wrapper.hpp"
 #endif
 
 namespace {
 
 const std::string kSimpleSolver = "simple";
-const std::string kSatSolver = "sat";
-const std::vector<std::string> solver_names = {kSimpleSolver, kSatSolver};
+const std::string kCadicalSolver = "cadical";
+const std::string kCryptominisatSolver = "cryptominisat";
+const std::vector<std::string> solver_names = {kSimpleSolver, kCadicalSolver, kCryptominisatSolver};
 // we don't use an enum for solver names because CLI11's error messages for enums are somewhat ugly
 
 struct Options {
@@ -44,11 +50,17 @@ void solve_action(Options options) {
     }
 
     std::unique_ptr<Solver> solver = std::make_unique<SimpleSolver>(problem);
-    if (options.solver_name == kSatSolver) {
-#ifdef SAT_SOLVER
-        solver = std::make_unique<SatSolver>(problem);
+    if (options.solver_name == kCadicalSolver) {
+#ifdef CADICAL
+        solver = std::make_unique<SatSolver>(problem, std::make_unique<CadicalWrapper>());
 #else
-        throw SolveError("SAT solver not available - it was disabled during compilation.");
+        throw SolveError("CaDiCaL is not available - it was disabled during compilation.");
+#endif
+    } else if (options.solver_name == kCryptominisatSolver) {
+#ifdef CRYPTOMINISAT
+        solver = std::make_unique<SatSolver>(problem, std::make_unique<CryptominisatWrapper>());
+#else
+        throw SolveError("CryptoMiniSat is not available - it was disabled during compilation.");
 #endif
     }
 

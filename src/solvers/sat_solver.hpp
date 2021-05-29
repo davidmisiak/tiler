@@ -1,29 +1,28 @@
 #ifndef TILER_SOLVERS_SAT_SOLVER_HPP_
 #define TILER_SOLVERS_SAT_SOLVER_HPP_
 
-#include <cryptominisat5/cryptominisat.h>
-
-#include <vector>
+#include <memory>
 
 #include "problem/problem.hpp"
 #include "solution/solution.hpp"
+#include "solvers/sat_utils/sat_utils.hpp"
+#include "solvers/sat_utils/sat_wrapper.hpp"
 #include "solvers/solver.hpp"
 
-// Solver based on CryptoMiniSat SAT solver.
+// Solver based on translation to a SAT problem (SAT solver selection in done through the
+// sat_wrapper parameter).
 class SatSolver : public Solver {
 public:
-    explicit SatSolver(Problem problem);
+    explicit SatSolver(Problem problem, std::unique_ptr<SatWrapper> sat_wrapper);
     Solution solve() override;
 
 private:
-    using Clause = std::vector<CMSat::Lit>;
-
-    // Adds clauses that guarantee that at most on of `literals` will be true. Modifies `next_var_`.
-    void at_most_one_of(Clause literals);
+    // Adds clauses that guarantee that at most one of `literals` will be true. Creates new utility
+    // variables.
+    void at_most_one_of(sat_utils::Clause literals);
 
     Problem problem_;
-    unsigned int next_var_ = 0;
-    std::vector<Clause> clauses_;
+    std::unique_ptr<SatWrapper> sat_wrapper_;
 };
 
 #endif  // TILER_SOLVERS_SAT_SOLVER_HPP_

@@ -11,6 +11,15 @@
 #include "solution/solution.hpp"
 #include "solvers/sat_solver.hpp"
 #include "solvers/simple_solver.hpp"
+#include "solvers/solver.hpp"
+
+#ifdef CADICAL
+#include "solvers/sat_utils/cadical_wrapper.hpp"
+#endif
+
+#ifdef CRYPTOMINISAT
+#include "solvers/sat_utils/cryptominisat_wrapper.hpp"
+#endif
 
 // Problem parser is used here because of readability.
 // It should be tested thoroughly in it's own tests.
@@ -39,7 +48,7 @@ bool check_solution(Problem problem, Solution solution, bool expected) {
 
 }  // namespace
 
-TEMPLATE_TEST_CASE("Solvers return correct solutions", "", SimpleSolver, SatSolver) {
+TEST_CASE("Solvers return correct solutions") {
     std::vector<std::tuple<std::vector<std::string>, bool, bool>> problems = {
             {{"1", "1:1"}, false, true},
             {{"1", "2:1"}, false, true},
@@ -47,10 +56,12 @@ TEMPLATE_TEST_CASE("Solvers return correct solutions", "", SimpleSolver, SatSolv
             {{"3L", "3:1"}, false, true},
             {{"3L", "1:3L"}, false, true},
             {{"3L", "1:2", "1:1"}, false, true},
+            {{"3L", "1:5N", "1:2", "1:1"}, false, true},
             {{"5V", "1:5V"}, false, true},
             {{"4x2", "8:1"}, false, true},
             {{"4x2", "1:3L", "1:4T", "1:1"}, false, true},
             {{"4x2", "1:2", "1:4I", "1:2"}, false, true},
+            {{"3x3", "1:1", "5:2"}, false, true},
             {{"3x4", "2:RRRDDDLUULDLUU"}, false, true},
             {{"3x3", "1:xxx\nx x\nxxx", "1:1"}, false, true},
             {{"DDDDDRRRRUURRUUULLLLLL", "2:3I", "2:4O", "2:4J", "1:4Z"}, false, true},
@@ -77,11 +88,23 @@ TEMPLATE_TEST_CASE("Solvers return correct solutions", "", SimpleSolver, SatSolv
             {{"DDDRDRRRUUULULLL", "2"}, false, false},
 
             {{"3x4", "4L"}, true, false},
+            {{"5V", "3I", "1:1"}, true, false},
     };
 
+    using std::make_unique;
     for (auto [problem_str, reflection, result] : problems) {
         Problem problem = problem_parser::parse(problem_str, reflection);
-        Solution solution = TestType(problem).solve();
-        REQUIRE(check_solution(problem, solution, result));
+        std::vector<std::unique_ptr<Solver>> solvers;
+        solvers.push_back(make_unique<SimpleSolver>(problem));
+#ifdef CADICAL
+        solvers.push_back(make_unique<SatSolver>(problem, make_unique<CadicalWrapper>()));
+#endif
+#ifdef CRYPTOMINISAT
+        solvers.push_back(make_unique<SatSolver>(problem, make_unique<CryptominisatWrapper>()));
+#endif
+        for (auto& solver : solvers) {
+            Solution solution = solver->solve();
+            REQUIRE(check_solution(problem, solution, result));
+        }
     }
 }

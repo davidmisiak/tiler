@@ -19,13 +19,21 @@ file(GLOB_RECURSE PROJECT_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 set(PROJECT_MAIN "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
 list(REMOVE_ITEM PROJECT_SOURCE ${PROJECT_MAIN})
 
-# include/exclude CryptoMiniSat
-option(SAT_SOLVER "Include the SAT solver backend (you need to have cryptominisat5 installed)." ON)
-if(SAT_SOLVER)
-    add_compile_definitions(SAT_SOLVER)
+# external libraries
+option(CADICAL "Include the CaDiCaL SAT solver." ON)
+if(CADICAL)
+    add_compile_definitions(CADICAL)
+    set(MY_LINK_OPTIONS ${MY_LINK_OPTIONS} -lcadical)
+else()
+    list(REMOVE_ITEM PROJECT_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/src/solvers/sat_utils/cadical_wrapper.cpp")
+endif()
+
+option(CRYPTOMINISAT "Include the CryptoMiniSat SAT solver." ON)
+if(CRYPTOMINISAT)
+    add_compile_definitions(CRYPTOMINISAT)
     set(MY_LINK_OPTIONS ${MY_LINK_OPTIONS} -lcryptominisat5)
 else()
-    list(REMOVE_ITEM PROJECT_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/src/solvers/sat_solver.cpp")
+    list(REMOVE_ITEM PROJECT_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/src/solvers/sat_utils/cryptominisat_wrapper.cpp")
 endif()
 
 # compile "tilerlib" - entire source without main.cpp so we don't have to recompile
