@@ -1,11 +1,10 @@
 #ifndef TILER_SOLVERS_SAT_UTILS_CRYPTOMINISAT_WRAPPER_HPP_
 #define TILER_SOLVERS_SAT_UTILS_CRYPTOMINISAT_WRAPPER_HPP_
 
-#include <cryptominisat5/cryptominisat.h>
-
 #include <memory>
 #include <vector>
 
+#include "cryptominisat5/cryptominisat.h"
 #include "solvers/sat_utils/sat_wrapper.hpp"
 
 class CryptominisatWrapper : public SatWrapper {

@@ -1,10 +1,9 @@
 #include "solvers/sat_utils/cryptominisat_wrapper.hpp"
 
-#include <cryptominisat5/cryptominisat.h>
-
 #include <algorithm>
 #include <vector>
 
+#include "cryptominisat5/cryptominisat.h"
 #include "solve_error.hpp"
 #include "solvers/sat_utils/sat_utils.hpp"
 
