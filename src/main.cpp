@@ -10,10 +10,79 @@
 #include "print.hpp"
 #include "problem/problem.hpp"
 #include "solution/solution.hpp"
+#include "solve_error.hpp"
+#include "solvers/sat_solver.hpp"
 #include "solvers/simple_solver.hpp"
 #include "solvers/solver.hpp"
 
+#ifdef CADICAL
+#include "solvers/sat_utils/cadical_wrapper.hpp"
+#endif
+
+#ifdef CRYPTOMINISAT
+#include "solvers/sat_utils/cryptominisat_wrapper.hpp"
+#endif
+
+namespace {
+
+const std::string kSimpleSolver = "simple";
+const std::string kCadicalSolver = "cadical";
+const std::string kCryptominisatSolver = "cryptominisat";
+const std::vector<std::string> solver_names = {kSimpleSolver, kCadicalSolver, kCryptominisatSolver};
+// we don't use an enum for solver names because CLI11's error messages for enums are somewhat ugly
+
+struct Options {
+    std::vector<std::string> tiles;
+    std::string input_file = "";
+    std::string image_file = "";
+    std::string solver_name = kSimpleSolver;
+    bool reflection = false;
+    bool quiet = false;
+};
+
+void solve_action(Options options) {
+    Problem problem =
+            options.tiles.empty()
+                    ? problem_parser::parse_from_file(options.input_file, options.reflection)
+                    : problem_parser::parse(options.tiles, options.reflection);
+    if (!options.quiet) {
+        print::normal() << problem << std::endl;
+    }
+
+    std::unique_ptr<Solver> solver = std::make_unique<SimpleSolver>(problem);
+    if (options.solver_name == kCadicalSolver) {
+#ifdef CADICAL
+        solver = std::make_unique<SatSolver>(problem, std::make_unique<CadicalWrapper>());
+#else
+        throw SolveError("CaDiCaL is not available - it was disabled during compilation.");
+#endif
+    } else if (options.solver_name == kCryptominisatSolver) {
+#ifdef CRYPTOMINISAT
+        solver = std::make_unique<SatSolver>(problem, std::make_unique<CryptominisatWrapper>());
+#else
+        throw SolveError("CryptoMiniSat is not available - it was disabled during compilation.");
+#endif
+    }
+
+    Solution solution = solver->solve();
+    if (solution.empty()) {
+        print::warning() << "FALSE" << std::endl;
+    } else {
+        print::success() << "TRUE" << std::endl;
+        if (!options.quiet) {
+            print::normal() << solution;
+        }
+        if (!options.image_file.empty()) {
+            solution.save_image(options.image_file, problem);
+        }
+    }
+}
+
+}  // namespace
+
 int main(int argc, char **argv) {
+    Options options;
+
     CLI::App app{"Tiler - tool for automated solving of polyomino tiling problems\n"};
     app.require_subcommand(1);
 
@@ -22,34 +91,34 @@ int main(int argc, char **argv) {
 
     CLI::App *input_group = solve_command->add_option_group("input", "The problem assignment");
     input_group->require_option(1);
-    std::vector<std::string> tiles;
     CLI::Option *tiles_option = input_group->add_option(
-            "tiles", tiles,
+            "tiles", options.tiles,
             "Definition of the board and tile shapes.\n" + help_strings::kInputFormats);
     tiles_option->expected(-2);  // at least 2 - one board and one or more tile shapes
-    std::string input_file = "";
     CLI::Option *input_file_option =
-            input_group->add_option("-f,--file", input_file,
+            input_group->add_option("-f,--file", options.input_file,
                                     "Path to file containing the problem assignment.\n"
                                     "Same input format, but shapes must be separated\n"
                                     "by an empty line and the optional \"N:\" may be\n"
                                     "on a separate line.");
     input_file_option->check(CLI::ExistingFile);
 
-    std::string image_file = "";
-    solve_command->add_option("-s,--save", image_file,
+    solve_command->add_option("-s,--save", options.image_file,
                               "Path to file where the solution (if it exists)\n"
                               "will be saved as an SVG image. If the file exists,\n"
                               "it will be overwritten.");
 
-    bool reflection = false;
+    solve_command
+            ->add_option("-b,--backend", options.solver_name,
+                         "Selected solver backend (default is " + options.solver_name + ").")
+            ->transform(CLI::IsMember(solver_names));
+
     solve_command->add_flag(
-            "-r,--allow-reflection", reflection,
+            "-r,--allow-reflection", options.reflection,
             "If present, the solver will be allowed to reflect\n(flip over) the tiles.");
 
-    bool quiet = false;
     solve_command->add_flag(
-            "-q,--quiet", quiet,
+            "-q,--quiet", options.quiet,
             "If present, the problem summarization before\nsolving will be silenced.");
 
     // list command definition
@@ -71,28 +140,13 @@ int main(int argc, char **argv) {
     CLI::App *command = app.get_subcommands()[0];  // there is always exactly one command
     if (command == solve_command) {
         try {
-            Problem problem = tiles.empty()
-                                      ? problem_parser::parse_from_file(input_file, reflection)
-                                      : problem_parser::parse(tiles, reflection);
-            if (!quiet) {
-                print::normal() << problem << std::endl;
-            }
-            std::unique_ptr<Solver> solver = std::make_unique<SimpleSolver>(problem);
-            Solution solution = solver->solve();
-            if (solution.empty()) {
-                print::warning() << "FALSE" << std::endl;
-            } else {
-                print::success() << "TRUE" << std::endl;
-                if (!quiet) {
-                    print::normal() << solution;
-                }
-                if (!image_file.empty()) {
-                    solution.save_image(image_file, problem);
-                }
-            }
+            solve_action(options);
         } catch (const ParseError &e) {
             print::error() << e.what() << "\nRun with --help for more information." << std::endl;
             return 1;
+        } catch (const SolveError &e) {
+            print::error() << e.what() << std::endl;
+            return 2;
         }
     } else if (command == list_command) {
         print::normal() << help_strings::kNamedTilesList;

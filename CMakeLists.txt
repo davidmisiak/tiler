@@ -19,9 +19,33 @@ file(GLOB_RECURSE PROJECT_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
 set(PROJECT_MAIN "${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp")
 list(REMOVE_ITEM PROJECT_SOURCE ${PROJECT_MAIN})
 
+# external libraries
+set(EXTERNAL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external")
+
+option(CADICAL "Include the CaDiCaL SAT solver." ON)
+if(CADICAL)
+    add_compile_definitions(CADICAL)
+    include_directories(SYSTEM "${EXTERNAL_DIR}/cadical/src")
+    link_directories("${EXTERNAL_DIR}/cadical/build")
+    set(MY_LINK_OPTIONS ${MY_LINK_OPTIONS} cadical)
+else()
+    list(REMOVE_ITEM PROJECT_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/src/solvers/sat_utils/cadical_wrapper.cpp")
+endif()
+
+option(CRYPTOMINISAT "Include the CryptoMiniSat SAT solver." ON)
+if(CRYPTOMINISAT)
+    add_compile_definitions(CRYPTOMINISAT)
+    include_directories(SYSTEM "${EXTERNAL_DIR}/cryptominisat/build/include")
+    link_directories("${EXTERNAL_DIR}/cryptominisat/build/lib")
+    set(MY_LINK_OPTIONS ${MY_LINK_OPTIONS} cryptominisat5)
+else()
+    list(REMOVE_ITEM PROJECT_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/src/solvers/sat_utils/cryptominisat_wrapper.cpp")
+endif()
+
 # compile "tilerlib" - entire source without main.cpp so we don't have to recompile
 # it when building tests
 add_library(tilerlib STATIC ${PROJECT_SOURCE})
+target_link_libraries(tilerlib ${MY_LINK_OPTIONS})
 target_compile_options(tilerlib PRIVATE ${PROJECT_WARNINGS})
 
 # build main executable

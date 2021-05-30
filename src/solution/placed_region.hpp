@@ -9,6 +9,10 @@ struct PlacedRegion {
     const int x;
     const int y;
     const Region region;
+
+    inline bool operator==(const PlacedRegion &other) const {
+        return x == other.x && y == other.y && region == other.region;
+    };
 };
 
 #endif  // TILER_SOLUTION_PLACED_REGION_HPP_
