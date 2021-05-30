@@ -3,26 +3,26 @@ stages:
   - build
   - test
 
-lint:
-  stage: lint
-  image: ubuntu:latest
+default:
+  image: ubuntu:21.04 # we use cryptominisat from Ubuntu's repository
   before_script:
     - apt-get update --yes
-    - apt-get install --yes clang-format cppcheck
+
+lint:
+  stage: lint
   script:
+    - apt-get install --yes clang-format cppcheck
     - ./scripts/lint.sh
   timeout: 3 minutes
 
 build:
   stage: build
-  image: ubuntu:21.04 # we need cryptominisat
-  before_script:
-    - apt-get update --yes
-    - DEBIAN_FRONTEND=noninteractive apt-get install --yes python3-pip cmake libcryptominisat5-dev
+  script:
+    - DEBIAN_FRONTEND=noninteractive apt-get install --yes python3-pip cmake libcryptominisat5-dev git make
     - pip install conan
     - conan profile new default --detect
     - conan profile update settings.compiler.libcxx=libstdc++11 default
-  script:
+    - ./scripts/build-cadical.sh
     - ./scripts/setup.sh
     - cmake --build build
   artifacts:
@@ -32,11 +32,8 @@ build:
 
 test:
   stage: test
-  image: ubuntu:latest
-  before_script:
-    - apt-get update --yes
-    - apt-get install --yes cmake
   script:
+    - apt-get install --yes cmake libcryptominisat5-dev
     - cd build
     - ctest --verbose
   timeout: 3 minutes
