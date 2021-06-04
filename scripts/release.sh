@@ -1,8 +1,8 @@
 #!/bin/bash
 
-[[ -e build ]] && rm -r build
-mkdir build
-cd build
+[[ -e release ]] && rm -r release
+mkdir release
+cd release
 conan install ..
 cmake ..
 cmake --build .
