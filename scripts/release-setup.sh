@@ -5,4 +5,3 @@ mkdir release
 cd release
 conan install ..
 cmake ..
-cmake --build .

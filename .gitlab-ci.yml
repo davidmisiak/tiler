@@ -12,7 +12,7 @@ lint:
   stage: lint
   script:
     - apt-get install --yes clang-format cppcheck
-    - ./scripts/lint.sh
+    - ./scripts/dev-lint.sh
   timeout: 3 minutes
 
 build:
@@ -23,8 +23,8 @@ build:
     - conan profile new default --detect
     - conan profile update settings.compiler.libcxx=libstdc++11 default
     - ./scripts/build-cadical.sh
-    - ./scripts/setup.sh
-    - ./scripts/build.sh
+    - ./scripts/dev-setup.sh
+    - ./scripts/dev-build.sh
   artifacts:
     paths:
       - build
@@ -34,5 +34,5 @@ test:
   stage: test
   script:
     - apt-get install --yes cmake libcryptominisat5-dev
-    - ./scripts/test.sh
+    - ./scripts/dev-test.sh
   timeout: 3 minutes
