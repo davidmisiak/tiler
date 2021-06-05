@@ -120,11 +120,13 @@ std::vector<utils::Edge> Region::get_edges() const {
 }
 
 void Region::update_top_left(int from_x, int from_y) {
-    if (top_left_y_ < from_y || (top_left_y_ == from_y && top_left_x_ < from_x)) {
-        return;
+    if (top_left_x_ != -1) {
+        if (top_left_y_ < from_y || (top_left_y_ == from_y && top_left_x_ < from_x)) {
+            return;
+        }
     }
     for (int y = from_y; y < h_; y++) {
-        for (int x = 0 /* sic */; x < w_; x++) {
+        for (int x = (y == from_y) ? from_x : 0; x < w_; x++) {
             if (matrix_[y][x]) {
                 top_left_x_ = x;
                 top_left_y_ = y;

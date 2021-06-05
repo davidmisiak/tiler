@@ -80,19 +80,20 @@ TEST_CASE("Continuity and holes in regions are handled") {
 }
 
 TEST_CASE("Incorrectly defined regions are not parsed") {
-    REQUIRE_THROWS_AS(region_parser::parse(""), ParseError);
-    REQUIRE_THROWS_AS(region_parser::parse(" "), ParseError);
-    REQUIRE_THROWS_AS(region_parser::parse("\n"), ParseError);
-    REQUIRE_THROWS_AS(region_parser::parse("3"), ParseError);
-    REQUIRE_THROWS_AS(region_parser::parse("3l"), ParseError);
-    REQUIRE_THROWS_AS(region_parser::parse("1xx"), ParseError);
-    REQUIRE_THROWS_AS(region_parser::parse("0x5"), ParseError);
-    REQUIRE_THROWS_AS(region_parser::parse("5x0"), ParseError);
-    REQUIRE_THROWS_AS(region_parser::parse("x\n\nx"), ParseError);
-    REQUIRE_THROWS_AS(region_parser::parse("d"), ParseError);
-    REQUIRE_THROWS_AS(region_parser::parse("D"), ParseError);
-    REQUIRE_THROWS_AS(region_parser::parse("DDRUL"), ParseError);
-    REQUIRE_THROWS_AS(region_parser::parse("DRUUDL"), ParseError);
-    REQUIRE_THROWS_AS(region_parser::parse("DRDRULUL"), ParseError);
-    REQUIRE_THROWS_AS(region_parser::parse("LLURDDRL"), ParseError);
+    using region_parser::parse;
+    REQUIRE_THROWS_AS(parse(""), ParseError);
+    REQUIRE_THROWS_AS(parse(" "), ParseError);
+    REQUIRE_THROWS_AS(parse("\n"), ParseError);
+    REQUIRE_THROWS_AS(parse("3"), ParseError);
+    REQUIRE_THROWS_AS(parse("3l"), ParseError);
+    REQUIRE_THROWS_AS(parse("1xx"), ParseError);
+    REQUIRE_THROWS_AS(parse("0x5"), ParseError);
+    REQUIRE_THROWS_AS(parse("5x0"), ParseError);
+    REQUIRE_THROWS_AS(parse("x\n\nx"), ParseError);
+    REQUIRE_THROWS_AS(parse("d"), ParseError);
+    REQUIRE_THROWS_AS(parse("D"), ParseError);
+    REQUIRE_THROWS_AS(parse("DDRUL"), ParseError);
+    REQUIRE_THROWS_AS(parse("DRUUDL"), ParseError);
+    REQUIRE_THROWS_AS(parse("DRDRULUL"), ParseError);
+    REQUIRE_THROWS_AS(parse("LLURDDRL"), ParseError);
 }

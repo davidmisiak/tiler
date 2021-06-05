@@ -80,6 +80,12 @@ TEST_CASE("Subregions can be manipulated") {
     REQUIRE(a.get_size() == 0);
     REQUIRE(a.get_top_left_x() == -1);
     REQUIRE(a.get_top_left_y() == -1);
+
+    a.add_subregion(1, 0, b);
+    REQUIRE(a.has_subregion(1, 0, b));
+    REQUIRE(a.get_size() == 3);
+    REQUIRE(a.get_top_left_x() == 2);
+    REQUIRE(a.get_top_left_y() == 0);
 }
 
 TEST_CASE("Correct region cells are returned") {
