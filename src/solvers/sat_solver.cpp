@@ -22,7 +22,6 @@ SatSolver::SatSolver(Problem problem, std::unique_ptr<SatWrapper> sat_wrapper)
 
 Solution SatSolver::solve() {
     using sat_utils::Lit, sat_utils::Clause;
-    sat_wrapper_->clear();
 
     int w = problem_.board_.get_width();
     int h = problem_.board_.get_height();

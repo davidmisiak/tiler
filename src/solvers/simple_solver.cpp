@@ -12,7 +12,6 @@ SimpleSolver::SimpleSolver(Problem problem) : problem_(problem) {}
 // entire tile, a recursive call is made. If no fit is found, this branch returns false. Note that
 // this algorithm finds a solution if and only if a solution exists.
 Solution SimpleSolver::solve() {
-    solution_.clear();
     step();
     return solution_;
 }
