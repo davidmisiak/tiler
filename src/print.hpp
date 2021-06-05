@@ -13,13 +13,15 @@ namespace print {
 
 inline std::ostream &normal() { return std::cout << rang::style::reset; }
 
-inline std::ostream &error() { return std::cout << rang::fg::red; }
+inline std::ostream &error() { return std::cout << rang::style::reset << rang::fg::red; }
 
-inline std::ostream &help() { return std::cout << rang::fg::blue; }
+inline std::ostream &help() { return std::cout << rang::style::reset << rang::fg::blue; }
 
-inline std::ostream &success() { return std::cout << rang::fg::green; }
+inline std::ostream &info() { return std::cout << rang::style::reset << rang::fg::cyan; }
 
-inline std::ostream &warning() { return std::cout << rang::fg::yellow; }
+inline std::ostream &success_bold() { return std::cout << rang::style::bold << rang::fg::green; }
+
+inline std::ostream &warning_bold() { return std::cout << rang::style::bold << rang::fg::yellow; }
 
 }  // namespace print
 

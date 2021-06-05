@@ -38,9 +38,9 @@ void solve_action(Options options) {
     std::unique_ptr<Solver> solver = solver_factory::create(options.solver_name, problem);
     Solution solution = solver->solve();
     if (solution.empty()) {
-        print::warning() << "FALSE" << std::endl;
+        print::warning_bold() << "FALSE" << std::endl;
     } else {
-        print::success() << "TRUE" << std::endl;
+        print::success_bold() << "TRUE" << std::endl;
         if (!options.quiet) {
             solution.print();
         }
