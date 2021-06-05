@@ -11,31 +11,16 @@
 #include "problem/problem.hpp"
 #include "solution/solution.hpp"
 #include "solve_error.hpp"
-#include "solvers/sat_solver.hpp"
-#include "solvers/simple_solver.hpp"
 #include "solvers/solver.hpp"
-
-#ifdef CADICAL
-#include "solvers/sat_utils/cadical_wrapper.hpp"
-#endif
-
-#ifdef CRYPTOMINISAT
-#include "solvers/sat_utils/cryptominisat_wrapper.hpp"
-#endif
+#include "solvers/solver_factory.hpp"
 
 namespace {
-
-const std::string kSimpleSolver = "simple";
-const std::string kCadicalSolver = "cadical";
-const std::string kCryptominisatSolver = "cryptominisat";
-const std::vector<std::string> solver_names = {kSimpleSolver, kCadicalSolver, kCryptominisatSolver};
-// we don't use an enum for solver names because CLI11's error messages for enums are somewhat ugly
 
 struct Options {
     std::vector<std::string> tiles;
     std::string input_file = "";
     std::string image_file = "";
-    std::string solver_name = kSimpleSolver;
+    std::string solver_name = solver_factory::kSimpleSolver;
     bool reflection = false;
     bool quiet = false;
 };
@@ -49,21 +34,7 @@ void solve_action(Options options) {
         print::normal() << problem << std::endl;
     }
 
-    std::unique_ptr<Solver> solver = std::make_unique<SimpleSolver>(problem);
-    if (options.solver_name == kCadicalSolver) {
-#ifdef CADICAL
-        solver = std::make_unique<SatSolver>(problem, std::make_unique<CadicalWrapper>());
-#else
-        throw SolveError("CaDiCaL is not available - it was disabled during compilation.");
-#endif
-    } else if (options.solver_name == kCryptominisatSolver) {
-#ifdef CRYPTOMINISAT
-        solver = std::make_unique<SatSolver>(problem, std::make_unique<CryptominisatWrapper>());
-#else
-        throw SolveError("CryptoMiniSat is not available - it was disabled during compilation.");
-#endif
-    }
-
+    std::unique_ptr<Solver> solver = solver_factory::create(options.solver_name, problem);
     Solution solution = solver->solve();
     if (solution.empty()) {
         print::warning() << "FALSE" << std::endl;
@@ -111,7 +82,7 @@ int main(int argc, char **argv) {
     solve_command
             ->add_option("-b,--backend", options.solver_name,
                          "Selected solver backend (default is " + options.solver_name + ").")
-            ->transform(CLI::IsMember(solver_names));
+            ->transform(CLI::IsMember(solver_factory::solver_names));
 
     solve_command->add_flag(
             "-r,--allow-reflection", options.reflection,
