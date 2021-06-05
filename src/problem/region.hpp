@@ -26,7 +26,9 @@ public:
         return w_ == other.w_ && h_ == other.h_ && matrix_ == other.matrix_;
     };
     inline bool operator<(const Region &other) const { return matrix_ < other.matrix_; };
-    friend std::ostream &operator<<(std::ostream &os, const Region &region);
+
+    void print() const;
+
     inline int get_width() const { return w_; };
     inline int get_height() const { return h_; };
     inline utils::BoolMatrix get_matrix() const { return matrix_; };

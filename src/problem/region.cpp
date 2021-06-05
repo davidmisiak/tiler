@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 
+#include "print.hpp"
 #include "utils.hpp"
 
 Region::Region(int w, int h, utils::BoolMatrix matrix)
@@ -41,18 +42,17 @@ Region Region::reflect(const Region &region) {
     return Region(region.w_, region.h_, reflected);
 }
 
-std::ostream &operator<<(std::ostream &os, const Region &region) {
-    if (region.w_ > 70 || region.h_ > 70) {
-        os << "(too big to show)";
-        return os;
+void Region::print() const {
+    if (w_ > 70 || h_ > 70) {
+        print::normal() << "(too big to show)";
+        return;
     }
-    for (int y = 0; y < region.h_; y++) {
-        if (y > 0) os << '\n';
-        for (int x = 0; x < region.w_; x++) {
-            os << (region.matrix_[y][x] ? 'x' : ' ');
+    for (int y = 0; y < h_; y++) {
+        if (y > 0) print::normal() << '\n';
+        for (int x = 0; x < w_; x++) {
+            print::normal() << (matrix_[y][x] ? 'x' : ' ');
         }
     }
-    return os;
 }
 
 bool Region::has_subregion(int origin_x, int origin_y, const Region &region) const {

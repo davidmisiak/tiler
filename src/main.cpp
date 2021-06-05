@@ -31,7 +31,8 @@ void solve_action(Options options) {
                     ? problem_parser::parse_from_file(options.input_file, options.reflection)
                     : problem_parser::parse(options.tiles, options.reflection);
     if (!options.quiet) {
-        print::normal() << problem << std::endl;
+        problem.print();
+        print::normal() << std::endl;
     }
 
     std::unique_ptr<Solver> solver = solver_factory::create(options.solver_name, problem);
@@ -41,7 +42,7 @@ void solve_action(Options options) {
     } else {
         print::success() << "TRUE" << std::endl;
         if (!options.quiet) {
-            print::normal() << solution;
+            solution.print();
         }
         if (!options.image_file.empty()) {
             solution.save_image(options.image_file, problem);

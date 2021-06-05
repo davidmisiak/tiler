@@ -11,7 +11,8 @@ class Board : public Region {
 public:
     Board() = delete;
     Board(Region region);
-    friend std::ostream &operator<<(std::ostream &os, const Board &board);
+
+    void print() const;
 };
 
 #endif  // TILER_PROBLEM_BOARD_HPP_

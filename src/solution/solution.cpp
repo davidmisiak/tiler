@@ -66,12 +66,12 @@ void Solution::save_image(std::string filepath, Problem problem) {
     file.close();
 }
 
-std::ostream &operator<<(std::ostream &os, const Solution &solution) {
-    for (auto [x, y, region] : solution) {
-        os << "\n" << region << "\n";
-        os << "at (" << x << ", " << y << ")\n";
+void Solution::print() const {
+    for (auto [x, y, region] : *this) {
+        print::normal() << "\n";
+        region.print();
+        print::normal() << "\nat (" << x << ", " << y << ")\n";
     }
-    return os;
 }
 
 const int Solution::kCellSize = 30;

@@ -13,7 +13,8 @@
 class Solution : public std::vector<PlacedRegion> {
 public:
     void save_image(std::string filepath, Problem problem);
-    friend std::ostream &operator<<(std::ostream &os, const Solution &solution);
+
+    void print() const;
 
 private:
     // Size of a cell in pixels (does not matter much, because the generated image is SVG).

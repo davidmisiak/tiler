@@ -4,6 +4,7 @@
 #include <ostream>
 
 #include "parse_error.hpp"
+#include "print.hpp"
 #include "problem/region.hpp"
 
 Tile::Tile(Region region, int count, bool reflection) : count_(count) {
@@ -19,21 +20,20 @@ Tile::Tile(Region region, int count, bool reflection) : count_(count) {
     }
 }
 
-std::ostream &operator<<(std::ostream &os, const Tile &tile) {
-    switch (tile.count_) {
+void Tile::print() const {
+    switch (count_) {
         case -1:
-            os << "Unlimited number of:";
+            print::normal() << "Unlimited number of:";
             break;
         case 1:
-            os << "1 piece of:";
+            print::normal() << "1 piece of:";
             break;
         default:
-            os << tile.count_ << " pieces of:";
+            print::normal() << count_ << " pieces of:";
             break;
     }
-    os << "\n" << tile.regions_[0];
-    if (tile.regions_.size() > 1) {
-        os << "\n(" << tile.regions_.size() << " possible rotations/reflections)";
+    regions_[0].print();
+    if (regions_.size() > 1) {
+        print::normal() << "\n(" << regions_.size() << " possible rotations/reflections)";
     }
-    return os;
 }
