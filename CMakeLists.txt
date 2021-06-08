@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.12)
 project(Tiler)
 set(CMAKE_CXX_STANDARD 17)
 
+# default build type is Release
 if (NOT CMAKE_BUILD_TYPE OR CMAKE_BUILD_TYPE STREQUAL "")
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING "" FORCE)
 endif()
