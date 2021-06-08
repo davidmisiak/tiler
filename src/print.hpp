@@ -20,9 +20,6 @@ inline std::ostream &normal_bold() { return std::cout << rang::style::reset << r
 // Error messages.
 inline std::ostream &error() { return std::cout << rang::style::reset << rang::fg::red; }
 
-// Help text (--help flag).
-inline std::ostream &help() { return std::cout << rang::style::reset << rang::fg::blue; }
-
 // Board/tile shape description.
 inline std::ostream &shape() { return std::cout << rang::style::reset << rang::fg::cyan; }
 

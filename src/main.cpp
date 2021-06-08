@@ -110,7 +110,7 @@ int main(int argc, char **argv) {
     try {
         app.parse(argc, argv);
     } catch (const CLI::ParseError &e) {
-        e.get_exit_code() == 0 ? print::help() : print::error();
+        e.get_exit_code() == 0 ? print::normal() : print::error();
         return app.exit(e);
     }
 
