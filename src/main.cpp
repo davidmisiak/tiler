@@ -21,16 +21,17 @@ struct Options {
     std::string input_file = "";
     std::string image_file = "";
     std::string solver_name = solver_factory::kSimpleSolver;
-    bool reflection = false;
-    bool quiet = false;
+    bool allow_reflection = false;
+    bool print_problem = false;
+    bool print_solution = false;
 };
 
 void solve_action(Options options) {
     Problem problem =
             options.tiles.empty()
-                    ? problem_parser::parse_from_file(options.input_file, options.reflection)
-                    : problem_parser::parse(options.tiles, options.reflection);
-    if (!options.quiet) {
+                    ? problem_parser::parse_from_file(options.input_file, options.allow_reflection)
+                    : problem_parser::parse(options.tiles, options.allow_reflection);
+    if (options.print_problem) {
         problem.print();
         print::normal() << std::endl;
     }
@@ -38,15 +39,16 @@ void solve_action(Options options) {
     std::unique_ptr<Solver> solver = solver_factory::create(options.solver_name, problem);
     Solution solution = solver->solve();
     if (solution.empty()) {
-        print::warning_bold() << "FALSE\n" << std::endl;
-    } else {
-        print::success_bold() << "TRUE\n" << std::endl;
-        if (!options.quiet) {
-            solution.print();
-        }
-        if (!options.image_file.empty()) {
-            solution.save_image(options.image_file, problem);
-        }
+        print::warning_bold() << "FALSE\n";
+        return;
+    }
+    print::success_bold() << "TRUE\n";
+    if (options.print_solution) {
+        print::normal() << "\n";
+        solution.print();
+    }
+    if (!options.image_file.empty()) {
+        solution.save_image(options.image_file, problem);
     }
 }
 
@@ -68,15 +70,15 @@ int main(int argc, char **argv) {
             "Definition of the board and tile shapes.\n" + help_strings::kInputFormats);
     tiles_option->expected(-2);  // at least 2 - one board and one or more tile shapes
     CLI::Option *input_file_option =
-            input_group->add_option("-f,--file", options.input_file,
+            input_group->add_option("-f,--from-file", options.input_file,
                                     "Path to file containing the problem assignment.\n"
                                     "Same input format, but shapes must be separated\n"
                                     "by an empty line and the optional \"N:\" may be\n"
                                     "on a separate line.");
     input_file_option->check(CLI::ExistingFile);
 
-    solve_command->add_option("-s,--save", options.image_file,
-                              "Path to file where the solution (if it exists)\n"
+    solve_command->add_option("-s,--save-image", options.image_file,
+                              "Path to the file where the solution (if it exists)\n"
                               "will be saved as an SVG image. If the file exists,\n"
                               "it will be overwritten.");
 
@@ -86,12 +88,16 @@ int main(int argc, char **argv) {
             ->transform(CLI::IsMember(solver_factory::solver_names));
 
     solve_command->add_flag(
-            "-r,--allow-reflection", options.reflection,
+            "-r,--allow-reflection", options.allow_reflection,
             "If present, the solver will be allowed to reflect\n(flip over) the tiles.");
 
     solve_command->add_flag(
-            "-q,--quiet", options.quiet,
-            "If present, the problem summarization before\nsolving will be silenced.");
+            "-p,--print-problem", options.print_problem,
+            "If present, the problem summarization will be\nprinted before solving.");
+
+    solve_command->add_flag(
+            "-c,--print-solution", options.print_solution,
+            "If present, the solution (if it exists) will be\nprinted after solving.");
 
     // list command definition
     CLI::App *list_command = app.add_subcommand("list", "List all named tiles");

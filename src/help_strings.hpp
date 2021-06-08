@@ -6,11 +6,11 @@
 namespace help_strings {
 
 const std::string kNamedTilesList =
-        "Monomino, Domino, Trominoes                                      \n"
+        "Monomino          Domino             Trominoes                   \n"
         "                                                                 \n"
-        " 1: x    2: x    3I: x    3L: x                                  \n"
-        "            x        x        xx                                 \n"
-        "                     x                                           \n"
+        " 1: x             2: x               3I: x    3L: x              \n"
+        "                     x                   x        xx             \n"
+        "                                         x                       \n"
         "                                                                 \n"
         "Tetrominoes                                                      \n"
         "                                                                 \n"
@@ -40,9 +40,10 @@ const std::string kNamedTilesList =
 const std::string kInputFormats =
         "A shape has to be in one of these formats:\n"
         "- name, eg. \"3L\" (see the 'list' command)\n"
-        "- dimensions, eg. \"2x4\"(only for rectangles)\n"
+        "- dimensions, eg. \"2x4\" (only for rectangles)\n"
         "- map, eg. \"  xx \"\n"
         "           \" xx  \" (useful with the -f option)\n"
+        "- perimeter, eg. \"DDRUUL\" (no crossing allowed)\n"
         "You should provide list of shapes, where the\n"
         "first one represents the board and the others\n"
         "the tiles. Tile shape may be prefixed with \"N:\"\n"
@@ -63,19 +64,21 @@ const std::string kExampleInput =
         "- board in the \"5P\" shape (3 by 2 without one corner, see the 'list'\n"
         "  command), one 1 by 1 tile and two 2 by 2 tiles\n"
         "\n"
-        "[start of 'problem.txt' file]\n"
+        "========== start of 'problem.txt' file ==========\n"
         "10x10\n"
         "\n"
         "3I\n"
         "\n"
         "5:6x1\n"
         "\n"
+        "10:LLUURRDD\n"
+        "\n"
         "5:\n"
         "xxxxx\n"
         "xxxx\n"
-        "[end of 'problem.txt' file]\n"
-        "- board 10 by 10, unlimited number of 3 by 1 tiles, five 6 by 1 tiles\n"
-        "  and five 5 by 2 tiles without one corner\n"
+        "=========== end of 'problem.txt' file ===========\n"
+        "- board 10 by 10, unlimited number of 3 by 1 tiles, five 6 by 1 tiles,\n"
+        "  ten 2 by 2 tiles and five 5 by 2 tiles without one corner\n"
         "  - usage: 'tiler solve -f problem.txt'\n";
 
 }  // namespace help_strings
