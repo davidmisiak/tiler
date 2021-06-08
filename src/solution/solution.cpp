@@ -21,7 +21,7 @@ std::string random_color() {
 
 }  // namespace
 
-void Solution::save_image(std::string filepath, Problem problem) {
+void Solution::save_image(std::string filepath, Problem problem) const {
     // compute the color of each region in the solution
     std::map<Region, std::string> colors;
     // each tile gets a random color (same for each rotation/reflection)
