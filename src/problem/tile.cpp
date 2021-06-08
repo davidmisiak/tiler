@@ -1,7 +1,6 @@
 #include "problem/tile.hpp"
 
 #include <algorithm>
-#include <ostream>
 
 #include "parse_error.hpp"
 #include "print.hpp"
@@ -21,19 +20,22 @@ Tile::Tile(Region region, int count, bool reflection) : count_(count) {
 }
 
 void Tile::print() const {
+    regions_[0].print();
     switch (count_) {
         case -1:
-            print::normal() << "Unlimited number of:";
+            print::normal() << "unlimited pieces";
             break;
         case 1:
-            print::normal() << "1 piece of:";
+            print::normal() << "1 piece";
             break;
         default:
-            print::normal() << count_ << " pieces of:";
+            print::normal() << count_ << " pieces";
             break;
     }
-    regions_[0].print();
-    if (regions_.size() > 1) {
-        print::normal() << "\n(" << regions_.size() << " possible rotations/reflections)";
+    print::normal() << ", " << regions_.size();
+    if (regions_.size() == 1) {
+        print::normal() << " rotation/reflection\n";
+    } else {
+        print::normal() << " rotations/reflections\n";
     }
 }

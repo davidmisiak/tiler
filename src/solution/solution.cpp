@@ -67,10 +67,11 @@ void Solution::save_image(std::string filepath, Problem problem) {
 }
 
 void Solution::print() const {
+    print::normal_bold() << "SOLUTION";
     for (auto [x, y, region] : *this) {
         print::normal() << "\n";
         region.print();
-        print::normal() << "\nat (" << x << ", " << y << ")\n";
+        print::normal() << "at (" << x << ", " << y << ")\n";
     }
 }
 

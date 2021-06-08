@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include <map>
-#include <ostream>
 #include <string>
 #include <vector>
 
@@ -44,14 +43,14 @@ Region Region::reflect(const Region &region) {
 
 void Region::print() const {
     if (w_ > 70 || h_ > 70) {
-        print::normal() << "(too big to show)";
+        print::normal() << "(too big to show)\n";
         return;
     }
     for (int y = 0; y < h_; y++) {
-        if (y > 0) print::normal() << '\n';
         for (int x = 0; x < w_; x++) {
-            print::normal() << (matrix_[y][x] ? 'x' : ' ');
+            print::shape() << (matrix_[y][x] ? 'x' : ' ');
         }
+        print::normal() << "\n";
     }
 }
 

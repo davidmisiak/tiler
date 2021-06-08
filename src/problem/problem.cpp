@@ -1,6 +1,5 @@
 #include "problem/problem.hpp"
 
-#include <iostream>
 #include <vector>
 
 #include "print.hpp"
@@ -11,10 +10,9 @@ Problem::Problem(Board board, std::vector<Tile> tiles) : board_(board), tiles_(t
 
 void Problem::print() const {
     board_.print();
-    print::normal() << "\n\nTILES";
+    print::normal_bold() << "\nTILES";
     for (Tile tile : tiles_) {
-        print::normal() << "\n\n";
+        print::normal() << "\n";
         tile.print();
     }
-    print::normal() << std::endl;
 }
