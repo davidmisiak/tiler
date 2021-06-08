@@ -6,12 +6,15 @@
 #include "solvers/sat_utils/sat_utils.hpp"
 
 // Interaface for SAT solver wrappers. Abstracts away specific API's of SAT solvers when writing
-// solving algorithms.
+// solving algorithms. Represents a signle CNF formula which will be solved.
 class SatWrapper {
 public:
     virtual ~SatWrapper() = default;
 
+    // Create a new literal.
     inline sat_utils::Lit new_lit() { return sat_utils::Lit(next_var_++); }
+
+    // Add a clause to the CNF formula.
     inline void add_clause(sat_utils::Clause clause) { clauses_.push_back(clause); }
 
     // Returns true if a solution exists, false if it doesn't (and throws a SolveError when the SAT

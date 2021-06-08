@@ -20,6 +20,16 @@ SatSolver::SatSolver(Problem problem, std::unique_ptr<SatWrapper> sat_wrapper)
     }
 }
 
+// For every possible position and orientation of every available piece of every tile, there is
+// one logical variable representing "this piece is placed on the board on this position with this
+// orietation".
+// For each piece of each tile, there is a set of clauses that guarantee that at most one of the
+// piece's variables is true (ie. each piece is placed on the board at most once).
+// For each cell of the board, there is a set of clauses that guarantee that exactly one of the tile
+// pieces covers this cell.
+// Put together, the CNF formula is satisfiable if and only if the board can be tiled.
+// There are some symmetries that should be broken in the future (eg. the order of pieces) to
+// improve the SAT solving performance.
 Solution SatSolver::solve() {
     using sat_utils::Lit, sat_utils::Clause;
 
