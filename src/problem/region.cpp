@@ -12,12 +12,11 @@ Region::Region(int w, int h, utils::BoolMatrix matrix)
         : w_(w), h_(h), matrix_(matrix), size_(0), top_left_x_(-1), top_left_y_(-1) {
     for (int y = 0; y < h_; y++) {
         for (int x = 0; x < w_; x++) {
-            if (matrix_[y][x]) {
-                size_++;
-                if (top_left_x_ == -1) {
-                    top_left_x_ = x;
-                    top_left_y_ = y;
-                }
+            if (!matrix_[y][x]) continue;
+            size_++;
+            if (top_left_x_ == -1) {
+                top_left_x_ = x;
+                top_left_y_ = y;
             }
         }
     }

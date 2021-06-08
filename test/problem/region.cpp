@@ -11,15 +11,15 @@
 // It should be tested thoroughly in it's own tests.
 
 TEST_CASE("Region can be rotated and reflected") {
-    const auto& rp = region_parser::parse;
+    using region_parser::parse;
 
-    REQUIRE(Region::rotate(rp("x")) == rp("x"));
-    REQUIRE(Region::rotate(rp("xx")) == rp("x\nx"));
-    REQUIRE(Region::rotate(rp("xx\nx\nx")) == rp("x\nxxx"));
+    REQUIRE(Region::rotate(parse("x")) == parse("x"));
+    REQUIRE(Region::rotate(parse("xx")) == parse("x\nx"));
+    REQUIRE(Region::rotate(parse("xx\nx\nx")) == parse("x\nxxx"));
 
-    REQUIRE(Region::reflect(rp("x")) == rp("x"));
-    REQUIRE(Region::reflect(rp("xx")) == rp("xx"));
-    REQUIRE(Region::reflect(rp("xx\nx\nx")) == rp("xx\n x\n x"));
+    REQUIRE(Region::reflect(parse("x")) == parse("x"));
+    REQUIRE(Region::reflect(parse("xx")) == parse("xx"));
+    REQUIRE(Region::reflect(parse("xx\nx\nx")) == parse("xx\n x\n x"));
 }
 
 TEST_CASE("Region size and top-left getters work") {
