@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "help_strings.hpp"
 #include "print.hpp"
 #include "utils.hpp"
 
@@ -41,7 +42,7 @@ Region Region::reflect(const Region &region) {
 }
 
 void Region::print() const {
-    if (w_ > 70 || h_ > 70) {
+    if (w_ > help_strings::kMaxWidth || h_ > help_strings::kMaxWidth) {
         print::normal() << "(too big to show)\n";
         return;
     }

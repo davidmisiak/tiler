@@ -5,6 +5,10 @@
 
 namespace help_strings {
 
+// Maximum width of line content. Not used for automatic word wrapping in help texts, but useful
+// elsewhere.
+const int kMaxWidth = 80;
+
 const std::string kNamedTilesList =
         "Monomino          Domino             Trominoes                   \n"
         "                                                                 \n"
