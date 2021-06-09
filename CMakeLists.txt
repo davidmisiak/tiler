@@ -62,3 +62,11 @@ if(BUILD_TESTS)
     add_executable(tilertest ${TEST_SOURCE})
     target_link_libraries(tilertest tilerlib ${CONAN_LIBS})
 endif()
+
+# build benchmark executable
+option(BUILD_BENCHMARK "Build the benchmark executable (from the 'benchmark' directory)." OFF)
+if(BUILD_BENCHMARK)
+    file(GLOB_RECURSE BENCHMARK_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/benchmark/*.cpp")
+    add_executable(tilerbm ${BENCHMARK_SOURCE})
+    target_link_libraries(tilerbm tilerlib ${CONAN_LIBS})
+endif()
