@@ -12,19 +12,19 @@ lint:
   stage: lint
   script:
     - apt-get install --yes clang-format cppcheck
-    - ./scripts/lint.sh
+    - ./scripts/dev-lint.sh
   timeout: 3 minutes
 
 build:
   stage: build
   script:
     - DEBIAN_FRONTEND=noninteractive apt-get install --yes python3-pip cmake libcryptominisat5-dev git make
-    - pip install conan
+    - pip3 install conan
     - conan profile new default --detect
     - conan profile update settings.compiler.libcxx=libstdc++11 default
     - ./scripts/build-cadical.sh
-    - ./scripts/setup.sh
-    - cmake --build build
+    - ./scripts/dev-setup.sh
+    - ./scripts/dev-build.sh
   artifacts:
     paths:
       - build
@@ -34,6 +34,23 @@ test:
   stage: test
   script:
     - apt-get install --yes cmake libcryptominisat5-dev
-    - cd build
-    - ctest --verbose
+    - ./scripts/dev-test.sh
   timeout: 3 minutes
+
+release:
+  when: manual
+  image: ubuntu:20.04
+  stage: lint
+  script:
+    - DEBIAN_FRONTEND=noninteractive apt-get install --yes python3-pip cmake git make
+    - pip3 install conan
+    - conan profile new default --detect
+    - conan profile update settings.compiler.libcxx=libstdc++11 default
+    - ./scripts/build-cadical.sh
+    - ./scripts/build-cryptominisat.sh
+    - ./scripts/release-setup.sh
+    - ./scripts/release-build.sh
+  artifacts:
+    paths:
+      - release/bin/tiler
+  timeout: 8 minutes

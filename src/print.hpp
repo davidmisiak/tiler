@@ -11,15 +11,24 @@
 // print::normal() before exiting the program, this solution works fine as well.
 namespace print {
 
+// Normal text.
 inline std::ostream &normal() { return std::cout << rang::style::reset; }
 
-inline std::ostream &error() { return std::cout << rang::fg::red; }
+// Headings.
+inline std::ostream &normal_bold() { return std::cout << rang::style::reset << rang::style::bold; }
 
-inline std::ostream &help() { return std::cout << rang::fg::blue; }
+// Error messages.
+inline std::ostream &error() { return std::cout << rang::style::reset << rang::fg::red; }
 
-inline std::ostream &success() { return std::cout << rang::fg::green; }
+// Board/tile shape description.
+inline std::ostream &shape() { return std::cout << rang::style::reset << rang::fg::cyan; }
 
-inline std::ostream &warning() { return std::cout << rang::fg::yellow; }
+// Solving stats.
+inline std::ostream &stats() { return std::cout << rang::style::reset << rang::fg::magenta; }
+
+inline std::ostream &success_bold() { return std::cout << rang::style::bold << rang::fg::green; }
+
+inline std::ostream &warning_bold() { return std::cout << rang::style::bold << rang::fg::yellow; }
 
 }  // namespace print
 

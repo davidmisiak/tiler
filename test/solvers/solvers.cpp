@@ -1,5 +1,4 @@
 #include <algorithm>
-#include <memory>
 #include <string>
 #include <tuple>
 #include <vector>
@@ -9,17 +8,7 @@
 #include "problem/problem.hpp"
 #include "problem/tile.hpp"
 #include "solution/solution.hpp"
-#include "solvers/sat_solver.hpp"
-#include "solvers/simple_solver.hpp"
-#include "solvers/solver.hpp"
-
-#ifdef CADICAL
-#include "solvers/sat_utils/cadical_wrapper.hpp"
-#endif
-
-#ifdef CRYPTOMINISAT
-#include "solvers/sat_utils/cryptominisat_wrapper.hpp"
-#endif
+#include "solvers/solver_factory.hpp"
 
 // Problem parser is used here because of readability.
 // It should be tested thoroughly in it's own tests.
@@ -91,19 +80,10 @@ TEST_CASE("Solvers return correct solutions") {
             {{"5V", "3I", "1:1"}, true, false},
     };
 
-    using std::make_unique;
     for (auto [problem_str, reflection, result] : problems) {
         Problem problem = problem_parser::parse(problem_str, reflection);
-        std::vector<std::unique_ptr<Solver>> solvers;
-        solvers.push_back(make_unique<SimpleSolver>(problem));
-#ifdef CADICAL
-        solvers.push_back(make_unique<SatSolver>(problem, make_unique<CadicalWrapper>()));
-#endif
-#ifdef CRYPTOMINISAT
-        solvers.push_back(make_unique<SatSolver>(problem, make_unique<CryptominisatWrapper>()));
-#endif
-        for (auto& solver : solvers) {
-            Solution solution = solver->solve();
+        for (std::string solver_name : solver_factory::solver_names) {
+            Solution solution = solver_factory::create(solver_name, problem)->solve();
             REQUIRE(check_solution(problem, solution, result));
         }
     }

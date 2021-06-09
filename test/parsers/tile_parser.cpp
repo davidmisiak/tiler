@@ -66,12 +66,13 @@ TEST_CASE("Limited tiles are parsed") {
 }
 
 TEST_CASE("Incorrectly defined tiles are not parsed") {
-    REQUIRE_THROWS_AS(tile_parser::parse(" ", false), ParseError);
-    REQUIRE_THROWS_AS(tile_parser::parse(":", false), ParseError);
-    REQUIRE_THROWS_AS(tile_parser::parse("1:", false), ParseError);
-    REQUIRE_THROWS_AS(tile_parser::parse(":x", false), ParseError);
-    REQUIRE_THROWS_AS(tile_parser::parse("1::x", false), ParseError);
-    REQUIRE_THROWS_AS(tile_parser::parse("1:x:x", false), ParseError);
-    REQUIRE_THROWS_AS(tile_parser::parse("1\n:x", false), ParseError);
-    REQUIRE_THROWS_AS(tile_parser::parse("0:x", false), ParseError);
+    using tile_parser::parse;
+    REQUIRE_THROWS_AS(parse(" ", false), ParseError);
+    REQUIRE_THROWS_AS(parse(":", false), ParseError);
+    REQUIRE_THROWS_AS(parse("1:", false), ParseError);
+    REQUIRE_THROWS_AS(parse(":x", false), ParseError);
+    REQUIRE_THROWS_AS(parse("1::x", false), ParseError);
+    REQUIRE_THROWS_AS(parse("1:x:x", false), ParseError);
+    REQUIRE_THROWS_AS(parse("1\n:x", false), ParseError);
+    REQUIRE_THROWS_AS(parse("0:x", false), ParseError);
 }

@@ -2,37 +2,35 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Setup",
+            "label": "Dev: Lint",
             "type": "shell",
-            "command": "./scripts/setup.sh",
+            "command": "./scripts/dev-lint.sh",
         },
         {
-            "label": "Lint",
+            "label": "Dev: Setup",
             "type": "shell",
-            "command": "./scripts/lint.sh",
+            "command": "./scripts/dev-setup.sh",
         },
         {
-            "label": "Build",
+            "label": "Dev: Build",
             "type": "shell",
-            "command": "cmake --build build",
+            "command": "./scripts/dev-build.sh",
         },
         {
-            "label": "Run",
+            "label": "Dev: Test",
             "type": "shell",
-            "dependsOn": "Build",
-            "command": "./build/bin/tiler",
-            "args": ["solve", "-f", "01.problem", "-s", "solution.svg"],
+            "dependsOn": "Dev: Build",
+            "command": "./scripts/dev-test.sh",
         },
         {
-            "label": "Test",
+            "label": "Release: Setup",
             "type": "shell",
-            "dependsOn": "Build",
-            "command": "cd build && ctest --verbose",
+            "command": "./scripts/release-setup.sh",
         },
         {
-            "label": "Release",
+            "label": "Release: Build",
             "type": "shell",
-            "command": "./scripts/release.sh",
+            "command": "./scripts/release-build.sh",
         },
     ]
 }

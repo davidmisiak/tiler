@@ -11,70 +11,45 @@
 #include "problem/problem.hpp"
 #include "solution/solution.hpp"
 #include "solve_error.hpp"
-#include "solvers/sat_solver.hpp"
-#include "solvers/simple_solver.hpp"
 #include "solvers/solver.hpp"
-
-#ifdef CADICAL
-#include "solvers/sat_utils/cadical_wrapper.hpp"
-#endif
-
-#ifdef CRYPTOMINISAT
-#include "solvers/sat_utils/cryptominisat_wrapper.hpp"
-#endif
+#include "solvers/solver_factory.hpp"
 
 namespace {
-
-const std::string kSimpleSolver = "simple";
-const std::string kCadicalSolver = "cadical";
-const std::string kCryptominisatSolver = "cryptominisat";
-const std::vector<std::string> solver_names = {kSimpleSolver, kCadicalSolver, kCryptominisatSolver};
-// we don't use an enum for solver names because CLI11's error messages for enums are somewhat ugly
 
 struct Options {
     std::vector<std::string> tiles;
     std::string input_file = "";
     std::string image_file = "";
-    std::string solver_name = kSimpleSolver;
-    bool reflection = false;
-    bool quiet = false;
+    std::string solver_name = solver_factory::kSimpleSolver;
+    bool allow_reflection = false;
+    bool print_problem = false;
+    bool print_solution = false;
+    bool print_stats = false;
 };
 
 void solve_action(Options options) {
     Problem problem =
             options.tiles.empty()
-                    ? problem_parser::parse_from_file(options.input_file, options.reflection)
-                    : problem_parser::parse(options.tiles, options.reflection);
-    if (!options.quiet) {
-        print::normal() << problem << std::endl;
+                    ? problem_parser::parse_from_file(options.input_file, options.allow_reflection)
+                    : problem_parser::parse(options.tiles, options.allow_reflection);
+    if (options.print_problem) {
+        problem.print();
+        print::normal() << std::endl;
     }
 
-    std::unique_ptr<Solver> solver = std::make_unique<SimpleSolver>(problem);
-    if (options.solver_name == kCadicalSolver) {
-#ifdef CADICAL
-        solver = std::make_unique<SatSolver>(problem, std::make_unique<CadicalWrapper>());
-#else
-        throw SolveError("CaDiCaL is not available - it was disabled during compilation.");
-#endif
-    } else if (options.solver_name == kCryptominisatSolver) {
-#ifdef CRYPTOMINISAT
-        solver = std::make_unique<SatSolver>(problem, std::make_unique<CryptominisatWrapper>());
-#else
-        throw SolveError("CryptoMiniSat is not available - it was disabled during compilation.");
-#endif
-    }
-
-    Solution solution = solver->solve();
+    std::unique_ptr<Solver> solver = solver_factory::create(options.solver_name, problem);
+    Solution solution = solver->solve(options.print_stats);
     if (solution.empty()) {
-        print::warning() << "FALSE" << std::endl;
-    } else {
-        print::success() << "TRUE" << std::endl;
-        if (!options.quiet) {
-            print::normal() << solution;
-        }
-        if (!options.image_file.empty()) {
-            solution.save_image(options.image_file, problem);
-        }
+        print::warning_bold() << "FALSE\n";
+        return;
+    }
+    print::success_bold() << "TRUE\n";
+    if (options.print_solution) {
+        print::normal() << "\n";
+        solution.print();
+    }
+    if (!options.image_file.empty()) {
+        solution.save_image(options.image_file, problem);
     }
 }
 
@@ -96,30 +71,37 @@ int main(int argc, char **argv) {
             "Definition of the board and tile shapes.\n" + help_strings::kInputFormats);
     tiles_option->expected(-2);  // at least 2 - one board and one or more tile shapes
     CLI::Option *input_file_option =
-            input_group->add_option("-f,--file", options.input_file,
+            input_group->add_option("-f,--from-file", options.input_file,
                                     "Path to file containing the problem assignment.\n"
                                     "Same input format, but shapes must be separated\n"
                                     "by an empty line and the optional \"N:\" may be\n"
                                     "on a separate line.");
     input_file_option->check(CLI::ExistingFile);
 
-    solve_command->add_option("-s,--save", options.image_file,
-                              "Path to file where the solution (if it exists)\n"
+    solve_command->add_option("-s,--save-image", options.image_file,
+                              "Path to the file where the solution (if it exists)\n"
                               "will be saved as an SVG image. If the file exists,\n"
                               "it will be overwritten.");
 
     solve_command
             ->add_option("-b,--backend", options.solver_name,
                          "Selected solver backend (default is " + options.solver_name + ").")
-            ->transform(CLI::IsMember(solver_names));
+            ->transform(CLI::IsMember(solver_factory::solver_names));
 
     solve_command->add_flag(
-            "-r,--allow-reflection", options.reflection,
+            "-r,--allow-reflection", options.allow_reflection,
             "If present, the solver will be allowed to reflect\n(flip over) the tiles.");
 
     solve_command->add_flag(
-            "-q,--quiet", options.quiet,
-            "If present, the problem summarization before\nsolving will be silenced.");
+            "-p,--print-problem", options.print_problem,
+            "If present, the problem summarization will be\nprinted before solving.");
+
+    solve_command->add_flag(
+            "-c,--print-solution", options.print_solution,
+            "If present, the solution (if it exists) will be\nprinted after solving.");
+
+    solve_command->add_flag("-a,--print-stats", options.print_stats,
+                            "If present, additional solver stats will be\nprinted.");
 
     // list command definition
     CLI::App *list_command = app.add_subcommand("list", "List all named tiles");
@@ -132,7 +114,7 @@ int main(int argc, char **argv) {
     try {
         app.parse(argc, argv);
     } catch (const CLI::ParseError &e) {
-        e.get_exit_code() == 0 ? print::help() : print::error();
+        e.get_exit_code() == 0 ? print::normal() : print::error();
         return app.exit(e);
     }
 

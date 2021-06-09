@@ -21,7 +21,7 @@ std::string random_color() {
 
 }  // namespace
 
-void Solution::save_image(std::string filepath, Problem problem) {
+void Solution::save_image(std::string filepath, Problem problem) const {
     // compute the color of each region in the solution
     std::map<Region, std::string> colors;
     // each tile gets a random color (same for each rotation/reflection)
@@ -66,12 +66,13 @@ void Solution::save_image(std::string filepath, Problem problem) {
     file.close();
 }
 
-std::ostream &operator<<(std::ostream &os, const Solution &solution) {
-    for (auto [x, y, region] : solution) {
-        os << "\n" << region << "\n";
-        os << "at (" << x << ", " << y << ")\n";
+void Solution::print() const {
+    print::normal_bold() << "SOLUTION";
+    for (auto [x, y, region] : *this) {
+        print::normal() << "\n";
+        region.print();
+        print::normal() << "at (" << x << ", " << y << ")\n";
     }
-    return os;
 }
 
 const int Solution::kCellSize = 30;

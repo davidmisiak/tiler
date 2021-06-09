@@ -1,13 +1,12 @@
 #include "problem/board.hpp"
 
-#include <ostream>
-
+#include "print.hpp"
 #include "problem/region.hpp"
 
 Board::Board(Region region) : Region(region) {}
 
-std::ostream &operator<<(std::ostream &os, const Board &board) {
-    os << "BOARD\n" << static_cast<Region>(board);
-    os << "\n(fits inside " << board.get_width() << "x" << board.get_height() << " grid)";
-    return os;
+void Board::print() const {
+    print::normal_bold() << "BOARD\n";
+    Region::print();
+    print::normal() << "(fits inside " << get_width() << "x" << get_height() << " grid)\n";
 }

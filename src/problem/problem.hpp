@@ -13,7 +13,7 @@ public:
     Problem() = delete;
     Problem(Board board, std::vector<Tile> tiles);
 
-    friend std::ostream &operator<<(std::ostream &os, const Problem &problem);
+    void print() const;
 
     Board board_;
     std::vector<Tile> tiles_;

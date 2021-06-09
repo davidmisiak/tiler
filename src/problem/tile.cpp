@@ -1,9 +1,9 @@
 #include "problem/tile.hpp"
 
 #include <algorithm>
-#include <ostream>
 
 #include "parse_error.hpp"
+#include "print.hpp"
 #include "problem/region.hpp"
 
 Tile::Tile(Region region, int count, bool reflection) : count_(count) {
@@ -19,21 +19,23 @@ Tile::Tile(Region region, int count, bool reflection) : count_(count) {
     }
 }
 
-std::ostream &operator<<(std::ostream &os, const Tile &tile) {
-    switch (tile.count_) {
+void Tile::print() const {
+    regions_[0].print();
+    switch (count_) {
         case -1:
-            os << "Unlimited number of:";
+            print::normal() << "unlimited pieces";
             break;
         case 1:
-            os << "1 piece of:";
+            print::normal() << "1 piece";
             break;
         default:
-            os << tile.count_ << " pieces of:";
+            print::normal() << count_ << " pieces";
             break;
     }
-    os << "\n" << tile.regions_[0];
-    if (tile.regions_.size() > 1) {
-        os << "\n(" << tile.regions_.size() << " possible rotations/reflections)";
+    print::normal() << ", " << regions_.size();
+    if (regions_.size() == 1) {
+        print::normal() << " rotation/reflection\n";
+    } else {
+        print::normal() << " rotations/reflections\n";
     }
-    return os;
 }

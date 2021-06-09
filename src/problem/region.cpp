@@ -2,22 +2,22 @@
 
 #include <algorithm>
 #include <map>
-#include <ostream>
 #include <string>
 #include <vector>
 
+#include "help_strings.hpp"
+#include "print.hpp"
 #include "utils.hpp"
 
 Region::Region(int w, int h, utils::BoolMatrix matrix)
         : w_(w), h_(h), matrix_(matrix), size_(0), top_left_x_(-1), top_left_y_(-1) {
     for (int y = 0; y < h_; y++) {
         for (int x = 0; x < w_; x++) {
-            if (matrix_[y][x]) {
-                size_++;
-                if (top_left_x_ == -1) {
-                    top_left_x_ = x;
-                    top_left_y_ = y;
-                }
+            if (!matrix_[y][x]) continue;
+            size_++;
+            if (top_left_x_ == -1) {
+                top_left_x_ = x;
+                top_left_y_ = y;
             }
         }
     }
@@ -41,18 +41,17 @@ Region Region::reflect(const Region &region) {
     return Region(region.w_, region.h_, reflected);
 }
 
-std::ostream &operator<<(std::ostream &os, const Region &region) {
-    if (region.w_ > 70 || region.h_ > 70) {
-        os << "(too big to show)";
-        return os;
+void Region::print() const {
+    if (w_ > help_strings::kMaxWidth || h_ > help_strings::kMaxWidth) {
+        print::normal() << "(too big to show)\n";
+        return;
     }
-    for (int y = 0; y < region.h_; y++) {
-        if (y > 0) os << '\n';
-        for (int x = 0; x < region.w_; x++) {
-            os << (region.matrix_[y][x] ? 'x' : ' ');
+    for (int y = 0; y < h_; y++) {
+        for (int x = 0; x < w_; x++) {
+            print::shape() << (matrix_[y][x] ? 'x' : ' ');
         }
+        print::normal() << "\n";
     }
-    return os;
 }
 
 bool Region::has_subregion(int origin_x, int origin_y, const Region &region) const {
@@ -120,11 +119,13 @@ std::vector<utils::Edge> Region::get_edges() const {
 }
 
 void Region::update_top_left(int from_x, int from_y) {
-    if (top_left_y_ < from_y || (top_left_y_ == from_y && top_left_x_ < from_x)) {
-        return;
+    if (top_left_x_ != -1) {
+        if (top_left_y_ < from_y || (top_left_y_ == from_y && top_left_x_ < from_x)) {
+            return;
+        }
     }
     for (int y = from_y; y < h_; y++) {
-        for (int x = 0 /* sic */; x < w_; x++) {
+        for (int x = (y == from_y) ? from_x : 0; x < w_; x++) {
             if (matrix_[y][x]) {
                 top_left_x_ = x;
                 top_left_y_ = y;

@@ -18,10 +18,10 @@ public:
     // rotations of the reflected shape. The value -1 of `count` means infinity.
     Tile(Region region, int count, bool reflection);
 
-    friend std::ostream &operator<<(std::ostream &os, const Tile &tile);
+    void print() const;
 
-    inline int get_size() { return regions_.begin()->get_size(); };
-    inline int get_count() { return count_; };
+    inline int get_size() const { return regions_.begin()->get_size(); };
+    inline int get_count() const { return count_; };
 
     // Adds `d` to the cell count (`d` may be negative). If the cell count is infinity, no
     // modification is performed.

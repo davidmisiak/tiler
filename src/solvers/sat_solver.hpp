@@ -14,7 +14,7 @@
 class SatSolver : public Solver {
 public:
     explicit SatSolver(Problem problem, std::unique_ptr<SatWrapper> sat_wrapper);
-    Solution solve() override;
+    Solution solve(bool print_stats = false) override;
 
 private:
     // Adds clauses that guarantee that at most one of `literals` will be true. Creates new utility

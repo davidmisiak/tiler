@@ -45,12 +45,11 @@ std::tuple<int, int, utils::BoolMatrix> utils::remove_margins(int w, int h,
     int min_y = h;
     for (int y = 0; y < h; y++) {
         for (int x = 0; x < w; x++) {
-            if (matrix[y][x]) {
-                max_x = std::max(max_x, x);
-                min_x = std::min(min_x, x);
-                max_y = std::max(max_y, y);
-                min_y = std::min(min_y, y);
-            }
+            if (!matrix[y][x]) continue;
+            max_x = std::max(max_x, x);
+            min_x = std::min(min_x, x);
+            max_y = std::max(max_y, y);
+            min_y = std::min(min_y, y);
         }
     }
     utils::BoolMatrix trimmed;
