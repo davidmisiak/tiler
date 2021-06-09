@@ -52,5 +52,5 @@ release:
     - ./scripts/release-build.sh
   artifacts:
     paths:
-      - release/bin/tiler
+      - release
   timeout: 8 minutes
