@@ -4,4 +4,4 @@
 mkdir release
 cd release
 conan install ..
-cmake ..
+cmake .. -DBUILD_BENCHMARK=ON

@@ -99,6 +99,7 @@ void SatSolver::at_most_one_of(sat_utils::Clause literals) {
             sat_wrapper_->add_clause({~a, ~b});
             sat_wrapper_->add_clause({~a, c});
             sat_wrapper_->add_clause({~b, c});
+            sat_wrapper_->add_clause({a, b, ~c});  // not necessary, but seems to improve speed
         }
         if (literals.size() % 2 == 1) {
             commanders.push_back(literals[literals.size() - 1]);

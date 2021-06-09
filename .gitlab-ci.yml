@@ -33,7 +33,7 @@ build:
 test:
   stage: test
   script:
-    - apt-get install --yes cmake libcryptominisat5-dev
+    - apt-get install --yes libcryptominisat5-dev
     - ./scripts/dev-test.sh
   timeout: 3 minutes
 

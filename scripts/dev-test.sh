@@ -1,4 +1,3 @@
 #!/bin/bash
 
-cd build
-ctest --verbose
+./build/bin/tilertest

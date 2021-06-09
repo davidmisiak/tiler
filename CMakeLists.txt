@@ -22,6 +22,7 @@ list(REMOVE_ITEM PROJECT_SOURCE ${PROJECT_MAIN})
 
 # external libraries
 set(EXTERNAL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external")
+set(SAT_UTILS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/solvers/sat_utils")
 
 option(CADICAL "Include the CaDiCaL SAT solver." ON)
 if(CADICAL)
@@ -30,7 +31,7 @@ if(CADICAL)
     link_directories("${EXTERNAL_DIR}/cadical/build")
     set(MY_LINK_OPTIONS ${MY_LINK_OPTIONS} cadical)
 else()
-    list(REMOVE_ITEM PROJECT_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/src/solvers/sat_utils/cadical_wrapper.cpp")
+    list(REMOVE_ITEM PROJECT_SOURCE "${SAT_UTILS_DIR}/cadical_wrapper.cpp")
 endif()
 
 option(CRYPTOMINISAT "Include the CryptoMiniSat SAT solver." ON)
@@ -40,7 +41,7 @@ if(CRYPTOMINISAT)
     link_directories("${EXTERNAL_DIR}/cryptominisat/build/lib")
     set(MY_LINK_OPTIONS ${MY_LINK_OPTIONS} cryptominisat5)
 else()
-    list(REMOVE_ITEM PROJECT_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/src/solvers/sat_utils/cryptominisat_wrapper.cpp")
+    list(REMOVE_ITEM PROJECT_SOURCE "${SAT_UTILS_DIR}/cryptominisat_wrapper.cpp")
 endif()
 
 # compile "tilerlib" - entire source without main.cpp so we don't have to recompile
@@ -57,7 +58,15 @@ target_compile_options(tiler PRIVATE ${PROJECT_WARNINGS})
 # build test executable
 option(BUILD_TESTS "Build the testing executable (from the 'test' directory)." OFF)
 if(BUILD_TESTS)
-    enable_testing()
-    add_subdirectory(test)
-    # see test/CMakeLists.txt
+    file(GLOB_RECURSE TEST_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/test/*.cpp")
+    add_executable(tilertest ${TEST_SOURCE})
+    target_link_libraries(tilertest tilerlib ${CONAN_LIBS})
+endif()
+
+# build benchmark executable
+option(BUILD_BENCHMARK "Build the benchmark executable (from the 'benchmark' directory)." OFF)
+if(BUILD_BENCHMARK)
+    file(GLOB_RECURSE BENCHMARK_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/benchmark/*.cpp")
+    add_executable(tilerbm ${BENCHMARK_SOURCE})
+    target_link_libraries(tilerbm tilerlib ${CONAN_LIBS})
 endif()

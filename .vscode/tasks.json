@@ -32,5 +32,11 @@
             "type": "shell",
             "command": "./scripts/release-build.sh",
         },
+        {
+            "label": "Release: Benchmark",
+            "type": "shell",
+            "dependsOn": "Release: Build",
+            "command": "./scripts/release-benchmark.sh",
+        },
     ]
 }
