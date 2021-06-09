@@ -11,7 +11,15 @@ class SatWrapper {
 public:
     virtual ~SatWrapper() = default;
 
-    // Create a new literal.
+    inline int get_var_count() { return next_var_; }
+    inline int get_clause_count() { return static_cast<int>(clauses_.size()); }
+    inline int get_lit_count() {
+        int s = 0;
+        for (auto c : clauses_) s += static_cast<int>(c.size());
+        return s;
+    }
+
+    // Create a new variable, return corresponding literal.
     inline sat_utils::Lit new_lit() { return sat_utils::Lit(next_var_++); }
 
     // Add a clause to the CNF formula.
