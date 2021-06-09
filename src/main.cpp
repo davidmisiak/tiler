@@ -24,6 +24,7 @@ struct Options {
     bool allow_reflection = false;
     bool print_problem = false;
     bool print_solution = false;
+    bool print_stats = false;
 };
 
 void solve_action(Options options) {
@@ -37,7 +38,7 @@ void solve_action(Options options) {
     }
 
     std::unique_ptr<Solver> solver = solver_factory::create(options.solver_name, problem);
-    Solution solution = solver->solve();
+    Solution solution = solver->solve(options.print_stats);
     if (solution.empty()) {
         print::warning_bold() << "FALSE\n";
         return;
@@ -98,6 +99,9 @@ int main(int argc, char **argv) {
     solve_command->add_flag(
             "-c,--print-solution", options.print_solution,
             "If present, the solution (if it exists) will be\nprinted after solving.");
+
+    solve_command->add_flag("-a,--print-stats", options.print_stats,
+                            "If present, additional solver stats will be\nprinted.");
 
     // list command definition
     CLI::App *list_command = app.add_subcommand("list", "List all named tiles");

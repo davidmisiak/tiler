@@ -23,6 +23,9 @@ inline std::ostream &error() { return std::cout << rang::style::reset << rang::f
 // Board/tile shape description.
 inline std::ostream &shape() { return std::cout << rang::style::reset << rang::fg::cyan; }
 
+// Solving stats.
+inline std::ostream &stats() { return std::cout << rang::style::reset << rang::fg::magenta; }
+
 inline std::ostream &success_bold() { return std::cout << rang::style::bold << rang::fg::green; }
 
 inline std::ostream &warning_bold() { return std::cout << rang::style::bold << rang::fg::yellow; }

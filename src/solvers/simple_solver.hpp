@@ -9,13 +9,15 @@
 class SimpleSolver : public Solver {
 public:
     explicit SimpleSolver(Problem problem);
-    Solution solve() override;
+    Solution solve(bool print_stats = false) override;
 
 private:
     bool step();
 
     Problem problem_;
     Solution solution_;
+    // number of visited search tree nodes (used for stats)
+    uint64_t nodes_ = 0;
 };
 
 #endif  // TILER_SOLVERS_SIMPLE_SOLVER_HPP_
