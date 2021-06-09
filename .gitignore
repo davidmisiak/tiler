@@ -4,5 +4,5 @@ release/
 .vscode/settings.json
 .vscode/c_cpp_properties.json
 
-*.problem
-*.svg
+/*.problem
+/*.svg
