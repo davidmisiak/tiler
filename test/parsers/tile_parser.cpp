@@ -8,31 +8,31 @@
 TEST_CASE("Unlimited tiles are parsed") {
     Tile a = tile_parser::parse("1", false);
     REQUIRE(*a.begin() == region_parser::parse("1"));
-    REQUIRE(a.get_count() == -1);
+    REQUIRE(a.get_count() == Tile::kCountInfinity);
 
     Tile b = tile_parser::parse("3L", false);
     REQUIRE(*b.begin() == region_parser::parse("3L"));
-    REQUIRE(b.get_count() == -1);
+    REQUIRE(b.get_count() == Tile::kCountInfinity);
 
     Tile c = tile_parser::parse("2x4", false);
     REQUIRE(*c.begin() == region_parser::parse("2x4"));
-    REQUIRE(c.get_count() == -1);
+    REQUIRE(c.get_count() == Tile::kCountInfinity);
 
     Tile d = tile_parser::parse("x", false);
     REQUIRE(*d.begin() == region_parser::parse("x"));
-    REQUIRE(d.get_count() == -1);
+    REQUIRE(d.get_count() == Tile::kCountInfinity);
 
     Tile e = tile_parser::parse(" xx\nxx", false);
     REQUIRE(*e.begin() == region_parser::parse(" xx\nxx"));
-    REQUIRE(e.get_count() == -1);
+    REQUIRE(e.get_count() == Tile::kCountInfinity);
 
     Tile f = tile_parser::parse("  xx\n xx", false);
     REQUIRE(*f.begin() == region_parser::parse(" xx\nxx"));
-    REQUIRE(f.get_count() == -1);
+    REQUIRE(f.get_count() == Tile::kCountInfinity);
 
     Tile g = tile_parser::parse("DRUL", false);
     REQUIRE(*g.begin() == region_parser::parse("DRUL"));
-    REQUIRE(g.get_count() == -1);
+    REQUIRE(g.get_count() == Tile::kCountInfinity);
 }
 
 TEST_CASE("Limited tiles are parsed") {

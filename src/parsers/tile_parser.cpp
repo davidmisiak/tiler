@@ -9,7 +9,7 @@
 
 Tile tile_parser::parse(std::string s, bool reflection) {
     if (s.find(":") == std::string::npos) {
-        return Tile(region_parser::parse(s), -1, reflection);
+        return Tile(region_parser::parse(s), Tile::kCountInfinity, reflection);
     }
     std::smatch matches;
     if (std::regex_match(s, matches, std::regex("([1-9][0-9]*):\n?([^:]+)"))) {

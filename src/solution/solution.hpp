@@ -18,7 +18,7 @@ public:
 
 private:
     // Size of a cell in pixels (does not matter much, because the generated image is SVG).
-    static const int kCellSize;
+    static constexpr int kCellSize = 30;
 
     // Colors of named tiles (in their lexicographical order).
     static const std::vector<std::string> kColors;

@@ -22,7 +22,7 @@ Tile::Tile(Region region, int count, bool reflection) : count_(count) {
 void Tile::print() const {
     regions_[0].print();
     switch (count_) {
-        case -1:
+        case kCountInfinity:
             print::normal() << "unlimited pieces";
             break;
         case 1:
