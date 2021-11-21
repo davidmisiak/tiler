@@ -13,9 +13,9 @@ Tile::Tile(Region region, int count, bool reflection) : count_(count) {
             if (std::find(regions_.begin(), regions_.end(), current) == regions_.end()) {
                 regions_.push_back(current);
             }
-            current = Region::rotate(current);
+            current = current.rotate();
         }
-        current = Region::reflect(current);
+        current = current.reflect();
     }
 }
 

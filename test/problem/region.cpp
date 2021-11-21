@@ -13,13 +13,13 @@
 TEST_CASE("Region can be rotated and reflected") {
     using region_parser::parse;
 
-    REQUIRE(Region::rotate(parse("x")) == parse("x"));
-    REQUIRE(Region::rotate(parse("xx")) == parse("x\nx"));
-    REQUIRE(Region::rotate(parse("xx\nx\nx")) == parse("x\nxxx"));
+    REQUIRE(parse("x").rotate() == parse("x"));
+    REQUIRE(parse("xx").rotate() == parse("x\nx"));
+    REQUIRE(parse("xx\nx\nx").rotate() == parse("x\nxxx"));
 
-    REQUIRE(Region::reflect(parse("x")) == parse("x"));
-    REQUIRE(Region::reflect(parse("xx")) == parse("xx"));
-    REQUIRE(Region::reflect(parse("xx\nx\nx")) == parse("xx\n x\n x"));
+    REQUIRE(parse("x").reflect() == parse("x"));
+    REQUIRE(parse("xx").reflect() == parse("xx"));
+    REQUIRE(parse("xx\nx\nx").reflect() == parse("xx\n x\n x"));
 }
 
 TEST_CASE("Region size and top-left getters work") {

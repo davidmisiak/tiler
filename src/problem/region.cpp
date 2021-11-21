@@ -23,22 +23,22 @@ Region::Region(int w, int h, utils::BoolMatrix matrix)
     }
 }
 
-Region Region::rotate(const Region &region) {
-    utils::BoolMatrix rotated(region.w_, std::vector<bool>(region.h_, false));
-    for (int y = 0; y < region.h_; y++) {
-        for (int x = 0; x < region.w_; x++) {
-            rotated[region.w_ - 1 - x][y] = region.matrix_[y][x];
+Region Region::rotate() const {
+    utils::BoolMatrix rotated(w_, std::vector<bool>(h_, false));
+    for (int y = 0; y < h_; y++) {
+        for (int x = 0; x < w_; x++) {
+            rotated[w_ - 1 - x][y] = matrix_[y][x];
         }
     }
-    return Region(region.h_, region.w_, rotated);
+    return Region(h_, w_, rotated);
 }
 
-Region Region::reflect(const Region &region) {
-    utils::BoolMatrix reflected(region.matrix_);
-    for (int y = 0; y < region.h_; y++) {
+Region Region::reflect() const {
+    utils::BoolMatrix reflected(matrix_);
+    for (int y = 0; y < h_; y++) {
         std::reverse(reflected[y].begin(), reflected[y].end());
     }
-    return Region(region.w_, region.h_, reflected);
+    return Region(w_, h_, reflected);
 }
 
 void Region::print() const {

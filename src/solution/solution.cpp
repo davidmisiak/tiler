@@ -37,7 +37,7 @@ void Solution::save_image(std::string filepath, Problem problem) const {
         Region region = region_parser::parse(m);
         for (int rot = 0; rot < 4; rot++) {
             colors[region] = kColors[i];
-            region = Region::rotate(region);
+            region = region.rotate();
         }
         i++;
     }

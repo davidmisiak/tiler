@@ -16,11 +16,11 @@ public:
     // Initializes the region - make sure `matrix` is of dimensions `w` by `h`.
     Region(int w, int h, utils::BoolMatrix matrix);
 
-    // Returns copy of `region` rotated by 90 degrees counterclokwise.
-    static Region rotate(const Region &region);
+    // Returns copy of `this` rotated by 90 degrees counterclokwise.
+    Region rotate() const;
 
-    // Returns copy of `region` mirrored by the y-axis.
-    static Region reflect(const Region &region);
+    // Returns copy of `this` mirrored by the y-axis.
+    Region reflect() const;
 
     inline bool operator==(const Region &other) const {
         return w_ == other.w_ && h_ == other.h_ && matrix_ == other.matrix_;
