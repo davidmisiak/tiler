@@ -90,6 +90,10 @@ Solution SatSolver::solve(bool print_stats) {
 // https://www.cs.cmu.edu/~wklieber/papers/2007_efficient-cnf-encoding-for-selecting-1.pdf
 void SatSolver::at_most_one_of(sat_utils::Clause literals) {
     while (literals.size() > 1) {
+        if (literals.size() == 2) {
+            sat_wrapper_->add_clause({~literals[0], ~literals[1]});
+            return;
+        }
         sat_utils::Clause commanders;
         for (int i = 1; i < static_cast<int>(literals.size()); i += 2) {
             sat_utils::Lit a = literals[i - 1];
