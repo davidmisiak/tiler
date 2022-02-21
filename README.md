@@ -9,7 +9,7 @@ The CLI takes input (either from command-line or from a file) which defines a bo
 consisting of unit squares) and polyomino tiles and tries to find a perfect tiling of the board with
 the tiles.
 
-The shape of board as well as of each tile can be provided in any of these formats:
+The shape of the board as well as of each tile can be provided in any of these formats:
 
 - **name**, eg. `3L` (see the `list` command for the list of all named shapes)
 
@@ -17,14 +17,14 @@ The shape of board as well as of each tile can be provided in any of these forma
 
 - **map**, eg. this equivalent of `3x2`:
 
-  ```
+  ```txt
   xxx
   xxx
   ```
 
-  (useful with the `-f `option)
+  (useful with the `-f` option)
 
-- **perimeter**, eg. `DDRRULUL` - equivalent of `3L` (crossings of the perimeter are not allowed,
+- **perimeter**, eg. `DDRRULUL` - an equivalent of `3L` (crossings of the perimeter are not allowed,
   applicable only for shapes without holes)
 
 You should provide a list of shapes, where the first one represents the board and the others the
@@ -37,17 +37,17 @@ Run `tiler -h` and `tiler solve -h` to see all options.
 
 Only continuous shapes are allowed.
 
-Solver may rotate the tiles. There is a CLI flag to allow reflections (flipping the tiles over).
+The solver may rotate the tiles. There is a CLI flag to allow reflections (flipping the tiles over).
 
 ## Examples
 
 Here are some example outputs of the solver.
 
 `tiler solve -s 01.svg 11x7 4T 3:3I`\
-![](examples/01.svg)
+![Example 1](examples/01.svg)
 
 `tiler solve -s 02.svg 10x9 1:5A 1:5F 1:5G 1:5J 1:5P 1:5S 1:5Y 1:5R 1:5N 1:5L 1:5Q 1:5Z 1:5I 1:5T 1:5U 1:5V 1:5W 1:5X`\
-![](examples/02.svg)
+![Example 2](examples/02.svg)
 
 ## Build Instructions
 
@@ -64,7 +64,7 @@ appropriate `-D` flags to the `cmake ..` line in `release-setup.sh`.
 If you want to use SAT solvers [CaDiCaL](https://github.com/arminbiere/cadical) and/or
 [CryptoMiniSat](https://github.com/msoos/cryptominisat), run `./scripts/build-cadical.sh` and
 `./scripts/build-cryptominisat.sh` beforehand (or having them installed system-wide should work as
-well). Otherwise you need to set CMake options `-DCADICAL=OFF` and `-DCRYPTOMINISAT=OFF`.
+well). Otherwise, you need to set CMake options `-DCADICAL=OFF` and `-DCRYPTOMINISAT=OFF`.
 
 Your freshly compiled Tiler executable will be located at `release/bin/tiler`.
 
@@ -81,9 +81,58 @@ In addition to CMake and Conan (see [Build Instructions](#build-instructions)), 
 
 Regarding the actual development, using [VS Code](https://code.visualstudio.com/) with the [C/C++
 extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools) is recommended -
-this way, you can use the IDE tasks, the built-in debugging UI and utilize proposed
-[VS Code settings](./.vscode/example.settings.json). If you intend to use other editor/IDE, all
+this way, you can use the IDE tasks, the built-in debugging UI and utilize the proposed [VS Code
+settings](./.vscode/example.settings.json). If you intend to use a different editor/IDE, all
 commands to run can be found at [tasks.json](./.vscode/tasks.json).
+
+## Benchmarks
+
+TODO
+
+## Problems
+
+The `problems` directory contains several tiling problems for testing and benchmarking. They are
+organized by their tile sets, and their filenames try to describe the respective problems (e.g. they usually
+contain board dimensions as a measure of the problem size). Each filename ends with either `_s`, if
+it is solvable, or `_u`, if it is unsolvable. If the problem is intended to be solved with
+reflections allowed, its filename contains a quote `'`.
+
+The following books were used as sources of some problems:
+
+> S. W. Golomb. *Polyominoes: Puzzles, patterns, problems, and packings*. Princeton University Press,
+2nd edition, 1994.
+
+```txt
+many-unique-tiles/4r-5r-04x20'_s
+many-unique-tiles/4r-5r-05x16'_s
+many-unique-tiles/4r-5r-08x10'_s
+many-unique-tiles/5r-03x20'_s
+many-unique-tiles/5r-04x15'_s
+many-unique-tiles/5r-05x12'_s
+many-unique-tiles/5r-06x10'_s
+many-unique-tiles/5r-diamond'_u
+many-unique-tiles/5r-fcr'_s
+many-unique-tiles/5r-H-08x09'_s
+many-unique-tiles/5r-hskew-06x10'_u
+many-unique-tiles/5r-plus'_u
+many-unique-tiles/5r-sideways'_u
+many-unique-tiles/5r-skew-03x20'_s
+many-unique-tiles/5r-skew-04x15'_s
+many-unique-tiles/5r-skew-05x12'_s
+many-unique-tiles/5r-skew-06x10'_s
+```
+
+> G. E. Martin. *Polyominoes: a Guide to Puzzles and Problems in Tiling*. Mathematical Association of
+America, 1991.
+
+```txt
+4I/10x10_u
+mixed-tiles/1-3I-07x07_s
+mixed-tiles/4O-4T-06x06_u
+```
+
+The remaining problems are either modifications of the listed ones, trivial, generally-known, or
+genuine.
 
 ---
 
@@ -91,7 +140,7 @@ commands to run can be found at [tasks.json](./.vscode/tasks.json).
 
 Tiler is licensed under the [GNU GPL license v3](./LICENSE).
 
-```
+```txt
 Tiler - tool for automated solving of polyomino tiling problems
 Copyright (C) 2020  David Misiak
 
