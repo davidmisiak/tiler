@@ -40,10 +40,10 @@ void solve_action(Options options) {
     std::unique_ptr<Solver> solver = solver_factory::create(options.solver_name, problem);
     Solution solution = solver->solve(options.print_stats);
     if (solution.empty()) {
-        print::warning_bold() << "FALSE\n";
+        print::warning_bold() << "UNSOLVABLE\n";
         return;
     }
-    print::success_bold() << "TRUE\n";
+    print::success_bold() << "SOLVABLE\n";
     if (options.print_solution) {
         print::normal() << "\n";
         solution.print();
