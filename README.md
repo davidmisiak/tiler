@@ -131,7 +131,7 @@ many-unique-tiles/5r-skew-06x10'_s
 America, 1991.
 
 ```txt
-4I/10x10_u
+4I/06x06_u
 mixed-tiles/1-3I-07x07_s
 mixed-tiles/4O-4T-06x06_u
 ```
