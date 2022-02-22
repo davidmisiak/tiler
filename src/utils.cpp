@@ -1,8 +1,10 @@
 #include "utils.hpp"
 
 #include <algorithm>
+#include <filesystem>
 #include <queue>
 #include <set>
+#include <string>
 #include <tuple>
 #include <vector>
 
@@ -84,4 +86,20 @@ bool utils::has_hole(int w, int h, utils::BoolMatrix matrix) {
         if (!matrix[y][w - 1]) matrix = flood_fill(w - 1, y, w, h, matrix);
     }
     return matrix_contains(matrix, false);
+}
+
+bool utils::ends_with(std::string str, std::string suffix) {
+    return str.size() >= suffix.size() &&
+           str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;
+}
+
+std::vector<std::string> utils::get_file_paths(std::string directory_path) {
+    std::vector<std::string> filepaths;
+    for (const auto& entry : std::filesystem::recursive_directory_iterator(directory_path)) {
+        if (std::filesystem::is_regular_file(entry)) {
+            filepaths.push_back(entry.path().string());
+        }
+    }
+    std::sort(filepaths.begin(), filepaths.end());
+    return filepaths;
 }
