@@ -9,6 +9,7 @@
 #include "problem/tile.hpp"
 #include "solution/solution.hpp"
 #include "solvers/solver_factory.hpp"
+#include "utils.hpp"
 
 // Problem parser is used here because of readability.
 // It should be tested thoroughly in it's own tests.
@@ -33,6 +34,13 @@ bool check_solution(Problem problem, Solution solution, bool expected) {
         if (!found) return false;
     }
     return problem.board_.get_size() == 0;
+}
+
+void test_solving(Problem problem, bool result) {
+    for (std::string solver_name : solver_factory::solver_names) {
+        Solution solution = solver_factory::create(solver_name, problem)->solve();
+        REQUIRE(check_solution(problem, solution, result));
+    }
 }
 
 }  // namespace
@@ -82,9 +90,19 @@ TEST_CASE("Solvers return correct solutions") {
 
     for (auto [problem_str, reflection, result] : problems) {
         Problem problem = problem_parser::parse(problem_str, reflection);
-        for (std::string solver_name : solver_factory::solver_names) {
-            Solution solution = solver_factory::create(solver_name, problem)->solve();
-            REQUIRE(check_solution(problem, solution, result));
+        test_solving(problem, result);
+    }
+}
+
+TEST_CASE("Solvers return correct solutions (benchmark problems)") {
+    for (std::string filepath : utils::get_file_paths("problems/mixed")) {
+        bool is_solvable = utils::ends_with(filepath, "_s");
+        bool is_unsolvable = utils::ends_with(filepath, "_u");
+        bool reflection = filepath.find('\'') != std::string::npos;
+        if (is_solvable || is_unsolvable) {
+            Problem problem = problem_parser::parse_from_file(filepath, reflection);
+            // Warning: This will take several hours, don't run by default.
+            // test_solving(problem, is_solvable);
         }
     }
 }
