@@ -78,6 +78,8 @@ In addition to CMake and Conan (see [Build Instructions](#build-instructions)), 
 - [ClangFormat](https://clang.llvm.org/docs/ClangFormat.html) code formatter (version 10 or later)
 - [Cppcheck](http://cppcheck.sourceforge.net/) static code analysis tool
 - [GDB](https://www.gnu.org/software/gdb/) debugger (optional)
+- [Python 3](https://www.python.org/), [Pandas](https://pandas.pydata.org/) and
+  [Matplotlib](https://matplotlib.org/) (if you want to run the benchmark displaying script)
 
 Regarding the actual development, using [VS Code](https://code.visualstudio.com/) with the [C/C++
 extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools) is recommended -
@@ -87,14 +89,17 @@ commands to run can be found at [tasks.json](./.vscode/tasks.json).
 
 ## Benchmarks
 
-TODO
+To run the benchmarking suite on all problems in the `problems` directory, run
+`./scripts/release-benchmark.sh` (however, note that this will take several hours; you can edit the
+`benchmark_filter` parameter in the script to select only some problems or solvers). You can use
+`./benchmark/show.py` to plot the measured data.
 
 ## Problems
 
 The `problems` directory contains several tiling problems for testing and benchmarking. They are
-organized by their tile sets, and their filenames try to describe the respective problems (e.g. they usually
-contain board dimensions as a measure of the problem size). Each filename ends with either `_s`, if
-it is solvable, or `_u`, if it is unsolvable. If the problem is intended to be solved with
+organized by their tile sets, and their filenames try to describe the respective problems (e.g. they
+usually contain board dimensions as a measure of the problem size). Each filename ends with either
+`_s`, if it is solvable, or `_u`, if it is unsolvable. If the problem is intended to be solved with
 reflections allowed, its filename contains a quote `'`.
 
 The following books were used as sources of some problems:
