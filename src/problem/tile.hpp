@@ -32,8 +32,8 @@ public:
         count_ = (count_ == kCountInfinity) ? m : std::min(count_, m);
     };
 
-    inline TileConstIterator begin() { return regions_.begin(); };
-    inline TileConstIterator end() { return regions_.end(); };
+    inline TileConstIterator begin() const { return regions_.begin(); };
+    inline TileConstIterator end() const { return regions_.end(); };
 
     static constexpr int kCountInfinity = -1;
 

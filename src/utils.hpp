@@ -30,10 +30,10 @@ struct Edge {
 // Starts at `start_x`, `start_y` and floods (ie. negates) all accessible cells (of the same value).
 // Crossing `edges` is forbidden.
 BoolMatrix flood_fill(int start_x, int start_y, int w, int h, BoolMatrix matrix,
-                      std::set<Edge> edges = {});
+                      const std::set<Edge> &edges = {});
 
 // Checks if `matrix` contains `value`.
-bool matrix_contains(BoolMatrix matrix, bool value);
+bool matrix_contains(const BoolMatrix &matrix, bool value);
 
 // Removes all leading and trailing rows and columns of `matrix` containing only `false` values,
 // returns new width, height and matrix.
@@ -41,16 +41,16 @@ std::tuple<int, int, BoolMatrix> remove_margins(int w, int h, BoolMatrix matrix)
 
 // Checks if the region of true cells in `matrix` is continuous (only edge-adjacent neighbors are
 // taken into account).
-bool is_continuous(int w, int h, BoolMatrix matrix);
+bool is_continuous(int w, int h, const BoolMatrix &matrix);
 
 // Checks if the region of true cells in `matrix` has a "hole" - at least one false cell inside it.
 bool has_hole(int w, int h, BoolMatrix matrix);
 
 // Checks if `str` ends with given `suffix`.
-bool ends_with(std::string str, std::string suffix);
+bool ends_with(const std::string &str, const std::string &suffix);
 
 // Recursively lists all files in directory.
-std::vector<std::string> get_file_paths(std::string directory_path);
+std::vector<std::string> get_file_paths(const std::string &directory_path);
 
 }  // namespace utils
 

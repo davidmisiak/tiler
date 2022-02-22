@@ -17,7 +17,8 @@
 #include "solvers/sat_utils/cryptominisat_wrapper.hpp"
 #endif
 
-std::unique_ptr<Solver> solver_factory::create(std::string solver_name, Problem problem) {
+std::unique_ptr<Solver> solver_factory::create(const std::string& solver_name,
+                                               const Problem& problem) {
     if (solver_name == solver_factory::kSimpleSolver) {
         return std::make_unique<SimpleSolver>(problem);
     }

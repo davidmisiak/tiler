@@ -10,10 +10,10 @@
 bool CryptominisatWrapper::solve() {
     solver_.new_vars(next_var_);
 
-    for (sat_utils::Clause clause : clauses_) {
+    for (const sat_utils::Clause& clause : clauses_) {
         std::vector<CMSat::Lit> cmsat_clause;
         std::transform(clause.begin(), clause.end(), std::back_inserter(cmsat_clause),
-                       [&](sat_utils::Lit lit) { return CMSat::Lit(lit.val(), lit.is_negated()); });
+                       [](sat_utils::Lit lit) { return CMSat::Lit(lit.val(), lit.is_negated()); });
         solver_.add_clause(cmsat_clause);
     }
 

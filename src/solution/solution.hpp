@@ -12,7 +12,7 @@
 // can be arbitrary. If there are no regions, the solution is considered non-existent.
 class Solution : public std::vector<PlacedRegion> {
 public:
-    void save_image(std::string filepath, Problem problem) const;
+    void save_image(const std::string& filepath, const Problem& problem) const;
 
     void print() const;
 

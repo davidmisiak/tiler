@@ -72,7 +72,7 @@ Region region_parser::parse_raw(const std::string s) {
         std::vector<std::string> lines;
         boost::split(lines, s, boost::is_any_of("\n"));
         int w = 0;
-        for (std::string line : lines) {
+        for (const std::string& line : lines) {
             w = std::max(w, static_cast<int>(line.size()));
         }
         int h = static_cast<int>(lines.size());

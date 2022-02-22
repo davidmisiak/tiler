@@ -9,7 +9,7 @@
 #include <vector>
 
 utils::BoolMatrix utils::flood_fill(int start_x, int start_y, int w, int h,
-                                    utils::BoolMatrix matrix, std::set<utils::Edge> edges) {
+                                    utils::BoolMatrix matrix, const std::set<utils::Edge>& edges) {
     std::queue<std::pair<int, int>> todo;
     todo.push({start_x, start_y});
     bool value = matrix[start_y][start_x];
@@ -30,8 +30,8 @@ utils::BoolMatrix utils::flood_fill(int start_x, int start_y, int w, int h,
     return matrix;
 }
 
-bool utils::matrix_contains(utils::BoolMatrix matrix, bool value) {
-    for (auto row : matrix) {
+bool utils::matrix_contains(const utils::BoolMatrix& matrix, bool value) {
+    for (const auto& row : matrix) {
         if (std::find(row.begin(), row.end(), value) != row.end()) {
             return true;
         }
@@ -62,7 +62,7 @@ std::tuple<int, int, utils::BoolMatrix> utils::remove_margins(int w, int h,
     return {std::max(0, max_x - min_x + 1), std::max(0, max_y - min_y + 1), trimmed};
 }
 
-bool utils::is_continuous(int w, int h, utils::BoolMatrix matrix) {
+bool utils::is_continuous(int w, int h, const utils::BoolMatrix& matrix) {
     for (int y = 0; y < h; y++) {
         for (int x = 0; x < w; x++) {
             if (matrix[y][x]) {
@@ -88,12 +88,12 @@ bool utils::has_hole(int w, int h, utils::BoolMatrix matrix) {
     return matrix_contains(matrix, false);
 }
 
-bool utils::ends_with(std::string str, std::string suffix) {
+bool utils::ends_with(const std::string& str, const std::string& suffix) {
     return str.size() >= suffix.size() &&
            str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;
 }
 
-std::vector<std::string> utils::get_file_paths(std::string directory_path) {
+std::vector<std::string> utils::get_file_paths(const std::string& directory_path) {
     std::vector<std::string> filepaths;
     for (const auto& entry : std::filesystem::recursive_directory_iterator(directory_path)) {
         if (std::filesystem::is_regular_file(entry)) {

@@ -20,7 +20,7 @@ bool check_solution(Problem problem, Solution solution, bool expected) {
     if (!expected) {
         return solution.size() == 0;
     }
-    for (auto [x, y, region] : solution) {
+    for (const auto& [x, y, region] : solution) {
         if (!problem.board_.has_subregion(x, y, region)) return false;
         problem.board_.remove_subregion(x, y, region);
         bool found = false;
@@ -37,7 +37,7 @@ bool check_solution(Problem problem, Solution solution, bool expected) {
 }
 
 void test_solving(Problem problem, bool result) {
-    for (std::string solver_name : solver_factory::solver_names) {
+    for (const std::string& solver_name : solver_factory::solver_names) {
         Solution solution = solver_factory::create(solver_name, problem)->solve();
         REQUIRE(check_solution(problem, solution, result));
     }
@@ -88,14 +88,14 @@ TEST_CASE("Solvers return correct solutions") {
             {{"5V", "3I", "1:1"}, true, false},
     };
 
-    for (auto [problem_str, reflection, result] : problems) {
+    for (const auto& [problem_str, reflection, result] : problems) {
         Problem problem = problem_parser::parse(problem_str, reflection);
         test_solving(problem, result);
     }
 }
 
 TEST_CASE("Solvers return correct solutions (benchmark problems)") {
-    for (std::string filepath : utils::get_file_paths("problems/mixed")) {
+    for (const std::string& filepath : utils::get_file_paths("problems/mixed")) {
         bool is_solvable = utils::ends_with(filepath, "_s");
         bool is_unsolvable = utils::ends_with(filepath, "_u");
         bool reflection = filepath.find('\'') != std::string::npos;

@@ -21,13 +21,13 @@ std::string random_color() {
 
 }  // namespace
 
-void Solution::save_image(std::string filepath, Problem problem) const {
+void Solution::save_image(const std::string& filepath, const Problem& problem) const {
     // compute the color of each region in the solution
     std::map<Region, std::string> colors;
     // each tile gets a random color (same for each rotation/reflection)
-    for (Tile tile : problem.tiles_) {
+    for (const Tile& tile : problem.tiles_) {
         std::string color = random_color();
-        for (Region region : tile) {
+        for (const Region& region : tile) {
             colors[region] = color;
         }
     }

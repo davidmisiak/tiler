@@ -8,7 +8,7 @@
 bool CadicalWrapper::solve() {
     solver_.set("quiet", 1);  // silence some log messages printed to stdout
 
-    for (sat_utils::Clause clause : clauses_) {
+    for (const sat_utils::Clause& clause : clauses_) {
         for (sat_utils::Lit lit : clause) {
             int n = lit.val() + 1;
             solver_.add(lit.is_negated() ? -n : n);

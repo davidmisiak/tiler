@@ -11,7 +11,7 @@ Problem::Problem(Board board, std::vector<Tile> tiles) : board_(board), tiles_(t
 void Problem::print() const {
     board_.print();
     print::normal_bold() << "\nTILES";
-    for (Tile tile : tiles_) {
+    for (const Tile& tile : tiles_) {
         print::normal() << "\n";
         tile.print();
     }

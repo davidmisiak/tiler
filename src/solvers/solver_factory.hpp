@@ -12,7 +12,7 @@ namespace solver_factory {
 
 // Creates a solver instance based on the `solver_name` (which should be one of the strings in
 // `solver_factory::solver_names`).
-std::unique_ptr<Solver> create(std::string solver_name, Problem problem);
+std::unique_ptr<Solver> create(const std::string& solver_name, const Problem& problem);
 
 const std::string kSimpleSolver = "simple";
 const std::string kCadicalSolver = "cadical";
