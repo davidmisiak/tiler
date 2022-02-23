@@ -1,9 +1,9 @@
 #!/bin/bash
 
 git submodule update --init --recursive
-cd external/cryptominisat
+cd external/pblib
 [[ -e build ]] && rm -r build
 mkdir build
 cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release -DSTATICCOMPILE=ON
+cmake .. -DCMAKE_BUILD_TYPE=Release -DPBLIB_BUILD_BINARIES=OFF
 cmake --build .

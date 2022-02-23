@@ -4,3 +4,6 @@
 [submodule "external/cryptominisat"]
 	path = external/cryptominisat
 	url = https://github.com/msoos/cryptominisat.git
+[submodule "external/pblib"]
+	path = external/pblib
+	url = https://github.com/master-keying/pblib.git
