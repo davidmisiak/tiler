@@ -13,8 +13,11 @@
 #include "solvers/sat_utils/sat_wrapper.hpp"
 #include "utils.hpp"
 
-SatSolver::SatSolver(Problem problem, std::unique_ptr<SatWrapper> sat_wrapper)
-        : problem_(problem), sat_wrapper_(std::move(sat_wrapper)) {
+SatSolver::SatSolver(Problem problem, std::unique_ptr<SatWrapper> sat_wrapper,
+                     PBLibWrapper pblib_wrapper)
+        : problem_(problem),
+          sat_wrapper_(std::move(sat_wrapper)),
+          pblib_wrapper_(std::move(pblib_wrapper)) {
     int board_size = problem_.board_.get_size();
     for (Tile& tile : problem_.tiles_) {
         tile.limit_count(board_size / tile.get_size());
@@ -60,12 +63,12 @@ Solution SatSolver::solve(bool print_stats) {
     }
 
     for (const Clause& tile_clause : tile_clauses) {
-        at_most_one_of(tile_clause);
+        pblib_wrapper_.at_most_one_of(tile_clause, sat_wrapper_);
     }
     for (auto [x, y] : problem_.board_.get_cells()) {
         if (cell_clauses[y][x].size() == 0) continue;
         sat_wrapper_->add_clause(cell_clauses[y][x]);
-        at_most_one_of(cell_clauses[y][x]);
+        pblib_wrapper_.at_most_one_of(cell_clauses[y][x], sat_wrapper_);
     }
 
     if (print_stats) {
@@ -84,30 +87,4 @@ Solution SatSolver::solve(bool print_stats) {
         solution.push_back(placed_regions[i]);
     }
     return solution;
-}
-
-// Uses the commander-variable encoding with k=2 (without special treating of small cases).
-// https://www.cs.cmu.edu/~wklieber/papers/2007_efficient-cnf-encoding-for-selecting-1.pdf
-void SatSolver::at_most_one_of(sat_utils::Clause literals) {
-    while (literals.size() > 1) {
-        if (literals.size() == 2) {
-            sat_wrapper_->add_clause({~literals[0], ~literals[1]});
-            return;
-        }
-        sat_utils::Clause commanders;
-        for (int i = 1; i < static_cast<int>(literals.size()); i += 2) {
-            sat_utils::Lit a = literals[i - 1];
-            sat_utils::Lit b = literals[i];
-            sat_utils::Lit c = sat_wrapper_->new_lit();
-            commanders.push_back(c);
-            sat_wrapper_->add_clause({~a, ~b});
-            sat_wrapper_->add_clause({~a, c});
-            sat_wrapper_->add_clause({~b, c});
-            sat_wrapper_->add_clause({a, b, ~c});  // not necessary, but seems to improve speed
-        }
-        if (literals.size() % 2 == 1) {
-            commanders.push_back(literals[literals.size() - 1]);
-        }
-        literals = commanders;
-    }
 }

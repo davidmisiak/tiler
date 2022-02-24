@@ -15,8 +15,24 @@ namespace solver_factory {
 std::unique_ptr<Solver> create(const std::string& solver_name, const Problem& problem);
 
 const std::string kSimpleSolver = "simple";
-const std::string kCadicalSolver = "cadical";
-const std::string kCryptominisatSolver = "cmsat";
+
+const std::string kCadicalAutoSolver = "cadical-auto";
+const std::string kCadicalNestedSolver = "cadical-nested";
+const std::string kCadicalBDDSolver = "cadical-bdd";
+const std::string kCadicalBimanderSolver = "cadical-bimander";
+const std::string kCadicalCommanderSolver = "cadical-commander";
+const std::string kCadicalKProductSolver = "cadical-kproduct";
+const std::string kCadicalBinarySolver = "cadical-binary";
+const std::string kCadicalPairwiseSolver = "cadical-pairwise";
+
+const std::string kCryptominisatAutoSolver = "cmsat-auto";
+const std::string kCryptominisatNestedSolver = "cmsat-nested";
+const std::string kCryptominisatBDDSolver = "cmsat-bdd";
+const std::string kCryptominisatBimanderSolver = "cmsat-bimander";
+const std::string kCryptominisatCommanderSolver = "cmsat-commander";
+const std::string kCryptominisatKProductSolver = "cmsat-kproduct";
+const std::string kCryptominisatBinarySolver = "cmsat-binary";
+const std::string kCryptominisatPairwiseSolver = "cmsat-pairwise";
 
 // Contains all available solver names.
 // We don't use an enum for solver names because CLI11's error messages for enums are somewhat ugly
@@ -24,10 +40,24 @@ const std::string kCryptominisatSolver = "cmsat";
 const std::vector<std::string> solver_names = {
         kSimpleSolver,
 #ifdef CADICAL
-        kCadicalSolver,
+        kCadicalAutoSolver,
+        kCadicalNestedSolver,
+        kCadicalBDDSolver,
+        kCadicalBimanderSolver,
+        kCadicalCommanderSolver,
+        kCadicalKProductSolver,
+        kCadicalBinarySolver,
+        kCadicalPairwiseSolver,
 #endif
 #ifdef CRYPTOMINISAT
-        kCryptominisatSolver,
+        kCryptominisatAutoSolver,
+        kCryptominisatNestedSolver,
+        kCryptominisatBDDSolver,
+        kCryptominisatBimanderSolver,
+        kCryptominisatCommanderSolver,
+        kCryptominisatKProductSolver,
+        kCryptominisatBinarySolver,
+        kCryptominisatPairwiseSolver,
 #endif
 };
 
