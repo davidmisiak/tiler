@@ -9,7 +9,7 @@
             "args": ["solve", "-f", "01.problem", "-s", "solution.svg"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
-            "preLaunchTask": "Build",
+            "preLaunchTask": "Dev: Build",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
