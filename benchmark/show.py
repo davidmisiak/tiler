@@ -3,12 +3,20 @@
 import json
 import glob
 import math
+import cycler
 import itertools as it
 import pandas as pd
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 
 FIGSIZE = (18, 9)
 VMIN, VMAX = 10**-10, 10**10
+COLORS = 20
+
+cm = plt.get_cmap("tab20")
+mpl.rcParams["axes.prop_cycle"] = cycler.cycler(
+    color=[cm(i / COLORS) for i in range(COLORS)]
+)
 
 
 def load_data(paths):
@@ -75,7 +83,7 @@ def compare_all_solvers(df):
 
 
 paths = sorted(glob.glob("benchmark/*.json"))
-df = filter_data(load_data(paths), "", "")
+df = filter_data(load_data(paths), "", "cadical")
 show_data(df, "")
 compare_all_solvers(df)
 
