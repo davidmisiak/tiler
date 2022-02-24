@@ -10,8 +10,7 @@ bool CadicalWrapper::solve() {
 
     for (const sat_utils::Clause& clause : clauses_) {
         for (sat_utils::Lit lit : clause) {
-            int n = lit.val() + 1;
-            solver_.add(lit.is_negated() ? -n : n);
+            solver_.add(lit.to_dimacs());
         }
         solver_.add(0);
     }
