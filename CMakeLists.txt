@@ -44,6 +44,14 @@ else()
     list(REMOVE_ITEM PROJECT_SOURCE "${SAT_UTILS_DIR}/cryptominisat_wrapper.cpp")
 endif()
 
+if(CADICAL OR CRYPTOMINISAT)
+    include_directories(SYSTEM "${EXTERNAL_DIR}/pblib/pblib")
+    link_directories("${EXTERNAL_DIR}/pblib/build")
+    set(MY_LINK_OPTIONS ${MY_LINK_OPTIONS} pb)
+else()
+    list(REMOVE_ITEM PROJECT_SOURCE "${SAT_UTILS_DIR}/pblib_wrapper.cpp")
+endif()
+
 # compile "tilerlib" - entire source without main.cpp so we don't have to recompile
 # it when building tests
 add_library(tilerlib STATIC ${PROJECT_SOURCE})

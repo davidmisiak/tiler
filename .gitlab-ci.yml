@@ -23,6 +23,7 @@ build:
     - conan profile new default --detect
     - conan profile update settings.compiler.libcxx=libstdc++11 default
     - ./scripts/build-cadical.sh
+    - ./scripts/build-pblib.sh
     - ./scripts/dev-setup.sh
     - ./scripts/dev-build.sh
   artifacts:
@@ -48,6 +49,7 @@ release:
     - conan profile update settings.compiler.libcxx=libstdc++11 default
     - ./scripts/build-cadical.sh
     - ./scripts/build-cryptominisat.sh
+    - ./scripts/build-pblib.sh
     - ./scripts/release-setup.sh
     - ./scripts/release-build.sh
   artifacts:

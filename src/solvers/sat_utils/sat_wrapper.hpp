@@ -12,6 +12,7 @@ public:
     virtual ~SatWrapper() = default;
 
     inline int get_var_count() { return next_var_; }
+    inline void add_var_count(int n) { next_var_ += n; }
     inline int get_clause_count() { return static_cast<int>(clauses_.size()); }
     inline int get_lit_count() {
         int s = 0;

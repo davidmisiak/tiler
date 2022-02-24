@@ -62,9 +62,10 @@ can configure build options using eg. `ccmake` before running `release-build.sh`
 appropriate `-D` flags to the `cmake ..` line in `release-setup.sh`.
 
 If you want to use SAT solvers [CaDiCaL](https://github.com/arminbiere/cadical) and/or
-[CryptoMiniSat](https://github.com/msoos/cryptominisat), run `./scripts/build-cadical.sh` and
-`./scripts/build-cryptominisat.sh` beforehand (or having them installed system-wide should work as
-well). Otherwise, you need to set CMake options `-DCADICAL=OFF` and `-DCRYPTOMINISAT=OFF`.
+[CryptoMiniSat](https://github.com/msoos/cryptominisat), run `./scripts/build-cadical.sh`,
+`./scripts/build-cryptominisat.sh` and `./scripts/build-pblib.sh` beforehand (or having them
+installed system-wide should work as well). Otherwise, you need to set CMake options `-DCADICAL=OFF`
+and `-DCRYPTOMINISAT=OFF`.
 
 Your freshly compiled Tiler executable will be located at `release/bin/tiler`.
 
