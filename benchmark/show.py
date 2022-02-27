@@ -38,19 +38,39 @@ def filter_data(df, problem_regex, solver_regex):
     return df
 
 
-def show_data(df, sort_by):
+def show_data(df, sort_by, cumulative):
     if sort_by:
         df = df.sort_values(sort_by)
 
+    if cumulative:
+        df = df.cumsum()
+
     dmin, dmax = df.min().min() / 2, df.max().max() * 2
 
-    df.plot(figsize=FIGSIZE, style="o-", grid=True, logy=True)
+    plots_fig, plots_ax = plt.subplots(figsize=FIGSIZE)
+    plot = df.plot(ax=plots_ax, style="o-", grid=True, logy=True)
 
     plt.xticks(range(len(df)), df.index, rotation="vertical")
     plt.yticks([10**i for i in range(-10, 10)])
     plt.xlim(-1, len(df))
     plt.ylim(dmin, dmax)
+    plt.tight_layout()
 
+    # checkboxes
+    lines = plot.lines
+    _, check_ax = plt.subplots(figsize=(4, 1 + 0.3 * len(lines)))
+    labels = [str(line.get_label()) for line in lines]
+    visibility = [True for _ in lines]
+
+    global check  # checkboxes lose interactivity when this gets garbage-collacted
+    check = mpl.widgets.CheckButtons(check_ax, labels, visibility)
+
+    def toggle_line(label):
+        index = labels.index(label)
+        lines[index].set_visible(not lines[index].get_visible())
+        plots_fig.canvas.draw_idle()
+
+    check.on_clicked(toggle_line)
     plt.tight_layout()
 
 
@@ -83,8 +103,8 @@ def compare_all_solvers(df):
 
 
 paths = sorted(glob.glob("benchmark/*.json"))
-df = filter_data(load_data(paths), "", "cadical")
-show_data(df, "")
-compare_all_solvers(df)
+df = filter_data(load_data(paths), problem_regex="", solver_regex="")
+show_data(df, sort_by="", cumulative=False)
+# compare_all_solvers(df)
 
 plt.show()
