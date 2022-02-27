@@ -66,7 +66,10 @@ Solution SatSolver::solve(bool print_stats) {
         pblib_wrapper_.at_most_one_of(tile_clause, sat_wrapper_);
     }
     for (auto [x, y] : problem_.board_.get_cells()) {
-        if (cell_clauses[y][x].size() == 0) continue;
+        if (cell_clauses[y][x].size() == 0) {
+            // the cell cannot be covered, the problem is unsolvable
+            return {};
+        }
         sat_wrapper_->add_clause(cell_clauses[y][x]);
         pblib_wrapper_.at_most_one_of(cell_clauses[y][x], sat_wrapper_);
     }
