@@ -70,8 +70,7 @@ Solution SatSolver::solve(bool print_stats) {
             // the cell cannot be covered, the problem is unsolvable
             return {};
         }
-        sat_wrapper_->add_clause(cell_clauses[y][x]);
-        pblib_wrapper_.at_most_one_of(cell_clauses[y][x], sat_wrapper_);
+        pblib_wrapper_.at_most_one_of(cell_clauses[y][x], sat_wrapper_, true);
     }
 
     if (print_stats) {

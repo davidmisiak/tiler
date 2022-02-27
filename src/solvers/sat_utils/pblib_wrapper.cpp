@@ -14,7 +14,8 @@ PBLibWrapper::PBLibWrapper(AMO_ENCODER::PB2CNF_AMO_Encoder amo_encoder) {
 }
 
 void PBLibWrapper::at_most_one_of(const sat_utils::Clause& literals,
-                                  std::unique_ptr<SatWrapper>& sat_wrapper) {
+                                  std::unique_ptr<SatWrapper>& sat_wrapper, bool exactly_one) {
+    std::vector<int64_t> pb_weights(literals.size(), 1);
     std::vector<int> pb_literals;
     for (sat_utils::Lit lit : literals) {
         pb_literals.push_back(lit.to_dimacs());
@@ -22,9 +23,16 @@ void PBLibWrapper::at_most_one_of(const sat_utils::Clause& literals,
     std::vector<std::vector<int>> pb_clauses;
 
     int fresh_var = sat_wrapper->get_var_count();
-    int new_fresh_var = pb2cnf_->encodeAtMostK(pb_literals, 1, pb_clauses,
-                                               fresh_var + 1  // + 1 because of dimacs
-    );
+    int new_fresh_var;
+    if (exactly_one) {
+        new_fresh_var = pb2cnf_->encodeBoth(pb_weights, pb_literals, 1, 1, pb_clauses,
+                                            fresh_var + 1  // + 1 because of dimacs
+        );
+    } else {
+        new_fresh_var = pb2cnf_->encodeLeq(pb_weights, pb_literals, 1, pb_clauses,
+                                           fresh_var + 1  // + 1 because of dimacs
+        );
+    }
     sat_wrapper->add_var_count(new_fresh_var - fresh_var);
 
     for (const auto& pb_clause : pb_clauses) {

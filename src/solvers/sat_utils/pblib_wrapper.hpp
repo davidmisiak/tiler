@@ -16,8 +16,8 @@ public:
 
     // Adds clauses that guarantee that at most one of `literals` will be true. Creates new utility
     // variables.
-    void at_most_one_of(const sat_utils::Clause& literals,
-                        std::unique_ptr<SatWrapper>& sat_wrapper);
+    void at_most_one_of(const sat_utils::Clause& literals, std::unique_ptr<SatWrapper>& sat_wrapper,
+                        bool exactly_one = false);
 
 private:
     std::unique_ptr<PB2CNF> pb2cnf_;
