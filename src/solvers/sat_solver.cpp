@@ -75,9 +75,10 @@ Solution SatSolver::solve(bool print_stats) {
     }
 
     if (print_stats) {
-        print::stats() << sat_wrapper_->get_var_count() << " variables\n"
-                       << sat_wrapper_->get_clause_count() << " clauses\n"
-                       << sat_wrapper_->get_lit_count() << " literals\n";
+        print::stats() << placed_regions.size() << " placed regions\n"
+                       << sat_wrapper_->get_var_count() << " boolean variables\n"
+                       << sat_wrapper_->get_clause_count() << " boolean clauses\n"
+                       << sat_wrapper_->get_lit_count() << " boolean literals\n";
     }
 
     bool result = sat_wrapper_->solve();
