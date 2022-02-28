@@ -5,6 +5,7 @@
 
 #include "problem/problem.hpp"
 #include "solve_error.hpp"
+#include "solvers/sat_oti_solver.hpp"
 #include "solvers/sat_solver.hpp"
 #include "solvers/simple_solver.hpp"
 #include "solvers/solver.hpp"
@@ -64,6 +65,11 @@ std::unique_ptr<Solver> solver_factory::create(const std::string& solver_name,
         return std::make_unique<SatSolver>(problem, std::make_unique<CadicalWrapper>(),
                                            PBLibWrapper(PB2CNF_AMO_Encoder::PAIRWISE));
     }
+
+    if (solver_name == kCadicalOTISolver) {
+        return std::make_unique<SatOTISolver>(problem, std::make_unique<CadicalWrapper>(),
+                                              PBLibWrapper(PB2CNF_AMO_Encoder::BDD));
+    }
 #endif
 
 #ifdef CRYPTOMINISAT
@@ -98,6 +104,11 @@ std::unique_ptr<Solver> solver_factory::create(const std::string& solver_name,
     if (solver_name == kCryptominisatPairwiseSolver) {
         return std::make_unique<SatSolver>(problem, std::make_unique<CryptominisatWrapper>(),
                                            PBLibWrapper(PB2CNF_AMO_Encoder::PAIRWISE));
+    }
+
+    if (solver_name == kCryptominisatOTISolver) {
+        return std::make_unique<SatOTISolver>(problem, std::make_unique<CryptominisatWrapper>(),
+                                              PBLibWrapper(PB2CNF_AMO_Encoder::BDD));
     }
 #endif
 

@@ -25,6 +25,8 @@ const std::string kCadicalKProductSolver = "cadical-kproduct";
 const std::string kCadicalBinarySolver = "cadical-binary";
 const std::string kCadicalPairwiseSolver = "cadical-pairwise";
 
+const std::string kCadicalOTISolver = "cadical-oti";
+
 const std::string kCryptominisatAutoSolver = "cmsat-auto";
 const std::string kCryptominisatNestedSolver = "cmsat-nested";
 const std::string kCryptominisatBDDSolver = "cmsat-bdd";
@@ -33,6 +35,8 @@ const std::string kCryptominisatCommanderSolver = "cmsat-commander";
 const std::string kCryptominisatKProductSolver = "cmsat-kproduct";
 const std::string kCryptominisatBinarySolver = "cmsat-binary";
 const std::string kCryptominisatPairwiseSolver = "cmsat-pairwise";
+
+const std::string kCryptominisatOTISolver = "cmsat-oti";
 
 // Contains all available solver names.
 // We don't use an enum for solver names because CLI11's error messages for enums are somewhat ugly
@@ -48,6 +52,7 @@ const std::vector<std::string> solver_names = {
         kCadicalKProductSolver,
         kCadicalBinarySolver,
         kCadicalPairwiseSolver,
+        kCadicalOTISolver,
 #endif
 #ifdef CRYPTOMINISAT
         kCryptominisatAutoSolver,
@@ -58,6 +63,7 @@ const std::vector<std::string> solver_names = {
         kCryptominisatKProductSolver,
         kCryptominisatBinarySolver,
         kCryptominisatPairwiseSolver,
+        kCryptominisatOTISolver,
 #endif
 };
 
