@@ -32,19 +32,17 @@ SatSolver::SatSolver(Problem problem, std::unique_ptr<SatWrapper> sat_wrapper,
 // For each cell of the board, there is a set of clauses that guarantee that exactly one of the tile
 // pieces covers this cell.
 // Put together, the CNF formula is satisfiable if and only if the board can be tiled.
-// There are some symmetries that should be broken in the future (eg. the order of pieces) to
-// improve the SAT solving performance.
 Solution SatSolver::solve(bool print_stats) {
     using sat_utils::Lit, sat_utils::Clause;
 
     int w = problem_.board_.get_width();
     int h = problem_.board_.get_height();
-    std::vector<Clause> tile_clauses;
+    std::vector<Clause> instance_clauses;
     std::vector<std::vector<Clause>> cell_clauses(h, std::vector<Clause>(w, Clause{}));
     std::vector<PlacedRegion> placed_regions;
     for (const Tile& tile : problem_.tiles_) {
         for (int i = 0; i < tile.get_count(); i++) {
-            Clause tile_clause;
+            Clause instance_clause;
             for (auto [bx, by] : problem_.board_.get_cells()) {
                 for (const Region& region : tile) {
                     int sx = bx - region.get_top_left_x();
@@ -52,19 +50,22 @@ Solution SatSolver::solve(bool print_stats) {
                     if (!problem_.board_.has_subregion(sx, sy, region)) continue;
                     placed_regions.push_back({sx, sy, region});
                     Lit lit = sat_wrapper_->new_lit();
-                    tile_clause.push_back(lit);
+                    instance_clause.push_back(lit);
                     for (auto [rx, ry] : region.get_cells()) {
                         cell_clauses[sy + ry][sx + rx].push_back(lit);
                     }
                 }
             }
-            tile_clauses.push_back(tile_clause);
+            instance_clauses.push_back(instance_clause);
         }
     }
 
-    for (const Clause& tile_clause : tile_clauses) {
-        pblib_wrapper_.at_most_one_of(tile_clause, sat_wrapper_);
+    for (const Clause& instance_clause : instance_clauses) {
+        if (instance_clauses.size() > 0) {
+            pblib_wrapper_.at_most_one_of(instance_clause, sat_wrapper_);
+        }
     }
+
     for (auto [x, y] : problem_.board_.get_cells()) {
         if (cell_clauses[y][x].size() == 0) {
             // the cell cannot be covered, the problem is unsolvable
