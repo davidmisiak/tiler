@@ -5,6 +5,7 @@
 
 #include "problem/problem.hpp"
 #include "solve_error.hpp"
+#include "solvers/sat_amk_solver.hpp"
 #include "solvers/sat_amo_ordered_solver.hpp"
 #include "solvers/sat_amo_solver.hpp"
 #include "solvers/simple_solver.hpp"
@@ -80,6 +81,22 @@ std::unique_ptr<Solver> solver_factory::create(const std::string& solver_name,
                 problem, std::make_unique<CadicalWrapper>(),
                 PBLibWrapper(PB2CNF_AMO_Encoder::BDD, PB2CNF_AMK_Encoder::BEST));
     }
+
+    if (solver_name == kCadicalAmkAutoSolver) {
+        return std::make_unique<SatAmkSolver>(
+                problem, std::make_unique<CadicalWrapper>(),
+                PBLibWrapper(PB2CNF_AMO_Encoder::BEST, PB2CNF_AMK_Encoder::BEST));
+    }
+    if (solver_name == kCadicalAmkBDDSolver) {
+        return std::make_unique<SatAmkSolver>(
+                problem, std::make_unique<CadicalWrapper>(),
+                PBLibWrapper(PB2CNF_AMO_Encoder::BEST, PB2CNF_AMK_Encoder::BDD));
+    }
+    if (solver_name == kCadicalAmkCardSolver) {
+        return std::make_unique<SatAmkSolver>(
+                problem, std::make_unique<CadicalWrapper>(),
+                PBLibWrapper(PB2CNF_AMO_Encoder::BEST, PB2CNF_AMK_Encoder::CARD));
+    }
 #endif
 
 #ifdef CRYPTOMINISAT
@@ -128,6 +145,22 @@ std::unique_ptr<Solver> solver_factory::create(const std::string& solver_name,
         return std::make_unique<SatAmoOrderedSolver>(
                 problem, std::make_unique<CryptominisatWrapper>(),
                 PBLibWrapper(PB2CNF_AMO_Encoder::BDD, PB2CNF_AMK_Encoder::BEST));
+    }
+
+    if (solver_name == kCryptominisatAmkAutoSolver) {
+        return std::make_unique<SatAmkSolver>(
+                problem, std::make_unique<CryptominisatWrapper>(),
+                PBLibWrapper(PB2CNF_AMO_Encoder::BEST, PB2CNF_AMK_Encoder::BEST));
+    }
+    if (solver_name == kCryptominisatAmkBDDSolver) {
+        return std::make_unique<SatAmkSolver>(
+                problem, std::make_unique<CryptominisatWrapper>(),
+                PBLibWrapper(PB2CNF_AMO_Encoder::BEST, PB2CNF_AMK_Encoder::BDD));
+    }
+    if (solver_name == kCryptominisatAmkCardSolver) {
+        return std::make_unique<SatAmkSolver>(
+                problem, std::make_unique<CryptominisatWrapper>(),
+                PBLibWrapper(PB2CNF_AMO_Encoder::BEST, PB2CNF_AMK_Encoder::CARD));
     }
 #endif
 

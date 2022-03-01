@@ -27,6 +27,10 @@ const std::string kCadicalAmoPairwiseSolver = "cadical-amo-pairwise";
 
 const std::string kCadicalAmoOrderedSolver = "cadical-amo-ordered";
 
+const std::string kCadicalAmkAutoSolver = "cadical-amk-auto";
+const std::string kCadicalAmkBDDSolver = "cadical-amk-bdd";
+const std::string kCadicalAmkCardSolver = "cadical-amk-card";
+
 const std::string kCryptominisatAmoAutoSolver = "cmsat-amo-auto";
 const std::string kCryptominisatAmoNestedSolver = "cmsat-amo-nested";
 const std::string kCryptominisatAmoBDDSolver = "cmsat-amo-bdd";
@@ -37,6 +41,10 @@ const std::string kCryptominisatAmoBinarySolver = "cmsat-amo-binary";
 const std::string kCryptominisatAmoPairwiseSolver = "cmsat-amo-pairwise";
 
 const std::string kCryptominisatAmoOrderedSolver = "cmsat-amo-ordered";
+
+const std::string kCryptominisatAmkAutoSolver = "cmsat-amk-auto";
+const std::string kCryptominisatAmkBDDSolver = "cmsat-amk-bdd";
+const std::string kCryptominisatAmkCardSolver = "cmsat-amk-card";
 
 // Contains all available solver names.
 // We don't use an enum for solver names because CLI11's error messages for enums are somewhat ugly
@@ -53,6 +61,9 @@ const std::vector<std::string> solver_names = {
         kCadicalAmoBinarySolver,
         // kCadicalPairwiseSolver,  // crashes on larger problems because of RAM exhaustion
         kCadicalAmoOrderedSolver,
+        kCadicalAmkAutoSolver,
+        kCadicalAmkBDDSolver,
+        kCadicalAmkCardSolver,
 #endif
 #ifdef CRYPTOMINISAT
         kCryptominisatAmoAutoSolver,
@@ -64,6 +75,9 @@ const std::vector<std::string> solver_names = {
         kCryptominisatAmoBinarySolver,
         // kCryptominisatPairwiseSolver,  // crashes on larger problems because of RAM exhaustion
         kCryptominisatAmoOrderedSolver,
+        kCryptominisatAmkAutoSolver,
+        kCryptominisatAmkBDDSolver,
+        kCryptominisatAmkCardSolver,
 #endif
 };
 
