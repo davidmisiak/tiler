@@ -1,5 +1,5 @@
-#ifndef TILER_SOLVERS_SAT_OTI_SOLVER_HPP_
-#define TILER_SOLVERS_SAT_OTI_SOLVER_HPP_
+#ifndef TILER_SOLVERS_SAT_AMO_ORDERED_SOLVER_HPP_
+#define TILER_SOLVERS_SAT_AMO_ORDERED_SOLVER_HPP_
 
 #include <memory>
 
@@ -11,12 +11,12 @@
 #include "solvers/solver.hpp"
 
 // Solver based on translation to a SAT problem (SAT solver selection in done through the
-// sat_wrapper parameter). In addition to what SatSolver does, it breaks tile instance symmetry (it
-// orders tile instances, hence the OTI acryonym).
-class SatOTISolver : public Solver {
+// sat_wrapper parameter). In addition to what SatAmoSolver does, this solver breaks tile instance
+// symmetry (it orders tile instances, hence the name).
+class SatAmoOrderedSolver : public Solver {
 public:
-    explicit SatOTISolver(Problem problem, std::unique_ptr<SatWrapper> sat_wrapper,
-                          PBLibWrapper pblib_wrapper);
+    explicit SatAmoOrderedSolver(Problem problem, std::unique_ptr<SatWrapper> sat_wrapper,
+                                 PBLibWrapper pblib_wrapper);
     Solution solve(bool print_stats = false) override;
 
 private:
@@ -25,4 +25,4 @@ private:
     PBLibWrapper pblib_wrapper_;
 };
 
-#endif  // TILER_SOLVERS_SAT_OTI_SOLVER_HPP_
+#endif  // TILER_SOLVERS_SAT_AMO_ORDERED_SOLVER_HPP_

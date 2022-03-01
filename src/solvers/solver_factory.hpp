@@ -16,27 +16,27 @@ std::unique_ptr<Solver> create(const std::string& solver_name, const Problem& pr
 
 const std::string kSimpleSolver = "simple";
 
-const std::string kCadicalAutoSolver = "cadical-auto";
-const std::string kCadicalNestedSolver = "cadical-nested";
-const std::string kCadicalBDDSolver = "cadical-bdd";
-const std::string kCadicalBimanderSolver = "cadical-bimander";
-const std::string kCadicalCommanderSolver = "cadical-commander";
-const std::string kCadicalKProductSolver = "cadical-kproduct";
-const std::string kCadicalBinarySolver = "cadical-binary";
-const std::string kCadicalPairwiseSolver = "cadical-pairwise";
+const std::string kCadicalAmoAutoSolver = "cadical-amo-auto";
+const std::string kCadicalAmoNestedSolver = "cadical-amo-nested";
+const std::string kCadicalAmoBDDSolver = "cadical-amo-bdd";
+const std::string kCadicalAmoBimanderSolver = "cadical-amo-bimander";
+const std::string kCadicalAmoCommanderSolver = "cadical-amo-commander";
+const std::string kCadicalAmoKProductSolver = "cadical-amo-kproduct";
+const std::string kCadicalAmoBinarySolver = "cadical-amo-binary";
+const std::string kCadicalAmoPairwiseSolver = "cadical-amo-pairwise";
 
-const std::string kCadicalOTISolver = "cadical-oti";
+const std::string kCadicalAmoOrderedSolver = "cadical-amo-ordered";
 
-const std::string kCryptominisatAutoSolver = "cmsat-auto";
-const std::string kCryptominisatNestedSolver = "cmsat-nested";
-const std::string kCryptominisatBDDSolver = "cmsat-bdd";
-const std::string kCryptominisatBimanderSolver = "cmsat-bimander";
-const std::string kCryptominisatCommanderSolver = "cmsat-commander";
-const std::string kCryptominisatKProductSolver = "cmsat-kproduct";
-const std::string kCryptominisatBinarySolver = "cmsat-binary";
-const std::string kCryptominisatPairwiseSolver = "cmsat-pairwise";
+const std::string kCryptominisatAmoAutoSolver = "cmsat-amo-auto";
+const std::string kCryptominisatAmoNestedSolver = "cmsat-amo-nested";
+const std::string kCryptominisatAmoBDDSolver = "cmsat-amo-bdd";
+const std::string kCryptominisatAmoBimanderSolver = "cmsat-amo-bimander";
+const std::string kCryptominisatAmoCommanderSolver = "cmsat-amo-commander";
+const std::string kCryptominisatAmoKProductSolver = "cmsat-amo-kproduct";
+const std::string kCryptominisatAmoBinarySolver = "cmsat-amo-binary";
+const std::string kCryptominisatAmoPairwiseSolver = "cmsat-amo-pairwise";
 
-const std::string kCryptominisatOTISolver = "cmsat-oti";
+const std::string kCryptominisatAmoOrderedSolver = "cmsat-amo-ordered";
 
 // Contains all available solver names.
 // We don't use an enum for solver names because CLI11's error messages for enums are somewhat ugly
@@ -44,26 +44,26 @@ const std::string kCryptominisatOTISolver = "cmsat-oti";
 const std::vector<std::string> solver_names = {
         kSimpleSolver,
 #ifdef CADICAL
-        kCadicalAutoSolver,
-        kCadicalNestedSolver,
-        kCadicalBDDSolver,
-        kCadicalBimanderSolver,
-        kCadicalCommanderSolver,
-        kCadicalKProductSolver,
-        kCadicalBinarySolver,
-        kCadicalPairwiseSolver,
-        kCadicalOTISolver,
+        kCadicalAmoAutoSolver,
+        kCadicalAmoNestedSolver,
+        kCadicalAmoBDDSolver,
+        kCadicalAmoBimanderSolver,
+        kCadicalAmoCommanderSolver,
+        kCadicalAmoKProductSolver,
+        kCadicalAmoBinarySolver,
+        // kCadicalPairwiseSolver,  // crashes on larger problems because of RAM exhaustion
+        kCadicalAmoOrderedSolver,
 #endif
 #ifdef CRYPTOMINISAT
-        kCryptominisatAutoSolver,
-        kCryptominisatNestedSolver,
-        kCryptominisatBDDSolver,
-        kCryptominisatBimanderSolver,
-        kCryptominisatCommanderSolver,
-        kCryptominisatKProductSolver,
-        kCryptominisatBinarySolver,
-        kCryptominisatPairwiseSolver,
-        kCryptominisatOTISolver,
+        kCryptominisatAmoAutoSolver,
+        kCryptominisatAmoNestedSolver,
+        kCryptominisatAmoBDDSolver,
+        kCryptominisatAmoBimanderSolver,
+        kCryptominisatAmoCommanderSolver,
+        kCryptominisatAmoKProductSolver,
+        kCryptominisatAmoBinarySolver,
+        // kCryptominisatPairwiseSolver,  // crashes on larger problems because of RAM exhaustion
+        kCryptominisatAmoOrderedSolver,
 #endif
 };
 

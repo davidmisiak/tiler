@@ -1,4 +1,4 @@
-#include "solvers/sat_solver.hpp"
+#include "solvers/sat_amo_solver.hpp"
 
 #include <memory>
 #include <vector>
@@ -13,8 +13,8 @@
 #include "solvers/sat_utils/sat_wrapper.hpp"
 #include "utils.hpp"
 
-SatSolver::SatSolver(Problem problem, std::unique_ptr<SatWrapper> sat_wrapper,
-                     PBLibWrapper pblib_wrapper)
+SatAmoSolver::SatAmoSolver(Problem problem, std::unique_ptr<SatWrapper> sat_wrapper,
+                           PBLibWrapper pblib_wrapper)
         : problem_(problem),
           sat_wrapper_(std::move(sat_wrapper)),
           pblib_wrapper_(std::move(pblib_wrapper)) {
@@ -32,7 +32,7 @@ SatSolver::SatSolver(Problem problem, std::unique_ptr<SatWrapper> sat_wrapper,
 // For each cell of the board, there is a set of clauses that guarantee that exactly one of the tile
 // pieces covers this cell.
 // Put together, the CNF formula is satisfiable if and only if the board can be tiled.
-Solution SatSolver::solve(bool print_stats) {
+Solution SatAmoSolver::solve(bool print_stats) {
     using sat_utils::Lit, sat_utils::Clause;
 
     int w = problem_.board_.get_width();
@@ -48,6 +48,7 @@ Solution SatSolver::solve(bool print_stats) {
                     int sx = bx - region.get_top_left_x();
                     int sy = by - region.get_top_left_y();
                     if (!problem_.board_.has_subregion(sx, sy, region)) continue;
+
                     placed_regions.push_back({sx, sy, region});
                     Lit lit = sat_wrapper_->new_lit();
                     instance_clause.push_back(lit);
@@ -62,7 +63,7 @@ Solution SatSolver::solve(bool print_stats) {
 
     for (const Clause& instance_clause : instance_clauses) {
         if (instance_clauses.size() > 0) {
-            pblib_wrapper_.at_most_one_of(instance_clause, sat_wrapper_);
+            pblib_wrapper_.at_most_k(instance_clause, sat_wrapper_, 1);
         }
     }
 
@@ -71,7 +72,7 @@ Solution SatSolver::solve(bool print_stats) {
             // the cell cannot be covered, the problem is unsolvable
             return {};
         }
-        pblib_wrapper_.at_most_one_of(cell_clauses[y][x], sat_wrapper_, true);
+        pblib_wrapper_.exactly_k(cell_clauses[y][x], sat_wrapper_, 1);
     }
 
     if (print_stats) {

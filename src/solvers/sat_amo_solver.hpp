@@ -1,5 +1,5 @@
-#ifndef TILER_SOLVERS_SAT_SOLVER_HPP_
-#define TILER_SOLVERS_SAT_SOLVER_HPP_
+#ifndef TILER_SOLVERS_SAT_AMO_SOLVER_HPP_
+#define TILER_SOLVERS_SAT_AMO_SOLVER_HPP_
 
 #include <memory>
 
@@ -11,11 +11,11 @@
 #include "solvers/solver.hpp"
 
 // Solver based on translation to a SAT problem (SAT solver selection in done through the
-// sat_wrapper parameter).
-class SatSolver : public Solver {
+// sat_wrapper parameter) with heavy use of at-most-one constraints.
+class SatAmoSolver : public Solver {
 public:
-    explicit SatSolver(Problem problem, std::unique_ptr<SatWrapper> sat_wrapper,
-                       PBLibWrapper pblib_wrapper);
+    explicit SatAmoSolver(Problem problem, std::unique_ptr<SatWrapper> sat_wrapper,
+                          PBLibWrapper pblib_wrapper);
     Solution solve(bool print_stats = false) override;
 
 private:
@@ -24,4 +24,4 @@ private:
     PBLibWrapper pblib_wrapper_;
 };
 
-#endif  // TILER_SOLVERS_SAT_SOLVER_HPP_
+#endif  // TILER_SOLVERS_SAT_AMO_SOLVER_HPP_

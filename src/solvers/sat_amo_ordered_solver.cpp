@@ -1,4 +1,4 @@
-#include "solvers/sat_oti_solver.hpp"
+#include "solvers/sat_amo_ordered_solver.hpp"
 
 #include <memory>
 #include <vector>
@@ -13,8 +13,8 @@
 #include "solvers/sat_utils/sat_wrapper.hpp"
 #include "utils.hpp"
 
-SatOTISolver::SatOTISolver(Problem problem, std::unique_ptr<SatWrapper> sat_wrapper,
-                           PBLibWrapper pblib_wrapper)
+SatAmoOrderedSolver::SatAmoOrderedSolver(Problem problem, std::unique_ptr<SatWrapper> sat_wrapper,
+                                         PBLibWrapper pblib_wrapper)
         : problem_(problem),
           sat_wrapper_(std::move(sat_wrapper)),
           pblib_wrapper_(std::move(pblib_wrapper)) {
@@ -32,7 +32,7 @@ SatOTISolver::SatOTISolver(Problem problem, std::unique_ptr<SatWrapper> sat_wrap
 // ensure that tile instance positions are ordered. We exploit the auxiliary variables added by
 // sequential (BDD) encoding of the "each tile instance has at most one position" constraints - we
 // add analogous clauses in the orthogonal direction to imply the position ordering.
-Solution SatOTISolver::solve(bool print_stats) {
+Solution SatAmoOrderedSolver::solve(bool print_stats) {
     using sat_utils::Lit, sat_utils::Clause;
 
     int w = problem_.board_.get_width();
@@ -104,7 +104,7 @@ Solution SatOTISolver::solve(bool print_stats) {
             // the cell cannot be covered, the problem is unsolvable
             return {};
         }
-        pblib_wrapper_.at_most_one_of(cell_clauses[y][x], sat_wrapper_, true);
+        pblib_wrapper_.exactly_k(cell_clauses[y][x], sat_wrapper_, 1);
     }
 
     if (print_stats) {

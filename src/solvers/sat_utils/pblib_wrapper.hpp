@@ -12,14 +12,27 @@
 // pseudo-boolean constraints.
 class PBLibWrapper {
 public:
-    PBLibWrapper(AMO_ENCODER::PB2CNF_AMO_Encoder amo_encoder);
+    PBLibWrapper(AMO_ENCODER::PB2CNF_AMO_Encoder amo_encoder,
+                 AMK_ENCODER::PB2CNF_AMK_Encoder amk_encoder);
 
-    // Adds clauses that guarantee that at most one of `literals` will be true. Creates new utility
+    // Adds clauses that guarantee that at most k of `literals` will be true. Creates new utility
     // variables.
-    void at_most_one_of(const sat_utils::Clause& literals, std::unique_ptr<SatWrapper>& sat_wrapper,
-                        bool exactly_one = false);
+    inline void at_most_k(const sat_utils::Clause& literals,
+                          std::unique_ptr<SatWrapper>& sat_wrapper, int k) {
+        return encode(literals, sat_wrapper, k, false);
+    }
+
+    // Adds clauses that guarantee that exactly k of `literals` will be true. Creates new utility
+    // variables.
+    inline void exactly_k(const sat_utils::Clause& literals,
+                          std::unique_ptr<SatWrapper>& sat_wrapper, int k) {
+        return encode(literals, sat_wrapper, k, true);
+    }
 
 private:
+    void encode(const sat_utils::Clause& literals, std::unique_ptr<SatWrapper>& sat_wrapper, int k,
+                bool exactly_k);
+
     std::unique_ptr<PB2CNF> pb2cnf_;
 };
 
