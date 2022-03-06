@@ -8,6 +8,7 @@
 #include "solvers/sat_utils/pblib_wrapper.hpp"
 #include "solvers/sat_utils/sat_utils.hpp"
 #include "solvers/sat_utils/sat_wrapper.hpp"
+#include "solvers/sat_utils/symmetry_breaker.hpp"
 #include "solvers/solver.hpp"
 
 // Solver based on translation to a SAT problem (SAT solver selection in done through the
@@ -16,12 +17,14 @@
 class SatAmkSolver : public Solver {
 public:
     explicit SatAmkSolver(Problem problem, std::unique_ptr<SatWrapper> sat_wrapper,
+                          std::unique_ptr<SymmetryBreaker> symmetry_breaker,
                           PBLibWrapper pblib_wrapper);
     Solution solve(bool print_stats = false) override;
 
 private:
     Problem problem_;
     std::unique_ptr<SatWrapper> sat_wrapper_;
+    std::unique_ptr<SymmetryBreaker> symmetry_breaker_;
     PBLibWrapper pblib_wrapper_;
 };
 

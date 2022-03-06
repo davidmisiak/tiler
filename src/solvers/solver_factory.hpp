@@ -33,6 +33,15 @@ const std::vector<std::string> kSatWrapperNames = {
 #endif
 };
 
+const std::string kNoSymmetryBreaker = "no-breaker";
+const std::string kBreakid = "breakid";
+const std::vector<std::string> kSymmetryBreakerNames = {
+        kNoSymmetryBreaker,
+#ifdef BREAKID
+        kBreakid,
+#endif
+};
+
 const std::string kAmoAuto = "amo-auto";
 const std::string kAmoNested = "amo-nested";
 const std::string kAmoBDD = "amo-bdd";
