@@ -7,3 +7,6 @@
 [submodule "external/pblib"]
 	path = external/pblib
 	url = https://github.com/master-keying/pblib.git
+[submodule "external/breakid"]
+	path = external/breakid
+	url = https://github.com/meelgroup/breakid.git
