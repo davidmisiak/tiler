@@ -86,7 +86,7 @@ int main(int argc, char **argv) {
     solve_command
             ->add_option("-b,--backend", options.solver_name,
                          "Selected solver backend (default is " + options.solver_name + ").")
-            ->transform(CLI::IsMember(solver_factory::solver_names));
+            ->transform(CLI::IsMember(solver_factory::get_solver_names()));
 
     solve_command->add_flag(
             "-r,--allow-reflection", options.allow_reflection,

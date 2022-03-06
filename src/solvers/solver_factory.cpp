@@ -1,8 +1,11 @@
 #include "solvers/solver_factory.hpp"
 
+#include <algorithm>
 #include <memory>
 #include <string>
+#include <vector>
 
+#include "boost/algorithm/string.hpp"
 #include "problem/problem.hpp"
 #include "solve_error.hpp"
 #include "solvers/sat_amk_solver.hpp"
@@ -24,145 +27,128 @@
 #include "solvers/sat_utils/pblib_wrapper.hpp"
 #endif
 
+std::vector<std::string> solver_factory::get_solver_names() {
+    using namespace solver_factory;
+
+    std::vector<std::string> solver_names;
+
+    // simple
+    solver_names.push_back(kSimpleSolver);
+
+    // sat
+    for (std::string sat_wrapper_name : kSatWrapperNames) {
+        for (std::string pblib_wrapper_name : kPBLibWrapperNames) {
+            std::vector<std::string> words{kSatPrefix, sat_wrapper_name, pblib_wrapper_name};
+            solver_names.push_back(boost::algorithm::join(words, "_"));
+        }
+    }
+
+    return solver_names;
+}
+
 std::unique_ptr<Solver> solver_factory::create(const std::string& solver_name,
                                                const Problem& problem) {
     using namespace solver_factory;
     using namespace AMO_ENCODER;
     using namespace AMK_ENCODER;
 
-    if (solver_name == kSimpleSolver) {
+    // actually, the error should never be thrown if the solver_name is from get_solver_names()
+    auto SolverNotFound = SolveError("Selected solver is not available.");
+
+    auto solver_names = get_solver_names();
+    if (std::find(solver_names.begin(), solver_names.end(), solver_name) == solver_names.end()) {
+        throw SolverNotFound;
+    }
+
+    std::vector<std::string> words;
+    boost::split(words, solver_name, boost::is_any_of("_"));
+
+    // simple
+    if (words.size() == 1 && words[0] == kSimpleSolver) {
         return std::make_unique<SimpleSolver>(problem);
     }
 
+    // sat
+    if (words.size() == 3 && words[0] == kSatPrefix) {
+        std::string sat_wrapper_name = words[1];
+        std::unique_ptr<SatWrapper> sat_wrapper;
 #ifdef CADICAL
-    if (solver_name == kCadicalAmoAutoSolver) {
-        return std::make_unique<SatAmoSolver>(
-                problem, std::make_unique<CadicalWrapper>(),
-                PBLibWrapper(PB2CNF_AMO_Encoder::BEST, PB2CNF_AMK_Encoder::BEST));
-    }
-    if (solver_name == kCadicalAmoNestedSolver) {
-        return std::make_unique<SatAmoSolver>(
-                problem, std::make_unique<CadicalWrapper>(),
-                PBLibWrapper(PB2CNF_AMO_Encoder::NESTED, PB2CNF_AMK_Encoder::BEST));
-    }
-    if (solver_name == kCadicalAmoBDDSolver) {
-        return std::make_unique<SatAmoSolver>(
-                problem, std::make_unique<CadicalWrapper>(),
-                PBLibWrapper(PB2CNF_AMO_Encoder::BDD, PB2CNF_AMK_Encoder::BEST));
-    }
-    if (solver_name == kCadicalAmoBimanderSolver) {
-        return std::make_unique<SatAmoSolver>(
-                problem, std::make_unique<CadicalWrapper>(),
-                PBLibWrapper(PB2CNF_AMO_Encoder::BIMANDER, PB2CNF_AMK_Encoder::BEST));
-    }
-    if (solver_name == kCadicalAmoCommanderSolver) {
-        return std::make_unique<SatAmoSolver>(
-                problem, std::make_unique<CadicalWrapper>(),
-                PBLibWrapper(PB2CNF_AMO_Encoder::COMMANDER, PB2CNF_AMK_Encoder::BEST));
-    }
-    if (solver_name == kCadicalAmoKProductSolver) {
-        return std::make_unique<SatAmoSolver>(
-                problem, std::make_unique<CadicalWrapper>(),
-                PBLibWrapper(PB2CNF_AMO_Encoder::KPRODUCT, PB2CNF_AMK_Encoder::BEST));
-    }
-    if (solver_name == kCadicalAmoBinarySolver) {
-        return std::make_unique<SatAmoSolver>(
-                problem, std::make_unique<CadicalWrapper>(),
-                PBLibWrapper(PB2CNF_AMO_Encoder::BINARY, PB2CNF_AMK_Encoder::BEST));
-    }
-    if (solver_name == kCadicalAmoPairwiseSolver) {
-        return std::make_unique<SatAmoSolver>(
-                problem, std::make_unique<CadicalWrapper>(),
-                PBLibWrapper(PB2CNF_AMO_Encoder::PAIRWISE, PB2CNF_AMK_Encoder::BEST));
-    }
-
-    if (solver_name == kCadicalAmoOrderedSolver) {
-        return std::make_unique<SatAmoOrderedSolver>(
-                problem, std::make_unique<CadicalWrapper>(),
-                PBLibWrapper(PB2CNF_AMO_Encoder::BDD, PB2CNF_AMK_Encoder::BEST));
-    }
-
-    if (solver_name == kCadicalAmkAutoSolver) {
-        return std::make_unique<SatAmkSolver>(
-                problem, std::make_unique<CadicalWrapper>(),
-                PBLibWrapper(PB2CNF_AMO_Encoder::BEST, PB2CNF_AMK_Encoder::BEST));
-    }
-    if (solver_name == kCadicalAmkBDDSolver) {
-        return std::make_unique<SatAmkSolver>(
-                problem, std::make_unique<CadicalWrapper>(),
-                PBLibWrapper(PB2CNF_AMO_Encoder::BEST, PB2CNF_AMK_Encoder::BDD));
-    }
-    if (solver_name == kCadicalAmkCardSolver) {
-        return std::make_unique<SatAmkSolver>(
-                problem, std::make_unique<CadicalWrapper>(),
-                PBLibWrapper(PB2CNF_AMO_Encoder::BEST, PB2CNF_AMK_Encoder::CARD));
-    }
+        if (sat_wrapper_name == kCadical) {
+            sat_wrapper = std::make_unique<CadicalWrapper>();
+        }
 #endif
-
 #ifdef CRYPTOMINISAT
-    if (solver_name == kCryptominisatAmoAutoSolver) {
-        return std::make_unique<SatAmoSolver>(
-                problem, std::make_unique<CryptominisatWrapper>(),
-                PBLibWrapper(PB2CNF_AMO_Encoder::BEST, PB2CNF_AMK_Encoder::BEST));
-    }
-    if (solver_name == kCryptominisatAmoNestedSolver) {
-        return std::make_unique<SatAmoSolver>(
-                problem, std::make_unique<CryptominisatWrapper>(),
-                PBLibWrapper(PB2CNF_AMO_Encoder::NESTED, PB2CNF_AMK_Encoder::BEST));
-    }
-    if (solver_name == kCryptominisatAmoBDDSolver) {
-        return std::make_unique<SatAmoSolver>(
-                problem, std::make_unique<CryptominisatWrapper>(),
-                PBLibWrapper(PB2CNF_AMO_Encoder::BDD, PB2CNF_AMK_Encoder::BEST));
-    }
-    if (solver_name == kCryptominisatAmoBimanderSolver) {
-        return std::make_unique<SatAmoSolver>(
-                problem, std::make_unique<CryptominisatWrapper>(),
-                PBLibWrapper(PB2CNF_AMO_Encoder::BIMANDER, PB2CNF_AMK_Encoder::BEST));
-    }
-    if (solver_name == kCryptominisatAmoCommanderSolver) {
-        return std::make_unique<SatAmoSolver>(
-                problem, std::make_unique<CryptominisatWrapper>(),
-                PBLibWrapper(PB2CNF_AMO_Encoder::COMMANDER, PB2CNF_AMK_Encoder::BEST));
-    }
-    if (solver_name == kCryptominisatAmoKProductSolver) {
-        return std::make_unique<SatAmoSolver>(
-                problem, std::make_unique<CryptominisatWrapper>(),
-                PBLibWrapper(PB2CNF_AMO_Encoder::KPRODUCT, PB2CNF_AMK_Encoder::BEST));
-    }
-    if (solver_name == kCryptominisatAmoBinarySolver) {
-        return std::make_unique<SatAmoSolver>(
-                problem, std::make_unique<CryptominisatWrapper>(),
-                PBLibWrapper(PB2CNF_AMO_Encoder::BINARY, PB2CNF_AMK_Encoder::BEST));
-    }
-    if (solver_name == kCryptominisatAmoPairwiseSolver) {
-        return std::make_unique<SatAmoSolver>(
-                problem, std::make_unique<CryptominisatWrapper>(),
-                PBLibWrapper(PB2CNF_AMO_Encoder::PAIRWISE, PB2CNF_AMK_Encoder::BEST));
-    }
-
-    if (solver_name == kCryptominisatAmoOrderedSolver) {
-        return std::make_unique<SatAmoOrderedSolver>(
-                problem, std::make_unique<CryptominisatWrapper>(),
-                PBLibWrapper(PB2CNF_AMO_Encoder::BDD, PB2CNF_AMK_Encoder::BEST));
-    }
-
-    if (solver_name == kCryptominisatAmkAutoSolver) {
-        return std::make_unique<SatAmkSolver>(
-                problem, std::make_unique<CryptominisatWrapper>(),
-                PBLibWrapper(PB2CNF_AMO_Encoder::BEST, PB2CNF_AMK_Encoder::BEST));
-    }
-    if (solver_name == kCryptominisatAmkBDDSolver) {
-        return std::make_unique<SatAmkSolver>(
-                problem, std::make_unique<CryptominisatWrapper>(),
-                PBLibWrapper(PB2CNF_AMO_Encoder::BEST, PB2CNF_AMK_Encoder::BDD));
-    }
-    if (solver_name == kCryptominisatAmkCardSolver) {
-        return std::make_unique<SatAmkSolver>(
-                problem, std::make_unique<CryptominisatWrapper>(),
-                PBLibWrapper(PB2CNF_AMO_Encoder::BEST, PB2CNF_AMK_Encoder::CARD));
-    }
+        if (sat_wrapper_name == kCryptominisat) {
+            sat_wrapper = std::make_unique<CryptominisatWrapper>();
+        }
 #endif
+        if (sat_wrapper.get() == nullptr) {
+            throw SolverNotFound;
+        }
 
-    throw SolveError("Selected solver is not available.");  // this should never happen
+        std::string pblib_wrapper_name = words[2];
+        if (pblib_wrapper_name == kAmoAuto) {
+            return std::make_unique<SatAmoSolver>(
+                    problem, std::move(sat_wrapper),
+                    PBLibWrapper(PB2CNF_AMO_Encoder::BEST, PB2CNF_AMK_Encoder::BEST));
+        }
+        if (pblib_wrapper_name == kAmoNested) {
+            return std::make_unique<SatAmoSolver>(
+                    problem, std::move(sat_wrapper),
+                    PBLibWrapper(PB2CNF_AMO_Encoder::NESTED, PB2CNF_AMK_Encoder::BEST));
+        }
+        if (pblib_wrapper_name == kAmoBDD) {
+            return std::make_unique<SatAmoSolver>(
+                    problem, std::move(sat_wrapper),
+                    PBLibWrapper(PB2CNF_AMO_Encoder::BDD, PB2CNF_AMK_Encoder::BEST));
+        }
+        if (pblib_wrapper_name == kAmoBimander) {
+            return std::make_unique<SatAmoSolver>(
+                    problem, std::move(sat_wrapper),
+                    PBLibWrapper(PB2CNF_AMO_Encoder::BIMANDER, PB2CNF_AMK_Encoder::BEST));
+        }
+        if (pblib_wrapper_name == kAmoCommander) {
+            return std::make_unique<SatAmoSolver>(
+                    problem, std::move(sat_wrapper),
+                    PBLibWrapper(PB2CNF_AMO_Encoder::COMMANDER, PB2CNF_AMK_Encoder::BEST));
+        }
+        if (pblib_wrapper_name == kAmoKProduct) {
+            return std::make_unique<SatAmoSolver>(
+                    problem, std::move(sat_wrapper),
+                    PBLibWrapper(PB2CNF_AMO_Encoder::KPRODUCT, PB2CNF_AMK_Encoder::BEST));
+        }
+        if (pblib_wrapper_name == kAmoBinary) {
+            return std::make_unique<SatAmoSolver>(
+                    problem, std::move(sat_wrapper),
+                    PBLibWrapper(PB2CNF_AMO_Encoder::BINARY, PB2CNF_AMK_Encoder::BEST));
+        }
+        if (pblib_wrapper_name == kAmoPairwise) {
+            return std::make_unique<SatAmoSolver>(
+                    problem, std::move(sat_wrapper),
+                    PBLibWrapper(PB2CNF_AMO_Encoder::PAIRWISE, PB2CNF_AMK_Encoder::BEST));
+        }
+        if (pblib_wrapper_name == kAmoOrdered) {
+            return std::make_unique<SatAmoOrderedSolver>(
+                    problem, std::move(sat_wrapper),
+                    PBLibWrapper(PB2CNF_AMO_Encoder::BDD, PB2CNF_AMK_Encoder::BEST));
+        }
+        if (pblib_wrapper_name == kAmkAuto) {
+            return std::make_unique<SatAmkSolver>(
+                    problem, std::move(sat_wrapper),
+                    PBLibWrapper(PB2CNF_AMO_Encoder::BEST, PB2CNF_AMK_Encoder::BEST));
+        }
+        if (pblib_wrapper_name == kAmkBDD) {
+            return std::make_unique<SatAmkSolver>(
+                    problem, std::move(sat_wrapper),
+                    PBLibWrapper(PB2CNF_AMO_Encoder::BEST, PB2CNF_AMK_Encoder::BDD));
+        }
+        if (pblib_wrapper_name == kAmkCard) {
+            return std::make_unique<SatAmkSolver>(
+                    problem, std::move(sat_wrapper),
+                    PBLibWrapper(PB2CNF_AMO_Encoder::BEST, PB2CNF_AMK_Encoder::CARD));
+        }
+        throw SolverNotFound;
+    }
+
+    throw SolverNotFound;
 }

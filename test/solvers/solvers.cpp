@@ -37,7 +37,7 @@ bool check_solution(Problem problem, Solution solution, bool expected) {
 }
 
 void test_solving(Problem problem, bool result) {
-    for (const std::string& solver_name : solver_factory::solver_names) {
+    for (const std::string& solver_name : solver_factory::get_solver_names()) {
         Solution solution = solver_factory::create(solver_name, problem)->solve();
         REQUIRE(check_solution(problem, solution, result));
     }

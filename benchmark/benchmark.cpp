@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
         bool reflection = filepath.find('\'') != std::string::npos;
         Problem problem = problem_parser::parse_from_file(filepath, reflection);
 
-        for (const std::string& solver_name : solver_factory::solver_names) {
+        for (const std::string& solver_name : solver_factory::get_solver_names()) {
             std::string name = filepath + "@" + solver_name;
             benchmark::RegisterBenchmark(name.c_str(), solve, problem, solver_name)
                     ->Unit(benchmark::kMillisecond);

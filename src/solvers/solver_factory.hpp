@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "problem/problem.hpp"
 #include "solvers/solver.hpp"
@@ -10,75 +11,53 @@
 // Encapsulates all the ugly #ifdef-s, etc.
 namespace solver_factory {
 
-// Creates a solver instance based on the `solver_name` (which should be one of the strings in
-// `solver_factory::solver_names`).
+// Returns all available solver names.
+std::vector<std::string> get_solver_names();
+
+// Creates a solver instance based on the `solver_name` (which must be one of the strings returned
+// by `solver_factory::solver_names()`).
 std::unique_ptr<Solver> create(const std::string& solver_name, const Problem& problem);
 
 const std::string kSimpleSolver = "simple";
 
-const std::string kCadicalAmoAutoSolver = "cadical-amo-auto";
-const std::string kCadicalAmoNestedSolver = "cadical-amo-nested";
-const std::string kCadicalAmoBDDSolver = "cadical-amo-bdd";
-const std::string kCadicalAmoBimanderSolver = "cadical-amo-bimander";
-const std::string kCadicalAmoCommanderSolver = "cadical-amo-commander";
-const std::string kCadicalAmoKProductSolver = "cadical-amo-kproduct";
-const std::string kCadicalAmoBinarySolver = "cadical-amo-binary";
-const std::string kCadicalAmoPairwiseSolver = "cadical-amo-pairwise";
+const std::string kSatPrefix = "sat";
 
-const std::string kCadicalAmoOrderedSolver = "cadical-amo-ordered";
-
-const std::string kCadicalAmkAutoSolver = "cadical-amk-auto";
-const std::string kCadicalAmkBDDSolver = "cadical-amk-bdd";
-const std::string kCadicalAmkCardSolver = "cadical-amk-card";
-
-const std::string kCryptominisatAmoAutoSolver = "cmsat-amo-auto";
-const std::string kCryptominisatAmoNestedSolver = "cmsat-amo-nested";
-const std::string kCryptominisatAmoBDDSolver = "cmsat-amo-bdd";
-const std::string kCryptominisatAmoBimanderSolver = "cmsat-amo-bimander";
-const std::string kCryptominisatAmoCommanderSolver = "cmsat-amo-commander";
-const std::string kCryptominisatAmoKProductSolver = "cmsat-amo-kproduct";
-const std::string kCryptominisatAmoBinarySolver = "cmsat-amo-binary";
-const std::string kCryptominisatAmoPairwiseSolver = "cmsat-amo-pairwise";
-
-const std::string kCryptominisatAmoOrderedSolver = "cmsat-amo-ordered";
-
-const std::string kCryptominisatAmkAutoSolver = "cmsat-amk-auto";
-const std::string kCryptominisatAmkBDDSolver = "cmsat-amk-bdd";
-const std::string kCryptominisatAmkCardSolver = "cmsat-amk-card";
-
-// Contains all available solver names.
-// We don't use an enum for solver names because CLI11's error messages for enums are somewhat ugly
-// and enum -> vector conversion would be an unnecessary hassle.
-const std::vector<std::string> solver_names = {
-        kSimpleSolver,
+const std::string kCadical = "cadical";
+const std::string kCryptominisat = "cms";
+const std::vector<std::string> kSatWrapperNames = {
 #ifdef CADICAL
-        kCadicalAmoAutoSolver,
-        kCadicalAmoNestedSolver,
-        kCadicalAmoBDDSolver,
-        kCadicalAmoBimanderSolver,
-        kCadicalAmoCommanderSolver,
-        kCadicalAmoKProductSolver,
-        kCadicalAmoBinarySolver,
-        // kCadicalPairwiseSolver,  // crashes on larger problems because of RAM exhaustion
-        kCadicalAmoOrderedSolver,
-        kCadicalAmkAutoSolver,
-        kCadicalAmkBDDSolver,
-        kCadicalAmkCardSolver,
+        kCadical,
 #endif
 #ifdef CRYPTOMINISAT
-        kCryptominisatAmoAutoSolver,
-        kCryptominisatAmoNestedSolver,
-        kCryptominisatAmoBDDSolver,
-        kCryptominisatAmoBimanderSolver,
-        kCryptominisatAmoCommanderSolver,
-        kCryptominisatAmoKProductSolver,
-        kCryptominisatAmoBinarySolver,
-        // kCryptominisatPairwiseSolver,  // crashes on larger problems because of RAM exhaustion
-        kCryptominisatAmoOrderedSolver,
-        kCryptominisatAmkAutoSolver,
-        kCryptominisatAmkBDDSolver,
-        kCryptominisatAmkCardSolver,
+        kCryptominisat,
 #endif
+};
+
+const std::string kAmoAuto = "amo-auto";
+const std::string kAmoNested = "amo-nested";
+const std::string kAmoBDD = "amo-bdd";
+const std::string kAmoBimander = "amo-bimander";
+const std::string kAmoCommander = "amo-commander";
+const std::string kAmoKProduct = "amo-kproduct";
+const std::string kAmoBinary = "amo-binary";
+const std::string kAmoPairwise = "amo-pairwise";
+const std::string kAmoOrdered = "amo-ordered";
+const std::string kAmkAuto = "amk-auto";
+const std::string kAmkBDD = "amk-bdd";
+const std::string kAmkCard = "amk-card";
+const std::vector<std::string> kPBLibWrapperNames = {
+        kAmoAuto,
+        kAmoNested,
+        kAmoBDD,
+        kAmoBimander,
+        kAmoCommander,
+        kAmoKProduct,
+        kAmoBinary,
+        // kAmoPairwise,  // crashes on larger problems because of RAM exhaustion
+        kAmoOrdered,
+        kAmkAuto,
+        kAmkBDD,
+        kAmkCard,
 };
 
 }  // namespace solver_factory
