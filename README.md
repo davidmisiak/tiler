@@ -51,6 +51,19 @@ Here are some example outputs of the solver.
 
 ## Build Instructions
 
+There are several optional dependencies (git submodules):
+
+- [CaDiCaL](https://github.com/arminbiere/cadical) SAT solver
+- [CryptoMiniSat](https://github.com/msoos/cryptominisat) SAT solver
+- [BreakID](https://github.com/meelgroup/breakid) CNF symmetry breaking library
+- [PBLib](https://github.com/master-keying/pblib) pseudo-boolean constraint encoding library
+  (required when either CaDiCaL or CryptoMiniSat is present)
+
+Run `./scripts/build-all-deps.sh` to clone and build them. You can select only some of them by
+running a subset of `./scripts/build-*.sh` scripts and setting CMake options `-DCADICAL=OFF` /
+`-DCRYPTOMINISAT=OFF` / `-DBREAKID=OFF`. Having the libraries installed system-wide should work as
+well.
+
 Building Tiler requires these dependencies:
 
 - [CMake](https://cmake.org/) build tool (version 3.12 or later)
@@ -60,12 +73,6 @@ Building Tiler requires these dependencies:
 Build the exacutable by running `./scripts/release-setup.sh` and `./scripts/release-build.sh`. You
 can configure build options using eg. `ccmake` before running `release-build.sh` or by adding
 appropriate `-D` flags to the `cmake ..` line in `release-setup.sh`.
-
-If you want to use SAT solvers [CaDiCaL](https://github.com/arminbiere/cadical) and/or
-[CryptoMiniSat](https://github.com/msoos/cryptominisat), run `./scripts/build-cadical.sh`,
-`./scripts/build-cryptominisat.sh` and `./scripts/build-pblib.sh` beforehand (or having them
-installed system-wide should work as well). Otherwise, you need to set CMake options `-DCADICAL=OFF`
-and `-DCRYPTOMINISAT=OFF`.
 
 Your freshly compiled Tiler executable will be located at `release/bin/tiler`.
 

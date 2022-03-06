@@ -26,6 +26,9 @@ public:
     // Add a clause to the CNF formula.
     inline void add_clause(const sat_utils::Clause& clause) { clauses_.push_back(clause); }
 
+    // Get currently present CNF clauses.
+    inline std::vector<sat_utils::Clause> get_clauses() { return clauses_; }
+
     // Returns true if a solution exists, false if it doesn't (and throws a SolveError when the SAT
     // solver signalizes something weird). Should be called at most once.
     virtual bool solve() = 0;
