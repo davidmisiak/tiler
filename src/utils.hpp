@@ -46,9 +46,6 @@ bool is_continuous(int w, int h, const BoolMatrix &matrix);
 // Checks if the region of true cells in `matrix` has a "hole" - at least one false cell inside it.
 bool has_hole(int w, int h, BoolMatrix matrix);
 
-// Checks if `str` ends with given `suffix`.
-bool ends_with(const std::string &str, const std::string &suffix);
-
 // Recursively lists all files in directory.
 std::vector<std::string> get_file_paths(const std::string &directory_path);
 

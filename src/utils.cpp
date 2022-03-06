@@ -88,11 +88,6 @@ bool utils::has_hole(int w, int h, utils::BoolMatrix matrix) {
     return matrix_contains(matrix, false);
 }
 
-bool utils::ends_with(const std::string& str, const std::string& suffix) {
-    return str.size() >= suffix.size() &&
-           str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;
-}
-
 std::vector<std::string> utils::get_file_paths(const std::string& directory_path) {
     std::vector<std::string> filepaths;
     for (const auto& entry : std::filesystem::recursive_directory_iterator(directory_path)) {

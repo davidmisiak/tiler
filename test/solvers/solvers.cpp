@@ -3,6 +3,7 @@
 #include <tuple>
 #include <vector>
 
+#include "boost/algorithm/string.hpp"
 #include "catch2/catch.hpp"
 #include "parsers/problem_parser.hpp"
 #include "problem/problem.hpp"
@@ -97,8 +98,8 @@ TEST_CASE("Solvers return correct solutions") {
 
 TEST_CASE("Solvers return correct solutions (benchmark problems)") {
     for (const std::string& filepath : utils::get_file_paths("problems")) {
-        bool is_solvable = utils::ends_with(filepath, "_s");
-        bool is_unsolvable = utils::ends_with(filepath, "_u");
+        bool is_solvable = boost::algorithm::ends_with(filepath, "_s");
+        bool is_unsolvable = boost::algorithm::ends_with(filepath, "_u");
         bool reflection = filepath.find('\'') != std::string::npos;
         if (is_solvable || is_unsolvable) {
             Problem problem = problem_parser::parse_from_file(filepath, reflection);
