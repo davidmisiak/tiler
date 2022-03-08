@@ -57,7 +57,7 @@ Solution SatAmkSolver::solve(bool print_stats) {
     }
 
     for (const auto& [tile_clause, tile_count] : tile_clauses) {
-        if (tile_clauses.size() > 0 && tile_count > 0) {
+        if (tile_clause.size() > 0 && tile_count > 0) {
             pblib_wrapper_.at_most_k(tile_clause, sat_wrapper_, tile_count);
         }
     }

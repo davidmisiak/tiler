@@ -62,7 +62,7 @@ Solution SatAmoSolver::solve(bool print_stats) {
     }
 
     for (const Clause& instance_clause : instance_clauses) {
-        if (instance_clauses.size() > 0) {
+        if (instance_clause.size() > 0) {
             pblib_wrapper_.at_most_k(instance_clause, sat_wrapper_, 1);
         }
     }
