@@ -21,10 +21,7 @@ SatAmoOrderedSolver::SatAmoOrderedSolver(Problem problem, std::unique_ptr<SatWra
           sat_wrapper_(std::move(sat_wrapper)),
           symmetry_breaker_(std::move(symmetry_breaker)),
           pblib_wrapper_(std::move(pblib_wrapper)) {
-    int board_size = problem_.board_.get_size();
-    for (Tile& tile : problem_.tiles_) {
-        tile.limit_count(board_size / tile.get_size());
-    }
+    problem_.limit_tile_counts();
 }
 
 // The principle is the same as in SatSolver. However, we define a certain order in which tile
