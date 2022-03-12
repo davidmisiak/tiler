@@ -37,9 +37,12 @@ bool check_solution(Problem problem, Solution solution, bool expected) {
     return problem.board_.get_size() == 0;
 }
 
-void test_solving(Problem problem, bool result) {
+void test_solving(Problem problem, std::string problem_ref, bool result) {
     for (const std::string& solver_name : solver_factory::get_solver_names()) {
         Solution solution = solver_factory::create(solver_name, problem)->solve();
+        std::vector<std::string> info_words = {solver_name, "should return",
+                                               (result ? "true" : "false"), "on", problem_ref};
+        INFO(boost::algorithm::join(info_words, " "));
         REQUIRE(check_solution(problem, solution, result));
     }
 }
@@ -90,9 +93,9 @@ TEST_CASE("Solvers return correct solutions") {
             {{"5V", "3I", "1:1"}, true, false},
     };
 
-    for (const auto& [problem_str, reflection, result] : problems) {
-        Problem problem = problem_parser::parse(problem_str, reflection);
-        test_solving(problem, result);
+    for (const auto& [problem_strs, reflection, result] : problems) {
+        Problem problem = problem_parser::parse(problem_strs, reflection);
+        test_solving(problem, boost::algorithm::join(problem_strs, " "), result);
     }
 }
 
@@ -104,7 +107,7 @@ TEST_CASE("Solvers return correct solutions (benchmark problems)") {
         if (is_solvable || is_unsolvable) {
             Problem problem = problem_parser::parse_from_file(filepath, reflection);
             // Warning: This will take several hours, don't run by default.
-            // test_solving(problem, is_solvable);
+            // test_solving(problem, filepath, is_solvable);
         }
     }
 }
