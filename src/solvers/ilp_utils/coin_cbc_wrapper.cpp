@@ -7,7 +7,7 @@
 #include "solve_error.hpp"
 #include "solvers/ilp_utils/ilp_utils.hpp"
 
-bool CoinCbcWrapper::solve(ilp_utils::ObjectiveSense obj_sense) {
+bool CoinCbcWrapper::solve(ilp_utils::ObjectiveSense obj_sense, double obj_limit) {
     Cbc_setObjSense(model_, static_cast<double>(obj_sense));
 
     for (auto var : objective_) {
@@ -29,16 +29,17 @@ bool CoinCbcWrapper::solve(ilp_utils::ObjectiveSense obj_sense) {
 
     if (Cbc_solve(model_) == 0) {
         if (Cbc_isProvenInfeasible(model_)) return false;
-        if (Cbc_isProvenOptimal(model_)) return true;
+        if (Cbc_isProvenOptimal(model_)) {
+            return ilp_utils::evaluate_obj_result(obj_sense, Cbc_getObjValue(model_), obj_limit);
+        }
     }
     // uncomment when timeout is active and the result is not important (e.g. when benchmarking)
     // return false;
     throw SolveError("Unknown COIN-CBC error occured.");
 }
 
-std::pair<double, std::vector<double>> CoinCbcWrapper::get_solution() {
-    double obj_value = Cbc_getObjValue(model_);
+std::vector<double> CoinCbcWrapper::get_solution() {
     const double *cbc_var_values = Cbc_getColSolution(model_);
     std::vector<double> var_values(cbc_var_values, cbc_var_values + objective_.size());
-    return {obj_value, var_values};
+    return var_values;
 }

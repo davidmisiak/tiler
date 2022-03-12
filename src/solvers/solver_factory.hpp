@@ -22,54 +22,63 @@ const std::string kSimpleSolver = "simple";
 
 const std::string kSatPrefix = "sat";
 
-const std::string kCadical = "cadical";
-const std::string kCryptominisat = "cms";
+const std::string kSatCadical = "cadical";
+const std::string kSatCryptominisat = "cms";
 const std::vector<std::string> kSatWrapperNames = {
 #ifdef CADICAL
-        kCadical,
+        kSatCadical,
 #endif
 #ifdef CRYPTOMINISAT
-        kCryptominisat,
+        kSatCryptominisat,
 #endif
 };
 
-const std::string kNoSymmetryBreaker = "no-breaker";
-const std::string kBreakid = "breakid";
-const std::vector<std::string> kSymmetryBreakerNames = {
-        kNoSymmetryBreaker,
+const std::string kSatNoSymmetryBreaker = "no-breaker";
+const std::string kSatBreakid = "breakid";
+const std::vector<std::string> kSatSymmetryBreakerNames = {
+        kSatNoSymmetryBreaker,
 #ifdef BREAKID
-        kBreakid,
+        kSatBreakid,
 #endif
 };
 
-const std::string kAmoAuto = "amo-auto";
-const std::string kAmoNested = "amo-nested";
-const std::string kAmoBDD = "amo-bdd";
-const std::string kAmoBimander = "amo-bimander";
-const std::string kAmoCommander = "amo-commander";
-const std::string kAmoKProduct = "amo-kproduct";
-const std::string kAmoBinary = "amo-binary";
-const std::string kAmoPairwise = "amo-pairwise";
-const std::string kAmoOrdered = "amo-ordered";
-const std::string kAmkAuto = "amk-auto";
-const std::string kAmkBDD = "amk-bdd";
-const std::string kAmkCard = "amk-card";
-const std::vector<std::string> kPBLibWrapperNames = {
-        kAmoAuto,
-        // kAmoNested,  // crashes on larger problems because of RAM exhaustion (with breakid)
-        kAmoBDD,
-        kAmoBimander,
-        kAmoCommander,
-        kAmoKProduct,
-        kAmoBinary,
-        // kAmoPairwise,  // crashes on larger problems because of RAM exhaustion
-        kAmoOrdered,
-        kAmkAuto,
-        kAmkBDD,
-        kAmkCard,
+const std::string kSatAmoAuto = "amo-auto";
+const std::string kSatAmoNested = "amo-nested";
+const std::string kSatAmoBDD = "amo-bdd";
+const std::string kSatAmoBimander = "amo-bimander";
+const std::string kSatAmoCommander = "amo-commander";
+const std::string kSatAmoKProduct = "amo-kproduct";
+const std::string kSatAmoBinary = "amo-binary";
+const std::string kSatAmoPairwise = "amo-pairwise";
+const std::string kSatAmoOrdered = "amo-ordered";
+const std::string kSatAmkAuto = "amk-auto";
+const std::string kSatAmkBDD = "amk-bdd";
+const std::string kSatAmkCard = "amk-card";
+const std::vector<std::string> kSatPBLibWrapperNames = {
+        kSatAmoAuto,
+        // kSatAmoNested,  // crashes on larger problems because of RAM exhaustion (with breakid)
+        kSatAmoBDD,
+        kSatAmoBimander,
+        kSatAmoCommander,
+        kSatAmoKProduct,
+        kSatAmoBinary,
+        // kSatAmoPairwise,  // crashes on larger problems because of RAM exhaustion
+        kSatAmoOrdered,
+        kSatAmkAuto,
+        kSatAmkBDD,
+        kSatAmkCard,
 };
 
-const std::string kIlpSolver = "ilp";
+const std::string kIlpPrefix = "ilp";
+
+const std::string kIlpExactCover = "exact";
+const std::string kIlpMinimizeCover = "minimize";
+const std::string kIlpMaximizeCover = "maximize";
+const std::vector<std::string> kIlpObjectiveNames = {
+        kIlpExactCover,
+        kIlpMinimizeCover,
+        kIlpMaximizeCover,
+};
 
 }  // namespace solver_factory
 

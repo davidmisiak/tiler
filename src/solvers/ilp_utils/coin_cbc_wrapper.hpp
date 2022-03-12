@@ -30,9 +30,9 @@ public:
         constraints_.push_back(constraint);
     }
 
-    bool solve(ilp_utils::ObjectiveSense obj_sense);
+    bool solve(ilp_utils::ObjectiveSense obj_sense, double obj_limit);
 
-    std::pair<double, std::vector<double>> get_solution();
+    std::vector<double> get_solution();
 
 protected:
     Cbc_Model* model_;

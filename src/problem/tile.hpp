@@ -20,7 +20,7 @@ public:
 
     void print() const;
 
-    inline int get_size() const { return regions_.begin()->get_size(); };
+    inline int get_size() const { return regions_[0].get_size(); };
     inline int get_count() const { return count_; };
 
     // Adds `d` to the cell count (`d` may be negative). If the cell count is infinity, no

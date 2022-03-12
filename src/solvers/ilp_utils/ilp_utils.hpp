@@ -1,6 +1,7 @@
 #ifndef TILER_SOLVERS_ILP_UTILS_ILP_UTILS_HPP_
 #define TILER_SOLVERS_ILP_UTILS_ILP_UTILS_HPP_
 
+#include <cstdlib>
 #include <vector>
 
 #include "coin/CoinFinite.hpp"
@@ -9,6 +10,7 @@ namespace ilp_utils {
 
 const double kMinDouble = COIN_DBL_MIN;
 const double kMaxDouble = COIN_DBL_MAX;
+const double kEps = 1e-5;
 
 enum class ConstraintSense {
     kLeq = 'L',
@@ -37,7 +39,7 @@ public:
     inline bool is_integer() const { return is_integer_; }
     inline double lower() const { return lower_; }
     inline double upper() const { return upper_; }
-    inline double coeff() const { return upper_; }
+    inline double coeff() const { return coeff_; }
 
 private:
     int num_;
@@ -63,6 +65,16 @@ private:
     ConstraintSense sense_;
     double rhs_;
 };
+
+inline bool approxEq(double lhs, double rhs) { return std::abs(lhs - rhs) < kEps; }
+inline bool approxLeq(double lhs, double rhs) { return lhs < rhs + kEps; }
+inline bool approxGeq(double lhs, double rhs) { return lhs > rhs - kEps; }
+
+inline bool evaluate_obj_result(ObjectiveSense sense, double result, double limit) {
+    if (sense == ObjectiveSense::kMinimize) return approxLeq(result, limit);
+    if (sense == ObjectiveSense::kMaximize) return approxGeq(result, limit);
+    return true;  // ObjectiveSense::kIgnore
+}
 
 }  // namespace ilp_utils
 
