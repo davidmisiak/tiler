@@ -8,6 +8,7 @@
 #include "solvers/sat_utils/sat_utils.hpp"
 
 bool CryptominisatWrapper::solve() {
+    // solver_.set_max_time(1000);
     solver_.new_vars(next_var_);
 
     for (const sat_utils::Clause& clause : clauses_) {
@@ -20,6 +21,8 @@ bool CryptominisatWrapper::solve() {
     CMSat::lbool result = solver_.solve();
     if (result == CMSat::l_False) return false;
     if (result == CMSat::l_True) return true;
+    // uncomment when timeout is active and the result is not important (e.g. when benchmarking)
+    // return false;
     throw SolveError("Unknown CryptoMiniSat error occured.");
 }
 

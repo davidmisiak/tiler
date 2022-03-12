@@ -58,7 +58,7 @@ def show_data(df, sort_by, cumulative):
 
     # checkboxes
     lines = plot.lines
-    _, check_ax = plt.subplots(figsize=(4, 1 + 0.3 * len(lines)))
+    _, check_ax = plt.subplots(figsize=(5, 1 + 0.3 * len(lines)))
     labels = [str(line.get_label()) for line in lines]
     visibility = [True for _ in lines]
 
@@ -103,7 +103,11 @@ def compare_all_solvers(df):
 
 
 paths = sorted(glob.glob("benchmark/*.json"))
-df = filter_data(load_data(paths), problem_regex="", solver_regex="")
+df = filter_data(
+    load_data(paths),
+    problem_regex="",
+    solver_regex="",
+)
 show_data(df, sort_by="", cumulative=False)
 # compare_all_solvers(df)
 

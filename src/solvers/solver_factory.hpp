@@ -56,7 +56,7 @@ const std::string kAmkBDD = "amk-bdd";
 const std::string kAmkCard = "amk-card";
 const std::vector<std::string> kPBLibWrapperNames = {
         kAmoAuto,
-        kAmoNested,
+        // kAmoNested,  // crashes on larger problems because of RAM exhaustion (with breakid)
         kAmoBDD,
         kAmoBimander,
         kAmoCommander,
