@@ -8,6 +8,8 @@
 #include "boost/algorithm/string.hpp"
 #include "problem/problem.hpp"
 #include "solve_error.hpp"
+#include "solvers/ilp_solver.hpp"
+#include "solvers/ilp_utils/coin_cbc_wrapper.hpp"
 #include "solvers/sat_amk_solver.hpp"
 #include "solvers/sat_amo_ordered_solver.hpp"
 #include "solvers/sat_amo_solver.hpp"
@@ -50,6 +52,9 @@ std::vector<std::string> solver_factory::get_solver_names() {
             }
         }
     }
+
+    // ilp
+    solver_names.push_back(kIlpSolver);
 
     return solver_names;
 }
@@ -170,6 +175,11 @@ std::unique_ptr<Solver> solver_factory::create(const std::string& solver_name,
                     PBLibWrapper(PB2CNF_AMO_Encoder::BEST, PB2CNF_AMK_Encoder::CARD));
         }
         throw SolverNotFound;
+    }
+
+    // ilp
+    if (words.size() == 1 && words[0] == kIlpSolver) {
+        return std::make_unique<IlpSolver>(problem, std::make_unique<CoinCbcWrapper>());
     }
 
     throw SolverNotFound;

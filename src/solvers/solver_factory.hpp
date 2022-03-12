@@ -69,6 +69,8 @@ const std::vector<std::string> kPBLibWrapperNames = {
         kAmkCard,
 };
 
+const std::string kIlpSolver = "ilp";
+
 }  // namespace solver_factory
 
 #endif  // TILER_SOLVERS_SOLVER_FACTORY_HPP_
