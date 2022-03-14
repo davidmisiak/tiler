@@ -19,6 +19,7 @@ public:
     explicit SatAmoOrderedSolver(Problem problem, std::unique_ptr<SatWrapper> sat_wrapper,
                                  std::unique_ptr<SymmetryBreaker> symmetry_breaker,
                                  PBLibWrapper pblib_wrapper);
+
     Solution solve(bool print_stats = false) override;
 
 private:

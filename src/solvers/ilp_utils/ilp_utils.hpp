@@ -12,23 +12,32 @@ const double kMinDouble = COIN_DBL_MIN;
 const double kMaxDouble = COIN_DBL_MAX;
 const double kEps = 1e-5;
 
+// Constraint sense - whether the linear combination of variables should be leq, geq or eq to the
+// constraint's rhs.
 enum class ConstraintSense {
     kLeq = 'L',
     kGeq = 'G',
     kEq = 'E',
 };
 
+// Objective sense - whetner we are minimizing or maximizing the objective function, or ignoring it
+// (when we are concerned only with feasibility).
 enum class ObjectiveSense {
     kMinimize = 1,
     kMaximize = -1,
     kIgnore = 0,
 };
 
+// MLP variable. Note that this class represents not only the variable itself (its number, bounds
+// and whether it is an integer), but also a coefficient associated with it (variables in
+// constraints as well as in the objective function always carry a coeffcient, so it is easier to
+// bundle them this way.)
 class Var {
 public:
     Var(int num, bool is_integer, double lower, double upper, double coeff)
             : num_(num), is_integer_(is_integer), lower_(lower), upper_(upper), coeff_(coeff) {}
 
+    // Returns the same variable as `this`, but with the given `coef`.
     inline Var with_coeff(double coeff) const {
         Var new_var(*this);
         new_var.coeff_ = coeff;
@@ -49,8 +58,10 @@ private:
     double coeff_;
 };
 
+// Alias for a list of variables (and their coefficients).
 using Vars = std::vector<Var>;
 
+// MLP constraint.
 class Constraint {
 public:
     Constraint(Vars vars, ConstraintSense sense, double rhs)
@@ -70,6 +81,8 @@ inline bool approxEq(double lhs, double rhs) { return std::abs(lhs - rhs) < kEps
 inline bool approxLeq(double lhs, double rhs) { return lhs < rhs + kEps; }
 inline bool approxGeq(double lhs, double rhs) { return lhs > rhs - kEps; }
 
+// Decides whether the objective function `result` passes the `limit` with regards to the objective
+// `sense`.
 inline bool evaluate_obj_result(ObjectiveSense sense, double result, double limit) {
     if (sense == ObjectiveSense::kMinimize) return approxLeq(result, limit);
     if (sense == ObjectiveSense::kMaximize) return approxGeq(result, limit);

@@ -10,14 +10,15 @@
 CoinCbcWrapper::CoinCbcWrapper(bool adjusted_params) {
     model_ = Cbc_newModel();
 
-    // we don't want a benchmark problem run to be dependent on the other selected problems,
-    // so we need to set fixed seeds before each solving
+    // We don't want a benchmark problem run to be dependent on the other selected problems, so we
+    // need to set fixed seeds before each solver run.
     Cbc_setParameter(model_, "randomSeed", "1234");
     Cbc_setParameter(model_, "randomCbcSeed", "5678");
 
     // Cbc_setMaximumSeconds(model_, 1000);
 
     if (adjusted_params) {
+        // These were selected empirically, but the results are not very impressive.
         Cbc_setParameter(model_, "feasibilityPump", "off");
         Cbc_setParameter(model_, "cutsOnOff", "off");
         Cbc_setParameter(model_, "cliqueCuts", "on");
@@ -54,7 +55,7 @@ bool CoinCbcWrapper::solve(ilp_utils::ObjectiveSense obj_sense, double obj_limit
             return ilp_utils::evaluate_obj_result(obj_sense, Cbc_getObjValue(model_), obj_limit);
         }
     }
-    // uncomment when timeout is active and the result is not important (e.g. when benchmarking)
+    // Uncomment when timeout is active and the result is not important (e.g. when benchmarking).
     // return false;
     throw SolveError("Unknown COIN-CBC error occured.");
 }

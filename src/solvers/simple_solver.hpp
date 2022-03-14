@@ -9,6 +9,7 @@
 class SimpleSolver : public Solver {
 public:
     explicit SimpleSolver(Problem problem);
+
     Solution solve(bool print_stats = false) override;
 
 private:

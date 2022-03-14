@@ -6,9 +6,13 @@
 #include "coin/Cbc_C_Interface.h"
 #include "solvers/ilp_utils/ilp_utils.hpp"
 
+// Wrapper for COIN-CBC MIP solver.
 class CoinCbcWrapper {
 public:
+    // If `adjusted_params` is `true`, we use COIN-CBC with some parameter adjustments, otherwise we
+    // use the defaults.
     CoinCbcWrapper(bool adjusted_params);
+
     CoinCbcWrapper(const CoinCbcWrapper&) = delete;
     CoinCbcWrapper(CoinCbcWrapper&&) = default;
     ~CoinCbcWrapper();
@@ -18,12 +22,16 @@ public:
     inline int get_var_count() const { return next_var_; }
     inline int get_constraint_count() const { return static_cast<int>(constraints_.size()); }
 
+    // Adds a new variable with `lower` and `upper` bounds. The `coeff` is set as the varible's
+    // coefficient in the problem objective. The created variable is returned with the given
+    // coeffcient as well.
     inline ilp_utils::Var new_var(bool is_integer, double lower, double upper, double coeff) {
         auto var = ilp_utils::Var(next_var_++, is_integer, lower, upper, coeff);
         objective_.push_back(var);
         return var;
     }
 
+    // Adds a constraint.
     inline void add_constraint(const ilp_utils::Constraint& constraint) {
         constraints_.push_back(constraint);
     }
