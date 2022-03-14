@@ -25,7 +25,7 @@ CoinCbcWrapper::CoinCbcWrapper(bool adjusted_params) {
         Cbc_setParameter(model_, "heuristicsOnOff", "off");
         Cbc_setParameter(model_, "greedyHeuristic", "on");
     }
-};
+}
 
 CoinCbcWrapper::~CoinCbcWrapper() { Cbc_deleteModel(model_); }
 
