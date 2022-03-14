@@ -78,10 +78,8 @@ Solution SatAmoSolver::solve(bool print_stats) {
     symmetry_breaker_->break_symmetries(sat_wrapper_);
 
     if (print_stats) {
-        print::stats() << placed_regions.size() << " placed regions\n"
-                       << sat_wrapper_->get_var_count() << " variables\n"
-                       << sat_wrapper_->get_clause_count() << " clauses\n"
-                       << sat_wrapper_->get_lit_count() << " literals\n";
+        print::stats() << placed_regions.size() << " placed regions\n";
+        sat_wrapper_->print_stats();
         symmetry_breaker_->print_stats();
     }
 

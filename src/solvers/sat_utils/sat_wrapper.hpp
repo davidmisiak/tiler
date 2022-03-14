@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "print.hpp"
 #include "solvers/sat_utils/sat_utils.hpp"
 
 // Interaface for SAT solver wrappers. Abstracts away specific API's of SAT solvers when writing
@@ -28,6 +29,13 @@ public:
 
     // Get currently present CNF clauses.
     inline std::vector<sat_utils::Clause> get_clauses() { return clauses_; }
+
+    // Prints current info about variables and clauses.
+    inline void print_stats() {
+        print::stats() << get_var_count() << " variables\n"
+                       << get_clause_count() << " clauses\n"
+                       << get_lit_count() << " literals\n";
+    }
 
     // Returns true if a solution exists, false if it doesn't (and throws a SolveError when the SAT
     // solver signalizes something weird). Should be called at most once.
