@@ -7,6 +7,27 @@
 #include "solve_error.hpp"
 #include "solvers/ilp_utils/ilp_utils.hpp"
 
+CoinCbcWrapper::CoinCbcWrapper(bool adjusted_params) {
+    model_ = Cbc_newModel();
+
+    // we don't want a benchmark problem run to be dependent on the other selected problems,
+    // so we need to set fixed seeds before each solving
+    Cbc_setParameter(model_, "randomSeed", "1234");
+    Cbc_setParameter(model_, "randomCbcSeed", "5678");
+
+    // Cbc_setMaximumSeconds(model_, 1000);
+
+    if (adjusted_params) {
+        Cbc_setParameter(model_, "feasibilityPump", "off");
+        Cbc_setParameter(model_, "cutsOnOff", "off");
+        Cbc_setParameter(model_, "cliqueCuts", "on");
+        Cbc_setParameter(model_, "heuristicsOnOff", "off");
+        Cbc_setParameter(model_, "greedyHeuristic", "on");
+    }
+};
+
+CoinCbcWrapper::~CoinCbcWrapper() { Cbc_deleteModel(model_); }
+
 bool CoinCbcWrapper::solve(ilp_utils::ObjectiveSense obj_sense, double obj_limit) {
     Cbc_setObjSense(model_, static_cast<double>(obj_sense));
 

@@ -59,6 +59,8 @@ Solution IlpSolver::solve(bool print_stats) {
         print::stats() << placed_regions.size() << " placed regions\n"
                        << coin_cbc_wrapper_->get_var_count() << " variables\n"
                        << coin_cbc_wrapper_->get_constraint_count() << " constraints\n";
+    } else {
+        coin_cbc_wrapper_->disableLogs();
     }
 
     bool result = coin_cbc_wrapper_->solve(obj_sense_, problem_.board_.get_size());

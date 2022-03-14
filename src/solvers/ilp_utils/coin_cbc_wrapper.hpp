@@ -8,14 +8,12 @@
 
 class CoinCbcWrapper {
 public:
-    CoinCbcWrapper() {
-        model_ = Cbc_newModel();
-        Cbc_setLogLevel(model_, 0);
-        // Cbc_setMaximumSeconds(model_, 1000);
-    };
+    CoinCbcWrapper(bool adjusted_params);
     CoinCbcWrapper(const CoinCbcWrapper&) = delete;
     CoinCbcWrapper(CoinCbcWrapper&&) = default;
-    ~CoinCbcWrapper() { Cbc_deleteModel(model_); };
+    ~CoinCbcWrapper();
+
+    inline void disableLogs() { Cbc_setLogLevel(model_, 0); }
 
     inline int get_var_count() const { return next_var_; }
     inline int get_constraint_count() const { return static_cast<int>(constraints_.size()); }

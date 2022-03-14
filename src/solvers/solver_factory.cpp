@@ -55,9 +55,11 @@ std::vector<std::string> solver_factory::get_solver_names() {
     }
 
     // ilp
-    for (std::string objective_name : kIlpObjectiveNames) {
-        std::vector<std::string> words{kIlpPrefix, objective_name};
-        solver_names.push_back(boost::algorithm::join(words, "_"));
+    for (std::string params_name : kIlpParamsNames) {
+        for (std::string objective_name : kIlpObjectiveNames) {
+            std::vector<std::string> words{kIlpPrefix, params_name, objective_name};
+            solver_names.push_back(boost::algorithm::join(words, "_"));
+        }
     }
 
     return solver_names;
@@ -183,20 +185,30 @@ std::unique_ptr<Solver> solver_factory::create(const std::string& solver_name,
     }
 
     // ilp
-    if (words.size() == 2 && words[0] == kIlpPrefix) {
+    if (words.size() == 3 && words[0] == kIlpPrefix) {
         using namespace ilp_utils;
 
-        std::string objective_name = words[1];
+        std::string params_name = words[1];
+        std::unique_ptr<CoinCbcWrapper> coin_cbc_wrapper;
+        if (params_name == kIlpDefaultParams) {
+            coin_cbc_wrapper = std::make_unique<CoinCbcWrapper>(false);
+        } else if (params_name == kIlpAdjustedParams) {
+            coin_cbc_wrapper = std::make_unique<CoinCbcWrapper>(true);
+        } else {
+            throw SolverNotFound;
+        }
+
+        std::string objective_name = words[2];
         if (objective_name == kIlpExactCover) {
-            return std::make_unique<IlpSolver>(problem, std::make_unique<CoinCbcWrapper>(),
+            return std::make_unique<IlpSolver>(problem, std::move(coin_cbc_wrapper),
                                                ConstraintSense::kEq, ObjectiveSense::kIgnore);
         }
         if (objective_name == kIlpMinimizeCover) {
-            return std::make_unique<IlpSolver>(problem, std::make_unique<CoinCbcWrapper>(),
+            return std::make_unique<IlpSolver>(problem, std::move(coin_cbc_wrapper),
                                                ConstraintSense::kGeq, ObjectiveSense::kMinimize);
         }
         if (objective_name == kIlpMaximizeCover) {
-            return std::make_unique<IlpSolver>(problem, std::make_unique<CoinCbcWrapper>(),
+            return std::make_unique<IlpSolver>(problem, std::move(coin_cbc_wrapper),
                                                ConstraintSense::kLeq, ObjectiveSense::kMaximize);
         }
         throw SolverNotFound;

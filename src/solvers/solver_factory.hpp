@@ -71,6 +71,13 @@ const std::vector<std::string> kSatPBLibWrapperNames = {
 
 const std::string kIlpPrefix = "ilp";
 
+const std::string kIlpDefaultParams = "default";
+const std::string kIlpAdjustedParams = "adjusted";
+const std::vector<std::string> kIlpParamsNames = {
+        kIlpDefaultParams,
+        kIlpAdjustedParams,
+};
+
 const std::string kIlpExactCover = "exact";
 const std::string kIlpMinimizeCover = "minimize";
 const std::string kIlpMaximizeCover = "maximize";
