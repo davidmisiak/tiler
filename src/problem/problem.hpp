@@ -14,6 +14,7 @@ public:
     Problem(Board board, std::vector<Tile> tiles);
 
     void limit_tile_counts();
+    int extra_tile_square_count();
     void print() const;
 
     Board board_;

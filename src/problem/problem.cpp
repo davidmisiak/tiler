@@ -15,6 +15,14 @@ void Problem::limit_tile_counts() {
     }
 }
 
+int Problem::extra_tile_square_count() {
+    int tile_square_count = 0;
+    for (Tile& tile : tiles_) {
+        tile_square_count += tile.get_count() * tile.get_size();
+    }
+    return tile_square_count - board_.get_size();
+}
+
 void Problem::print() const {
     board_.print();
     print::normal_bold() << "\nTILES";
