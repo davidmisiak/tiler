@@ -29,7 +29,12 @@ CoinCbcWrapper::CoinCbcWrapper(bool adjusted_params) {
 
 CoinCbcWrapper::~CoinCbcWrapper() { Cbc_deleteModel(model_); }
 
-bool CoinCbcWrapper::solve(ilp_utils::ObjectiveSense obj_sense, double obj_limit) {
+bool CoinCbcWrapper::solve(ilp_utils::ObjectiveSense obj_sense, double obj_limit,
+                           bool print_stats) {
+    if (!print_stats) {
+        Cbc_setLogLevel(model_, 0);
+    }
+
     Cbc_setObjSense(model_, static_cast<double>(obj_sense));
 
     for (auto var : objective_) {
@@ -52,7 +57,8 @@ bool CoinCbcWrapper::solve(ilp_utils::ObjectiveSense obj_sense, double obj_limit
     if (Cbc_solve(model_) == 0) {
         if (Cbc_isProvenInfeasible(model_)) return false;
         if (Cbc_isProvenOptimal(model_)) {
-            return ilp_utils::evaluate_obj_result(obj_sense, Cbc_getObjValue(model_), obj_limit);
+            return obj_sense == ilp_utils::ObjectiveSense::kIgnore ||
+                   ilp_utils::evaluate_obj_result(obj_sense, Cbc_getObjValue(model_), obj_limit);
         }
     }
     // Uncomment when timeout is active and the result is not important (e.g. when benchmarking).

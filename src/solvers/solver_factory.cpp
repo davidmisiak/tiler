@@ -11,6 +11,7 @@
 #include "solvers/ilp_solver.hpp"
 #include "solvers/ilp_utils/coin_cbc_wrapper.hpp"
 #include "solvers/ilp_utils/ilp_utils.hpp"
+#include "solvers/ilp_utils/ilp_wrapper.hpp"
 #include "solvers/sat_amk_solver.hpp"
 #include "solvers/sat_amo_ordered_solver.hpp"
 #include "solvers/sat_amo_solver.hpp"
@@ -35,6 +36,10 @@
 #include "solvers/sat_utils/breakid_wrapper.hpp"
 #endif
 
+#ifdef GUROBI
+#include "solvers/ilp_utils/gurobi_wrapper.hpp"
+#endif
+
 std::vector<std::string> solver_factory::get_solver_names() {
     using namespace solver_factory;
 
@@ -55,10 +60,13 @@ std::vector<std::string> solver_factory::get_solver_names() {
     }
 
     // ilp
-    for (std::string params_name : kIlpParamsNames) {
-        for (std::string objective_name : kIlpObjectiveNames) {
-            std::vector<std::string> words{kIlpPrefix, params_name, objective_name};
-            solver_names.push_back(boost::algorithm::join(words, "_"));
+    for (std::string ilp_wrapper_name : kIlpWrapperNames) {
+        for (std::string params_name : kIlpParamsNames) {
+            for (std::string objective_name : kIlpObjectiveNames) {
+                std::vector<std::string> words{kIlpPrefix, ilp_wrapper_name, params_name,
+                                               objective_name};
+                solver_names.push_back(boost::algorithm::join(words, "_"));
+            }
         }
     }
 
@@ -185,30 +193,48 @@ std::unique_ptr<Solver> solver_factory::create(const std::string& solver_name,
     }
 
     // ilp
-    if (words.size() == 3 && words[0] == kIlpPrefix) {
+    if (words.size() == 4 && words[0] == kIlpPrefix) {
         using namespace ilp_utils;
 
-        std::string params_name = words[1];
-        std::unique_ptr<CoinCbcWrapper> coin_cbc_wrapper;
+        std::string params_name = words[2];
+        bool adjusted_params;
         if (params_name == kIlpDefaultParams) {
-            coin_cbc_wrapper = std::make_unique<CoinCbcWrapper>(false);
+            adjusted_params = false;
         } else if (params_name == kIlpAdjustedParams) {
-            coin_cbc_wrapper = std::make_unique<CoinCbcWrapper>(true);
+            adjusted_params = true;
         } else {
             throw SolverNotFound;
         }
 
-        std::string objective_name = words[2];
-        if (objective_name == kIlpExactCover) {
-            return std::make_unique<IlpSolver>(problem, std::move(coin_cbc_wrapper),
+        std::string ilp_wrapper_name = words[1];
+        std::unique_ptr<IlpWrapper> ilp_wrapper;
+        if (ilp_wrapper_name == kIlpCoinCbc) {
+            ilp_wrapper = std::make_unique<CoinCbcWrapper>(adjusted_params);
+        }
+#ifdef GUROBI
+        if (ilp_wrapper_name == kIlpGurobi) {
+            ilp_wrapper = std::make_unique<GurobiWrapper>(adjusted_params);
+        }
+#endif
+        if (ilp_wrapper.get() == nullptr) {
+            throw SolverNotFound;
+        }
+
+        std::string objective_name = words[3];
+        if (objective_name == kIlpEqIgnore) {
+            return std::make_unique<IlpSolver>(problem, std::move(ilp_wrapper),
                                                ConstraintSense::kEq, ObjectiveSense::kIgnore);
         }
-        if (objective_name == kIlpMinimizeCover) {
-            return std::make_unique<IlpSolver>(problem, std::move(coin_cbc_wrapper),
+        if (objective_name == kIlpEqMinimize) {
+            return std::make_unique<IlpSolver>(problem, std::move(ilp_wrapper),
+                                               ConstraintSense::kEq, ObjectiveSense::kMinimize);
+        }
+        if (objective_name == kIlpGeqMinimize) {
+            return std::make_unique<IlpSolver>(problem, std::move(ilp_wrapper),
                                                ConstraintSense::kGeq, ObjectiveSense::kMinimize);
         }
-        if (objective_name == kIlpMaximizeCover) {
-            return std::make_unique<IlpSolver>(problem, std::move(coin_cbc_wrapper),
+        if (objective_name == kIlpLeqMaximize) {
+            return std::make_unique<IlpSolver>(problem, std::move(ilp_wrapper),
                                                ConstraintSense::kLeq, ObjectiveSense::kMaximize);
         }
         throw SolverNotFound;

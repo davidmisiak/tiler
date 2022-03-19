@@ -23,6 +23,7 @@ list(REMOVE_ITEM PROJECT_SOURCE ${PROJECT_MAIN})
 # external libraries
 set(EXTERNAL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external")
 set(SAT_UTILS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/solvers/sat_utils")
+set(ILP_UTILS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/solvers/ilp_utils")
 
 option(CADICAL "Include the CaDiCaL SAT solver." ON)
 if(CADICAL)
@@ -60,6 +61,15 @@ if(CADICAL OR CRYPTOMINISAT)
     set(MY_LINK_OPTIONS ${MY_LINK_OPTIONS} pb)
 else()
     list(REMOVE_ITEM PROJECT_SOURCE "${SAT_UTILS_DIR}/pblib_wrapper.cpp")
+endif()
+
+option(GUROBI "Link against the Gurobi ILP solver." ON)
+if(GUROBI)
+    add_compile_definitions(GUROBI)
+    include_directories(SYSTEM "$ENV{GUROBI_HOME}/include")
+    set(MY_LINK_OPTIONS ${MY_LINK_OPTIONS} gurobi95 gurobi_g++5.2)
+else()
+    list(REMOVE_ITEM PROJECT_SOURCE "${ILP_UTILS_DIR}/gurobi_wrapper.cpp")
 endif()
 
 # compile "tilerlib" - entire source without main.cpp so we don't have to recompile

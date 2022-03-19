@@ -8,3 +8,7 @@ release/
 *.svg
 
 benchmark/**/*.json
+
+tune/
+model.mps
+model.prm

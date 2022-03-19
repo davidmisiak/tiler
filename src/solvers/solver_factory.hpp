@@ -71,6 +71,15 @@ const std::vector<std::string> kSatPBLibWrapperNames = {
 
 const std::string kIlpPrefix = "ilp";
 
+const std::string kIlpCoinCbc = "coin";
+const std::string kIlpGurobi = "gurobi";
+const std::vector<std::string> kIlpWrapperNames = {
+        kIlpCoinCbc,
+#ifdef GUROBI
+        kIlpGurobi,
+#endif
+};
+
 const std::string kIlpDefaultParams = "default";
 const std::string kIlpAdjustedParams = "adjusted";
 const std::vector<std::string> kIlpParamsNames = {
@@ -78,13 +87,15 @@ const std::vector<std::string> kIlpParamsNames = {
         kIlpAdjustedParams,
 };
 
-const std::string kIlpExactCover = "exact";
-const std::string kIlpMinimizeCover = "minimize";
-const std::string kIlpMaximizeCover = "maximize";
+const std::string kIlpEqIgnore = "eq-ign";
+const std::string kIlpEqMinimize = "eq-min";
+const std::string kIlpGeqMinimize = "geq-min";
+const std::string kIlpLeqMaximize = "leq-max";
 const std::vector<std::string> kIlpObjectiveNames = {
-        kIlpExactCover,
-        kIlpMinimizeCover,
-        kIlpMaximizeCover,
+        kIlpEqIgnore,
+        kIlpEqMinimize,
+        kIlpGeqMinimize,
+        kIlpLeqMaximize,
 };
 
 }  // namespace solver_factory

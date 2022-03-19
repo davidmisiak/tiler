@@ -51,7 +51,9 @@ Here are some example outputs of the solver.
 
 ## Build Instructions
 
-There are several optional dependencies (git submodules):
+### Dependencies
+
+There are several optional open-source dependencies (git submodules):
 
 - [CaDiCaL](https://github.com/arminbiere/cadical) SAT solver
 - [CryptoMiniSat](https://github.com/msoos/cryptominisat) SAT solver
@@ -64,6 +66,15 @@ running a subset of `./scripts/build-*.sh` scripts and setting CMake options `-D
 `-DCRYPTOMINISAT=OFF` / `-DBREAKID=OFF`. Having the libraries installed system-wide should work as
 well.
 
+Additionally, Tiler can be dynamically linked against the
+[Gurobi](https://www.gurobi.com/products/gurobi-optimizer/) (v9.5.1) ILP solver. If you have an
+appropriate license, follow the official Gurobi
+[installation guide](https://www.gurobi.com/documentation/9.5/quickstart_linux/index.html) and run
+`source scripts/gurobi-env.sh` in the shell where you intend to build and run Tiler. Otherwise, set
+the CMake options `-DGUROBI=OFF`.
+
+### Building Tiler
+
 Building Tiler requires these dependencies:
 
 - [CMake](https://cmake.org/) build tool (version 3.12 or later)
@@ -72,7 +83,7 @@ Building Tiler requires these dependencies:
 
 Build the exacutable by running `./scripts/release-setup.sh` and `./scripts/release-build.sh`. You
 can configure build options using eg. `ccmake` before running `release-build.sh` or by adding
-appropriate `-D` flags to the `cmake ..` line in `release-setup.sh`.
+appropriate `-D` flags to `release-setup.sh` (they will be passed on to CMake).
 
 Your freshly compiled Tiler executable will be located at `release/bin/tiler`.
 

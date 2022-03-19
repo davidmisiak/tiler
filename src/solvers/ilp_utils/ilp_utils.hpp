@@ -28,7 +28,7 @@ enum class ObjectiveSense {
     kIgnore = 0,
 };
 
-// MLP variable. Note that this class represents not only the variable itself (its number, bounds
+// ILP variable. Note that this class represents not only the variable itself (its number, bounds
 // and whether it is an integer), but also a coefficient associated with it (variables in
 // constraints as well as in the objective function always carry a coeffcient, so it is easier to
 // bundle them this way.)
@@ -61,7 +61,7 @@ private:
 // Alias for a list of variables (and their coefficients).
 using Vars = std::vector<Var>;
 
-// MLP constraint.
+// ILP constraint.
 class Constraint {
 public:
     Constraint(Vars vars, ConstraintSense sense, double rhs)
@@ -87,6 +87,14 @@ inline bool evaluate_obj_result(ObjectiveSense sense, double result, double limi
     if (sense == ObjectiveSense::kMinimize) return approxLeq(result, limit);
     if (sense == ObjectiveSense::kMaximize) return approxGeq(result, limit);
     return true;  // ObjectiveSense::kIgnore
+}
+
+// Returns the value of `limit` shifted by `kEps` generously to the direction determined by the
+// objective `sense`.
+inline double relax_limit(ObjectiveSense sense, double limit) {
+    if (sense == ObjectiveSense::kMinimize) return limit + kEps;
+    if (sense == ObjectiveSense::kMaximize) return limit - kEps;
+    return limit;  // ObjectiveSense::kIgnore
 }
 
 }  // namespace ilp_utils

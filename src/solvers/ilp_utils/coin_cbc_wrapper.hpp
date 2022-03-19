@@ -5,9 +5,10 @@
 
 #include "coin/Cbc_C_Interface.h"
 #include "solvers/ilp_utils/ilp_utils.hpp"
+#include "solvers/ilp_utils/ilp_wrapper.hpp"
 
-// Wrapper for COIN-CBC MIP solver.
-class CoinCbcWrapper {
+// Wrapper for COIN-CBC ILP solver.
+class CoinCbcWrapper : public IlpWrapper {
 public:
     // If `adjusted_params` is `true`, we use COIN-CBC with some parameter adjustments, otherwise we
     // use the defaults.
@@ -15,36 +16,14 @@ public:
 
     CoinCbcWrapper(const CoinCbcWrapper&) = delete;
     CoinCbcWrapper(CoinCbcWrapper&&) = default;
-    ~CoinCbcWrapper();
+    ~CoinCbcWrapper() override;
 
-    inline void disableLogs() { Cbc_setLogLevel(model_, 0); }
+    bool solve(ilp_utils::ObjectiveSense obj_sense, double obj_limit, bool print_stats) override;
 
-    inline int get_var_count() const { return next_var_; }
-    inline int get_constraint_count() const { return static_cast<int>(constraints_.size()); }
-
-    // Adds a new variable with `lower` and `upper` bounds. The `coeff` is set as the varible's
-    // coefficient in the problem objective. The created variable is returned with the given
-    // coeffcient as well.
-    inline ilp_utils::Var new_var(bool is_integer, double lower, double upper, double coeff) {
-        auto var = ilp_utils::Var(next_var_++, is_integer, lower, upper, coeff);
-        objective_.push_back(var);
-        return var;
-    }
-
-    // Adds a constraint.
-    inline void add_constraint(const ilp_utils::Constraint& constraint) {
-        constraints_.push_back(constraint);
-    }
-
-    bool solve(ilp_utils::ObjectiveSense obj_sense, double obj_limit);
-
-    std::vector<double> get_solution();
+    std::vector<double> get_solution() override;
 
 protected:
     Cbc_Model* model_;
-    int next_var_ = 0;
-    ilp_utils::Vars objective_;
-    std::vector<ilp_utils::Constraint> constraints_;
 };
 
 #endif  // TILER_SOLVERS_ILP_UTILS_COIN_CBC_WRAPPER_HPP_
