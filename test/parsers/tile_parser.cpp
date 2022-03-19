@@ -1,7 +1,7 @@
 #include "parsers/tile_parser.hpp"
 
 #include "catch2/catch.hpp"
-#include "parse_error.hpp"
+#include "errors/parse_error.hpp"
 #include "parsers/region_parser.hpp"
 #include "problem/tile.hpp"
 

@@ -32,7 +32,7 @@ SatAmoSolver::SatAmoSolver(Problem problem, std::unique_ptr<SatWrapper> sat_wrap
 // For each cell of the board, there is a set of clauses that guarantee that exactly one of the tile
 // pieces covers this cell.
 // Put together, the CNF formula is satisfiable if and only if the board can be tiled.
-Solution SatAmoSolver::solve(bool print_stats) {
+Solution SatAmoSolver::solve(bool print_stats, int max_seconds) {
     using sat_utils::Lit, sat_utils::Clause;
 
     int w = problem_.board_.get_width();
@@ -83,7 +83,7 @@ Solution SatAmoSolver::solve(bool print_stats) {
         symmetry_breaker_->print_stats();
     }
 
-    bool result = sat_wrapper_->solve();
+    bool result = sat_wrapper_->solve(max_seconds);
     if (!result) return {};
 
     Solution solution;

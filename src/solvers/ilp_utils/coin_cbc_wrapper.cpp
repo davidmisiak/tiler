@@ -4,7 +4,8 @@
 #include <vector>
 
 #include "coin/Cbc_C_Interface.h"
-#include "solve_error.hpp"
+#include "errors/solve_error.hpp"
+#include "errors/time_limit_error.hpp"
 #include "solvers/ilp_utils/ilp_utils.hpp"
 
 CoinCbcWrapper::CoinCbcWrapper(bool adjusted_params) {
@@ -14,8 +15,6 @@ CoinCbcWrapper::CoinCbcWrapper(bool adjusted_params) {
     // need to set fixed seeds before each solver run.
     Cbc_setParameter(model_, "randomSeed", "1234");
     Cbc_setParameter(model_, "randomCbcSeed", "5678");
-
-    // Cbc_setMaximumSeconds(model_, 1000);
 
     if (adjusted_params) {
         // These were selected empirically, but the results are not very impressive.
@@ -29,10 +28,13 @@ CoinCbcWrapper::CoinCbcWrapper(bool adjusted_params) {
 
 CoinCbcWrapper::~CoinCbcWrapper() { Cbc_deleteModel(model_); }
 
-bool CoinCbcWrapper::solve(ilp_utils::ObjectiveSense obj_sense, double obj_limit,
-                           bool print_stats) {
+bool CoinCbcWrapper::solve(ilp_utils::ObjectiveSense obj_sense, double obj_limit, bool print_stats,
+                           int max_seconds) {
     if (!print_stats) {
         Cbc_setLogLevel(model_, 0);
+    }
+    if (max_seconds) {
+        Cbc_setMaximumSeconds(model_, max_seconds);
     }
 
     Cbc_setObjSense(model_, static_cast<double>(obj_sense));
@@ -61,8 +63,9 @@ bool CoinCbcWrapper::solve(ilp_utils::ObjectiveSense obj_sense, double obj_limit
                    ilp_utils::evaluate_obj_result(obj_sense, Cbc_getObjValue(model_), obj_limit);
         }
     }
-    // Uncomment when timeout is active and the result is not important (e.g. when benchmarking).
-    // return false;
+    if (max_seconds && Cbc_status(model_) == 1 && Cbc_secondaryStatus(model_) == 4) {
+        throw TimeLimitError();
+    }
     throw SolveError("Unknown COIN-CBC error occured.");
 }
 

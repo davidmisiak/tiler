@@ -8,7 +8,7 @@
 #include <vector>
 
 #include "boost/algorithm/string.hpp"
-#include "parse_error.hpp"
+#include "errors/parse_error.hpp"
 #include "problem/region.hpp"
 #include "utils.hpp"
 

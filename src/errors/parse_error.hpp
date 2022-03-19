@@ -1,5 +1,5 @@
-#ifndef TILER_PARSE_ERROR_HPP_
-#define TILER_PARSE_ERROR_HPP_
+#ifndef TILER_ERRORS_PARSE_ERROR_HPP_
+#define TILER_ERRORS_PARSE_ERROR_HPP_
 
 #include <stdexcept>
 #include <string>
@@ -9,4 +9,4 @@ public:
     explicit ParseError(const std::string& err) : std::runtime_error(err){};
 };
 
-#endif  // TILER_PARSE_ERROR_HPP_
+#endif  // TILER_ERRORS_PARSE_ERROR_HPP_

@@ -1,12 +1,20 @@
 #include "solvers/sat_utils/cadical_wrapper.hpp"
 
+#include <csignal>
 #include <vector>
 
-#include "solve_error.hpp"
+#include "errors/solve_error.hpp"
+#include "errors/time_limit_error.hpp"
+#include "signal.hpp"
 #include "solvers/sat_utils/sat_utils.hpp"
 
-bool CadicalWrapper::solve() {
-    solver_.set("quiet", 1);  // silence some log messages printed to stdout
+bool CadicalWrapper::solve(int max_seconds) {
+    solver_.set("quiet", 1);  // in case CaDiCaL was build without the QUIET flag
+
+    if (max_seconds) {
+        CaDiCaL::Signal::set(this);  // `this` implements CaDiCaL::Handler interface
+        CaDiCaL::Signal::alarm(max_seconds);
+    }
 
     for (const sat_utils::Clause& clause : clauses_) {
         for (sat_utils::Lit lit : clause) {
@@ -16,8 +24,15 @@ bool CadicalWrapper::solve() {
     }
 
     int result = solver_.solve();
+
+    if (max_seconds) {
+        CaDiCaL::Signal::alarm(0);  // cancel the alarm
+        CaDiCaL::Signal::reset();
+    }
+
     if (result == 20) return false;
     if (result == 10) return true;
+    if (max_seconds) throw TimeLimitError();
     throw SolveError("Unknown CaDiCaL error occured.");
 }
 

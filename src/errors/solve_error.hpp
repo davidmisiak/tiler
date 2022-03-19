@@ -1,5 +1,5 @@
-#ifndef TILER_SOLVE_ERROR_HPP_
-#define TILER_SOLVE_ERROR_HPP_
+#ifndef TILER_ERRORS_SOLVE_ERROR_HPP_
+#define TILER_ERRORS_SOLVE_ERROR_HPP_
 
 #include <stdexcept>
 #include <string>
@@ -9,4 +9,4 @@ public:
     explicit SolveError(const std::string& err) : std::runtime_error(err){};
 };
 
-#endif  // TILER_SOLVE_ERROR_HPP_
+#endif  // TILER_ERRORS_SOLVE_ERROR_HPP_

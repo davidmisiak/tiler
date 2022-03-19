@@ -39,7 +39,7 @@ public:
 
     // Returns true if a solution exists, false if it doesn't (and throws a SolveError when the SAT
     // solver signalizes something weird). Should be called at most once.
-    virtual bool solve() = 0;
+    virtual bool solve(int max_seconds) = 0;
 
     // Returns the solution model if it exists (indices are the val() values of used literals).
     // Should be called only if solve() returned true, and only once.

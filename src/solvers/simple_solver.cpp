@@ -12,7 +12,7 @@ SimpleSolver::SimpleSolver(Problem problem) : problem_(problem) {}
 // empty unit square of board's top-most row with empty squares. If there is available space for the
 // entire tile, a recursive call is made. If no fit is found, this branch returns false. Note that
 // this algorithm finds a solution if and only if a solution exists.
-Solution SimpleSolver::solve(bool print_stats) {
+Solution SimpleSolver::solve(bool print_stats, [[maybe_unused]] int max_seconds) {
     step();
     if (print_stats) {
         print::stats() << nodes_ << " nodes\n";

@@ -18,7 +18,8 @@ public:
     CoinCbcWrapper(CoinCbcWrapper&&) = default;
     ~CoinCbcWrapper() override;
 
-    bool solve(ilp_utils::ObjectiveSense obj_sense, double obj_limit, bool print_stats) override;
+    bool solve(ilp_utils::ObjectiveSense obj_sense, double obj_limit, bool print_stats,
+               int max_seconds) override;
 
     std::vector<double> get_solution() override;
 

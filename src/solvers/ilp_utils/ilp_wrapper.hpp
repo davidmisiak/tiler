@@ -31,7 +31,8 @@ public:
     // Returns true if the ILP is feasible and the objective value complies with the `obj_limit`,
     // false otherwise (and throws a SolveError when the ILP solver signalizes something weird).
     // Should be called at most once.
-    virtual bool solve(ilp_utils::ObjectiveSense obj_sense, double obj_limit, bool print_stats) = 0;
+    virtual bool solve(ilp_utils::ObjectiveSense obj_sense, double obj_limit, bool print_stats,
+                       int max_seconds) = 0;
 
     // Returns the optimal variable values if the ILP is feasible (indices are the num() values of
     // the used variables). Should be called only if solve() returned true, and only once.

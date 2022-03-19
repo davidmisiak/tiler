@@ -9,6 +9,7 @@ import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
+MAX_SECONDS = 1000
 FIGSIZE = (18, 9)
 VMIN, VMAX = 10**-10, 10**10
 COLORS = 20
@@ -27,7 +28,8 @@ def load_data(paths):
         df[["problem", "solver"]] = df.name.str.split("@", expand=True)
         df.problem = df.problem.str.removeprefix("problems/")
         dfs.append(df)
-    return pd.concat(dfs).pivot("problem", "solver", "cpu_time")
+    merged_df = pd.concat(dfs).pivot("problem", "solver", "cpu_time")
+    return merged_df.clip(upper=MAX_SECONDS * 1000)
 
 
 def filter_data(df, problem_regex, solver_regex):

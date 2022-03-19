@@ -5,7 +5,9 @@
 
 #include "boost/algorithm/string.hpp"
 #include "catch2/catch.hpp"
+#include "errors/time_limit_error.hpp"
 #include "parsers/problem_parser.hpp"
+#include "print.hpp"
 #include "problem/problem.hpp"
 #include "problem/tile.hpp"
 #include "solution/solution.hpp"
@@ -37,13 +39,20 @@ bool check_solution(Problem problem, Solution solution, bool expected) {
     return problem.board_.get_size() == 0;
 }
 
-void test_solving(Problem problem, std::string problem_ref, bool result) {
+void test_solving(Problem problem, std::string problem_ref, bool result, int max_seconds) {
+    print::normal() << problem_ref << "\n";
     for (const std::string& solver_name : solver_factory::get_solver_names()) {
-        Solution solution = solver_factory::create(solver_name, problem)->solve();
-        std::vector<std::string> info_words = {solver_name, "should return",
-                                               (result ? "true" : "false"), "on", problem_ref};
-        INFO(boost::algorithm::join(info_words, " "));
-        REQUIRE(check_solution(problem, solution, result));
+        try {
+            Solution solution =
+                    solver_factory::create(solver_name, problem)->solve(false, max_seconds);
+            std::vector<std::string> info_words = {solver_name, "should return",
+                                                   (result ? "true" : "false"), "on", problem_ref};
+            INFO(boost::algorithm::join(info_words, " "));
+            REQUIRE(check_solution(problem, solution, result));
+        } catch (const TimeLimitError& e) {
+            print::normal() << "  timeout: " << solver_name << "\n";
+            // If you don't want this to ever happed, set `max_seconds` to 0 (disabled).
+        }
     }
 }
 
@@ -95,7 +104,8 @@ TEST_CASE("Solvers return correct solutions") {
 
     for (const auto& [problem_strs, reflection, result] : problems) {
         Problem problem = problem_parser::parse(problem_strs, reflection);
-        test_solving(problem, boost::algorithm::join(problem_strs, " "), result);
+        std::string problem_ref = boost::algorithm::join(problem_strs, " ");
+        test_solving(problem, problem_ref, result, 0);
     }
 }
 
@@ -106,8 +116,9 @@ TEST_CASE("Solvers return correct solutions (benchmark problems)") {
         bool reflection = filepath.find('\'') != std::string::npos;
         if (is_solvable || is_unsolvable) {
             Problem problem = problem_parser::parse_from_file(filepath, reflection);
-            // Warning: This will take several hours, don't run by default.
-            // test_solving(problem, filepath, is_solvable);
+            [[maybe_unused]] const int kMaxSeconds = 100;  // 0 for unlimited
+            // Warning: This would take several hours, commented out by default.
+            // test_solving(problem, filepath, is_solvable, kMaxSeconds);
         }
     }
 }

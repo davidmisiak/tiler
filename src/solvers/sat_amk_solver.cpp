@@ -29,7 +29,7 @@ SatAmkSolver::SatAmkSolver(Problem problem, std::unique_ptr<SatWrapper> sat_wrap
 // having such variables for each tile instance and encoding that each tile instance has at most one
 // position (like SatAmoSolver does), this solver encodes that the tile is present on at most k
 // positions, where k is the tile instance count.
-Solution SatAmkSolver::solve(bool print_stats) {
+Solution SatAmkSolver::solve(bool print_stats, int max_seconds) {
     using sat_utils::Lit, sat_utils::Clause;
 
     int w = problem_.board_.get_width();
@@ -78,7 +78,7 @@ Solution SatAmkSolver::solve(bool print_stats) {
         symmetry_breaker_->print_stats();
     }
 
-    bool result = sat_wrapper_->solve();
+    bool result = sat_wrapper_->solve(max_seconds);
     if (!result) return {};
 
     Solution solution;

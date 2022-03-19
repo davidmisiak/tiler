@@ -10,7 +10,7 @@ class SimpleSolver : public Solver {
 public:
     explicit SimpleSolver(Problem problem);
 
-    Solution solve(bool print_stats = false) override;
+    Solution solve(bool print_stats, int max_seconds) override;
 
 private:
     bool step();

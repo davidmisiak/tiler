@@ -32,7 +32,7 @@ SatAmoOrderedSolver::SatAmoOrderedSolver(Problem problem, std::unique_ptr<SatWra
 // ensure that tile instance positions are ordered. We exploit the auxiliary variables added by
 // sequential (BDD) encoding of the "each tile instance has at most one position" constraints - we
 // add analogous clauses in the orthogonal direction to imply the position ordering.
-Solution SatAmoOrderedSolver::solve(bool print_stats) {
+Solution SatAmoOrderedSolver::solve(bool print_stats, int max_seconds) {
     using sat_utils::Lit, sat_utils::Clause;
 
     int w = problem_.board_.get_width();
@@ -115,7 +115,7 @@ Solution SatAmoOrderedSolver::solve(bool print_stats) {
         symmetry_breaker_->print_stats();
     }
 
-    bool result = sat_wrapper_->solve();
+    bool result = sat_wrapper_->solve(max_seconds);
     if (!result) return {};
 
     Solution solution;

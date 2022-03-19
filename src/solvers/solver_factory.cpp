@@ -6,8 +6,8 @@
 #include <vector>
 
 #include "boost/algorithm/string.hpp"
+#include "errors/solve_error.hpp"
 #include "problem/problem.hpp"
-#include "solve_error.hpp"
 #include "solvers/ilp_solver.hpp"
 #include "solvers/ilp_utils/coin_cbc_wrapper.hpp"
 #include "solvers/ilp_utils/ilp_utils.hpp"

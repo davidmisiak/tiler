@@ -3,7 +3,7 @@
 #include <regex>
 #include <string>
 
-#include "parse_error.hpp"
+#include "errors/parse_error.hpp"
 #include "parsers/region_parser.hpp"
 #include "problem/tile.hpp"
 

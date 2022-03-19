@@ -2,7 +2,7 @@
 
 #include <algorithm>
 
-#include "parse_error.hpp"
+#include "errors/parse_error.hpp"
 #include "print.hpp"
 #include "problem/region.hpp"
 

@@ -8,7 +8,7 @@
 
 class CryptominisatWrapper : public SatWrapper {
 public:
-    bool solve() override;
+    bool solve(int max_seconds) override;
     std::vector<bool> get_model() override;
 
 private:

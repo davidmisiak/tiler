@@ -4,13 +4,14 @@
 #include <vector>
 
 #include "CLI/CLI.hpp"
+#include "errors/parse_error.hpp"
+#include "errors/solve_error.hpp"
+#include "errors/time_limit_error.hpp"
 #include "help_strings.hpp"
-#include "parse_error.hpp"
 #include "parsers/problem_parser.hpp"
 #include "print.hpp"
 #include "problem/problem.hpp"
 #include "solution/solution.hpp"
-#include "solve_error.hpp"
 #include "solvers/solver.hpp"
 #include "solvers/solver_factory.hpp"
 
@@ -21,6 +22,7 @@ struct Options {
     std::string input_file = "";
     std::string image_file = "";
     std::string solver_name = solver_factory::kSimpleSolver;
+    int max_seconds = 0;
     bool allow_reflection = false;
     bool print_problem = false;
     bool print_solution = false;
@@ -38,7 +40,7 @@ void solve_action(Options options) {
     }
 
     std::unique_ptr<Solver> solver = solver_factory::create(options.solver_name, problem);
-    Solution solution = solver->solve(options.print_stats);
+    Solution solution = solver->solve(options.print_stats, options.max_seconds);
     if (solution.empty()) {
         print::warning_bold() << "UNSOLVABLE\n";
         return;
@@ -88,6 +90,11 @@ int main(int argc, char **argv) {
                          "Selected solver backend (default is " + options.solver_name + ").")
             ->transform(CLI::IsMember(solver_factory::get_solver_names()));
 
+    solve_command->add_option("-t,--time-limit", options.max_seconds,
+                              "Soft time limit for the solver backend in seconds.\n"
+                              "Zero means no time limit (default). This feature\n"
+                              "is experimental, some backends may ignore it.");
+
     solve_command->add_flag(
             "-r,--allow-reflection", options.allow_reflection,
             "If present, the solver will be allowed to reflect\n(flip over) the tiles.");
@@ -129,6 +136,9 @@ int main(int argc, char **argv) {
         } catch (const SolveError &e) {
             print::error() << e.what() << std::endl;
             return 2;
+        } catch (const TimeLimitError &e) {
+            print::error() << e.what() << std::endl;
+            return 3;
         }
     } else if (command == list_command) {
         print::normal() << help_strings::kNamedTilesList;

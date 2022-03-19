@@ -19,7 +19,7 @@ public:
     explicit IlpSolver(Problem problem, std::unique_ptr<IlpWrapper> ilp_wrapper,
                        ilp_utils::ConstraintSense cell_sense, ilp_utils::ObjectiveSense obj_sense);
 
-    Solution solve(bool print_stats = false) override;
+    Solution solve(bool print_stats, int max_seconds) override;
 
 private:
     Problem problem_;

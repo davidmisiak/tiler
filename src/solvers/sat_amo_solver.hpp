@@ -19,7 +19,7 @@ public:
                           std::unique_ptr<SymmetryBreaker> symmetry_breaker,
                           PBLibWrapper pblib_wrapper);
 
-    Solution solve(bool print_stats = false) override;
+    Solution solve(bool print_stats, int max_seconds) override;
 
 private:
     Problem problem_;

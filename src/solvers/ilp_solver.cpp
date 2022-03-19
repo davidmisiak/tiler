@@ -18,7 +18,7 @@ IlpSolver::IlpSolver(Problem problem, std::unique_ptr<IlpWrapper> ilp_wrapper,
     problem_.limit_tile_counts();
 }
 
-Solution IlpSolver::solve(bool print_stats) {
+Solution IlpSolver::solve(bool print_stats, int max_seconds) {
     using namespace ilp_utils;
 
     int w = problem_.board_.get_width();
@@ -61,7 +61,8 @@ Solution IlpSolver::solve(bool print_stats) {
                        << ilp_wrapper_->get_constraint_count() << " constraints\n";
     }
 
-    bool result = ilp_wrapper_->solve(obj_sense_, problem_.board_.get_size(), print_stats);
+    int obj_limit = problem_.board_.get_size();
+    bool result = ilp_wrapper_->solve(obj_sense_, obj_limit, print_stats, max_seconds);
     if (!result) return {};
 
     Solution solution;

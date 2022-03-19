@@ -4,8 +4,9 @@
 #include <memory>
 #include <vector>
 
+#include "errors/solve_error.hpp"
+#include "errors/time_limit_error.hpp"
 #include "gurobi_c++.h"
-#include "solve_error.hpp"
 #include "solvers/ilp_utils/ilp_utils.hpp"
 
 namespace {
@@ -34,7 +35,9 @@ char constraint_sense_to_gurobi(ilp_utils::ConstraintSense sense) {
 
 GurobiWrapper::GurobiWrapper(bool adjusted_params) : adjusted_params_(adjusted_params) {}
 
-bool GurobiWrapper::solve(ilp_utils::ObjectiveSense obj_sense, double obj_limit, bool print_stats) {
+bool GurobiWrapper::solve(ilp_utils::ObjectiveSense obj_sense, double obj_limit, bool print_stats,
+                          int max_seconds) {
+    // Ideally, this should be in the constructor, but we receive `print_stats` only now.
     GRBEnv env = GRBEnv(true);
     env.set(GRB_IntParam_Threads, 1);
     if (!print_stats) {
@@ -44,13 +47,15 @@ bool GurobiWrapper::solve(ilp_utils::ObjectiveSense obj_sense, double obj_limit,
 
     model_ = std::make_unique<GRBModel>(env);
     model_->set(GRB_IntParam_Seed, 1234);
+    if (max_seconds) {
+        model_->set(GRB_DoubleParam_TimeLimit, max_seconds);
+    }
     if (adjusted_params_) {
         // These were selected empirically, but the results are not very impressive.
         model_->set(GRB_IntParam_Method, GRB_METHOD_PRIMAL);
         model_->set(GRB_IntParam_DegenMoves, 0);
         model_->set(GRB_IntParam_PreDual, 1);
     }
-    // model_->set(GRB_DoubleParam_TimeLimit, 1000.0);
 
     for (auto var : objective_) {
         char var_type = get_gurobi_var_type(var);
@@ -92,8 +97,7 @@ bool GurobiWrapper::solve(ilp_utils::ObjectiveSense obj_sense, double obj_limit,
     // TODO Should we handle INF_OR_UNBD and UNBOUNDED?
     if (status == GRB_INFEASIBLE || status == GRB_CUTOFF) return false;
     if (status == GRB_OPTIMAL || status == GRB_USER_OBJ_LIMIT) return true;
-    // Uncomment when timeout is active and the result is not important (e.g. when benchmarking).
-    // return false;
+    if (max_seconds && status == GRB_TIME_LIMIT) throw TimeLimitError();
     throw SolveError("Unknown Gurobi error occured.");
 }
 

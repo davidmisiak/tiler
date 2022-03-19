@@ -2,15 +2,22 @@
 
 #include <string>
 
+#include "errors/time_limit_error.hpp"
 #include "parsers/problem_parser.hpp"
 #include "problem/problem.hpp"
 #include "solvers/solver_factory.hpp"
 
 int main(int argc, char** argv) {
+    const int kMaxSeconds = 1000;  // 0 for unlimited
+
     auto solve = [](benchmark::State& state, const Problem& problem,
                     const std::string& solver_name) {
         for (auto _ : state) {
-            solver_factory::create(solver_name, problem)->solve();
+            try {
+                solver_factory::create(solver_name, problem)->solve(false, kMaxSeconds);
+            } catch (const TimeLimitError& e) {
+                // Intentionally empty - we handle time limit overruns in benchmark.py.
+            }
         }
     };
 
