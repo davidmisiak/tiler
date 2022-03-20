@@ -40,10 +40,12 @@ Solution SatAmoSolver::solve(bool print_stats, int max_seconds) {
     std::vector<Clause> instance_clauses;
     std::vector<std::vector<Clause>> cell_clauses(h, std::vector<Clause>(w, Clause{}));
     std::vector<PlacedRegion> placed_regions;
+
+    auto board_cells = problem_.board_.get_cells();
     for (const Tile& tile : problem_.tiles_) {
         for (int i = 0; i < tile.get_count(); i++) {
             Clause instance_clause;
-            for (auto [bx, by] : problem_.board_.get_cells()) {
+            for (auto [bx, by] : board_cells) {
                 for (const Region& region : tile) {
                     int sx = bx - region.get_top_left_x();
                     int sy = by - region.get_top_left_y();
@@ -67,7 +69,7 @@ Solution SatAmoSolver::solve(bool print_stats, int max_seconds) {
         }
     }
 
-    for (auto [x, y] : problem_.board_.get_cells()) {
+    for (auto [x, y] : board_cells) {
         if (cell_clauses[y][x].size() == 0) {
             // the cell cannot be covered, the problem is unsolvable
             return {};

@@ -25,9 +25,11 @@ Solution IlpSolver::solve(bool print_stats, int max_seconds) {
     int h = problem_.board_.get_height();
     std::vector<std::vector<Vars>> cell_vars(h, std::vector<Vars>(w, Vars{}));
     std::vector<PlacedRegion> placed_regions;
+
+    auto board_cells = problem_.board_.get_cells();
     for (const Tile& tile : problem_.tiles_) {
         Vars tile_vars;
-        for (auto [bx, by] : problem_.board_.get_cells()) {
+        for (auto [bx, by] : board_cells) {
             for (const Region& region : tile) {
                 int sx = bx - region.get_top_left_x();
                 int sy = by - region.get_top_left_y();
@@ -47,7 +49,7 @@ Solution IlpSolver::solve(bool print_stats, int max_seconds) {
         }
     }
 
-    for (auto [x, y] : problem_.board_.get_cells()) {
+    for (auto [x, y] : board_cells) {
         if (cell_vars[y][x].size() == 0) {
             // the cell cannot be covered, the problem is unsolvable
             return {};

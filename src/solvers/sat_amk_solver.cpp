@@ -37,9 +37,11 @@ Solution SatAmkSolver::solve(bool print_stats, int max_seconds) {
     std::vector<std::pair<Clause, int>> tile_clauses;
     std::vector<std::vector<Clause>> cell_clauses(h, std::vector<Clause>(w, Clause{}));
     std::vector<PlacedRegion> placed_regions;
+
+    auto board_cells = problem_.board_.get_cells();
     for (const Tile& tile : problem_.tiles_) {
         Clause tile_clause;
-        for (auto [bx, by] : problem_.board_.get_cells()) {
+        for (auto [bx, by] : board_cells) {
             for (const Region& region : tile) {
                 int sx = bx - region.get_top_left_x();
                 int sy = by - region.get_top_left_y();
@@ -62,7 +64,7 @@ Solution SatAmkSolver::solve(bool print_stats, int max_seconds) {
         }
     }
 
-    for (auto [x, y] : problem_.board_.get_cells()) {
+    for (auto [x, y] : board_cells) {
         if (cell_clauses[y][x].size() == 0) {
             // the cell cannot be covered, the problem is unsolvable
             return {};
