@@ -24,6 +24,7 @@ list(REMOVE_ITEM PROJECT_SOURCE ${PROJECT_MAIN})
 set(EXTERNAL_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external")
 set(SAT_UTILS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/solvers/sat_utils")
 set(ILP_UTILS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/solvers/ilp_utils")
+set(DLX_UTILS_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/solvers/dlx_utils")
 
 option(CADICAL "Include the CaDiCaL SAT solver." ON)
 if(CADICAL)
@@ -70,6 +71,15 @@ if(GUROBI)
     set(MY_LINK_OPTIONS ${MY_LINK_OPTIONS} gurobi95 gurobi_g++5.2)
 else()
     list(REMOVE_ITEM PROJECT_SOURCE "${ILP_UTILS_DIR}/gurobi_wrapper.cpp")
+endif()
+
+option(DLX "Include Knuth's DLX algorithm." ON)
+if(DLX)
+    add_compile_definitions(DLX)
+    link_directories("${EXTERNAL_DIR}/dlx1/build")
+    set(MY_LINK_OPTIONS ${MY_LINK_OPTIONS} dlx)
+else()
+    list(REMOVE_ITEM PROJECT_SOURCE "${DLX_UTILS_DIR}/dlx_wrapper.cpp")
 endif()
 
 # compile "tilerlib" - entire source without main.cpp so we don't have to recompile

@@ -60,11 +60,13 @@ There are several optional open-source dependencies (git submodules):
 - [BreakID](https://github.com/meelgroup/breakid) CNF symmetry breaking library
 - [PBLib](https://github.com/master-keying/pblib) pseudo-boolean constraint encoding library
   (required when either CaDiCaL or CryptoMiniSat is present)
+- [DLX1](https://www-cs-faculty.stanford.edu/~knuth/programs.html) exact cover finding algorithm by
+  Donald Knuth
 
 Run `./scripts/build-all-deps.sh` to clone and build them. You can select only some of them by
 running a subset of `./scripts/build-*.sh` scripts and setting CMake options `-DCADICAL=OFF` /
-`-DCRYPTOMINISAT=OFF` / `-DBREAKID=OFF`. Having the libraries installed system-wide should work as
-well.
+`-DCRYPTOMINISAT=OFF` / `-DBREAKID=OFF` / `-DDLX=OFF`. Having the libraries installed system-wide
+should work as well.
 
 Additionally, Tiler can be dynamically linked against the
 [Gurobi](https://www.gurobi.com/products/gurobi-optimizer/) (v9.5.1) ILP solver. If you have an
@@ -162,7 +164,8 @@ genuine.
 
 ## License
 
-Tiler is licensed under the [GNU GPL license v3](./LICENSE).
+Tiler is licensed under the [GNU GPL license v3](./LICENSE). This does not apply to files in the
+`external` directory.
 
 ```txt
 Tiler - tool for automated solving of polyomino tiling problems
