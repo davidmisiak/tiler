@@ -98,6 +98,8 @@ const std::vector<std::string> kIlpObjectiveNames = {
         kIlpLeqMaximize,
 };
 
+const std::string kDlxSolver = "dlx";
+
 }  // namespace solver_factory
 
 #endif  // TILER_SOLVERS_SOLVER_FACTORY_HPP_

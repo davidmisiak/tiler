@@ -40,7 +40,7 @@ bool check_solution(Problem problem, Solution solution, bool expected) {
 }
 
 void test_solving(Problem problem, std::string problem_ref, bool result, int max_seconds) {
-    print::normal() << problem_ref << "\n";
+    print::normal() << problem_ref << std::endl;
     for (const std::string& solver_name : solver_factory::get_solver_names()) {
         try {
             Solution solution =
@@ -50,7 +50,7 @@ void test_solving(Problem problem, std::string problem_ref, bool result, int max
             INFO(boost::algorithm::join(info_words, " "));
             REQUIRE(check_solution(problem, solution, result));
         } catch (const TimeLimitError& e) {
-            print::normal() << "  timeout: " << solver_name << "\n";
+            print::normal() << "  timeout: " << solver_name << std::endl;
             // If you don't want this to ever happed, set `max_seconds` to 0 (disabled).
         }
     }

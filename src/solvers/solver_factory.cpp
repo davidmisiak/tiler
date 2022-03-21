@@ -8,6 +8,7 @@
 #include "boost/algorithm/string.hpp"
 #include "errors/solve_error.hpp"
 #include "problem/problem.hpp"
+#include "solvers/dlx_solver.hpp"
 #include "solvers/ilp_solver.hpp"
 #include "solvers/ilp_utils/coin_cbc_wrapper.hpp"
 #include "solvers/ilp_utils/ilp_utils.hpp"
@@ -40,6 +41,10 @@
 #include "solvers/ilp_utils/gurobi_wrapper.hpp"
 #endif
 
+#ifdef DLX
+#include "solvers/dlx_utils/dlx_wrapper.hpp"
+#endif
+
 std::vector<std::string> solver_factory::get_solver_names() {
     using namespace solver_factory;
 
@@ -69,6 +74,9 @@ std::vector<std::string> solver_factory::get_solver_names() {
             }
         }
     }
+
+    // dlx
+    solver_names.push_back(kDlxSolver);
 
     return solver_names;
 }
@@ -238,6 +246,11 @@ std::unique_ptr<Solver> solver_factory::create(const std::string& solver_name,
                                                ConstraintSense::kLeq, ObjectiveSense::kMaximize);
         }
         throw SolverNotFound;
+    }
+
+    // dlx
+    if (words.size() == 1 && words[0] == kDlxSolver) {
+        return std::make_unique<DlxSolver>(problem, DlxWrapper{});
     }
 
     throw SolverNotFound;
