@@ -9,7 +9,9 @@ import pandas as pd
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 
+NAN_IS_TIMEOUT = True
 MAX_SECONDS = 1000
+MAX_MILLIS = MAX_SECONDS * 1000
 FIGSIZE = (18, 9)
 VMIN, VMAX = 10**-10, 10**10
 COLORS = 20
@@ -29,7 +31,9 @@ def load_data(paths):
         df.problem = df.problem.str.removeprefix("problems/")
         dfs.append(df)
     merged_df = pd.concat(dfs).pivot("problem", "solver", "cpu_time")
-    return merged_df.clip(upper=MAX_SECONDS * 1000)
+    if NAN_IS_TIMEOUT:
+        merged_df = merged_df.fillna(MAX_MILLIS)
+    return merged_df.clip(upper=MAX_MILLIS)
 
 
 def filter_data(df, problem_regex, solver_regex):
