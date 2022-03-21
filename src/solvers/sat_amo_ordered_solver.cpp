@@ -37,14 +37,24 @@ Solution SatAmoOrderedSolver::solve(bool print_stats, int max_seconds) {
 
     int w = problem_.board_.get_width();
     int h = problem_.board_.get_height();
+    bool exact_tile_set = problem_.extra_tile_square_count() == 0;
     std::vector<std::vector<Clause>> tile_clauses;
     std::vector<std::vector<Clause>> cell_clauses(h, std::vector<Clause>(w, Clause{}));
     std::vector<PlacedRegion> placed_regions;
 
     auto board_cells = problem_.board_.get_cells();
     for (const Tile& tile : problem_.tiles_) {
+        int tile_count = tile.get_count();
+        int add_instance_clause = true;
+        if (tile_count * tile.get_size() >= problem_.board_.get_size()) {
+            // If there are enough instances of the single tile to cover the board, we can drop the
+            // entire notion of tile instances and just encode cell covering.
+            tile_count = 1;
+            add_instance_clause = false;
+        }
+
         std::vector<Clause> instance_clauses;
-        for (int i = 0; i < tile.get_count(); i++) {
+        for (int i = 0; i < tile_count; i++) {
             Clause instance_clause;
             int position_number = 0;
             for (auto [bx, by] : board_cells) {
@@ -54,7 +64,11 @@ Solution SatAmoOrderedSolver::solve(bool print_stats, int max_seconds) {
                     if (!problem_.board_.has_subregion(sx, sy, region)) continue;
 
                     position_number++;
-                    if (position_number <= i) continue;
+                    if (position_number <= i) {
+                        // Minor optimization - `i`-th tile can be placed only on the `i`-th
+                        // position or later.
+                        continue;
+                    }
 
                     placed_regions.push_back({sx, sy, region});
                     Lit lit = sat_wrapper_->new_lit();
@@ -64,7 +78,9 @@ Solution SatAmoOrderedSolver::solve(bool print_stats, int max_seconds) {
                     }
                 }
             }
-            instance_clauses.push_back(instance_clause);
+            if (add_instance_clause) {
+                instance_clauses.push_back(instance_clause);
+            }
         }
         tile_clauses.push_back(instance_clauses);
     }
@@ -82,9 +98,23 @@ Solution SatAmoOrderedSolver::solve(bool print_stats, int max_seconds) {
 
         // add clauses
         for (int c = 0; c < static_cast<int>(instance_clauses.size()); c++) {
-            // each tile instance has at most one position
-            //  similar to external/pblib/pblib/encoder/BDD_Seq_Amo.cpp
-            if (instance_clauses[c].size() < 2) continue;
+            if (instance_clauses[c].size() == 0) continue;
+            if (instance_clauses[c].size() == 1) {
+                if (exact_tile_set) {
+                    // We know that each tile instance has to be used, so we force the variable to
+                    // be true.
+                    sat_wrapper_->add_clause({instance_clauses[c][0]});
+                }
+                continue;
+            }
+            if (exact_tile_set) {
+                // We know that each tile instance has to be used, so we enforce that at least one
+                // of the variables is true.
+                sat_wrapper_->add_clause({instance_clauses[c].back(), aux_clauses[c].back()});
+            }
+
+            // Each tile instance has at most one position.
+            // (similar to external/pblib/pblib/encoder/BDD_Seq_Amo.cpp)
             sat_wrapper_->add_clause({~instance_clauses[c][0], aux_clauses[c][0]});
             sat_wrapper_->add_clause({~aux_clauses[c][0], ~instance_clauses[c][1]});
             for (int v = 1; v < static_cast<int>(instance_clauses[c].size()) - 1; v++) {
@@ -92,7 +122,7 @@ Solution SatAmoOrderedSolver::solve(bool print_stats, int max_seconds) {
                 sat_wrapper_->add_clause({~aux_clauses[c][v - 1], aux_clauses[c][v]});
                 sat_wrapper_->add_clause({~aux_clauses[c][v], ~instance_clauses[c][v + 1]});
             }
-            // tile instances are ordered by their position
+            // Tile instances are ordered by their position.
             if (c > 0) {
                 for (int v = 0; v < static_cast<int>(instance_clauses[c].size()) - 1; v++) {
                     sat_wrapper_->add_clause({~aux_clauses[c][v], aux_clauses[c - 1][v]});

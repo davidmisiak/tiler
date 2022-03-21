@@ -37,15 +37,33 @@ Solution SatAmoSolver::solve(bool print_stats, int max_seconds) {
 
     int w = problem_.board_.get_width();
     int h = problem_.board_.get_height();
+    bool exact_tile_set = problem_.extra_tile_square_count() == 0;
     std::vector<Clause> instance_clauses;
     std::vector<std::vector<Clause>> cell_clauses(h, std::vector<Clause>(w, Clause{}));
     std::vector<PlacedRegion> placed_regions;
 
     auto board_cells = problem_.board_.get_cells();
     for (const Tile& tile : problem_.tiles_) {
-        for (int i = 0; i < tile.get_count(); i++) {
+        int tile_count = tile.get_count();
+        int add_instance_clause = true;
+        if (tile_count * tile.get_size() >= problem_.board_.get_size()) {
+            // If there are enough instances of the single tile to cover the board, we can drop the
+            // entire notion of tile instances and just encode cell covering.
+            tile_count = 1;
+            add_instance_clause = false;
+        }
+
+        for (int i = 0; i < tile_count; i++) {
             Clause instance_clause;
+            int position_number = 0;
             for (auto [bx, by] : board_cells) {
+                position_number++;
+                if (position_number <= i) {
+                    // Minor optimization - `i`-th tile can be placed only on the `i`-th position or
+                    // later.
+                    continue;
+                }
+
                 for (const Region& region : tile) {
                     int sx = bx - region.get_top_left_x();
                     int sy = by - region.get_top_left_y();
@@ -59,12 +77,17 @@ Solution SatAmoSolver::solve(bool print_stats, int max_seconds) {
                     }
                 }
             }
-            instance_clauses.push_back(instance_clause);
+            if (add_instance_clause && instance_clause.size() > 0) {
+                instance_clauses.push_back(instance_clause);
+            }
         }
     }
 
     for (const Clause& instance_clause : instance_clauses) {
-        if (instance_clause.size() > 0) {
+        if (exact_tile_set) {
+            // We know that each tile instance has to be used, let's tell this to the SAT solver.
+            pblib_wrapper_.exactly_k(instance_clause, sat_wrapper_, 1);
+        } else {
             pblib_wrapper_.at_most_k(instance_clause, sat_wrapper_, 1);
         }
     }
