@@ -23,6 +23,7 @@ Solution IlpSolver::solve(bool print_stats, int max_seconds) {
 
     int w = problem_.board_.get_width();
     int h = problem_.board_.get_height();
+    bool exact_tile_set = problem_.extra_tile_square_count() == 0;
     std::vector<std::vector<Vars>> cell_vars(h, std::vector<Vars>(w, Vars{}));
     std::vector<PlacedRegion> placed_regions;
 
@@ -43,9 +44,17 @@ Solution IlpSolver::solve(bool print_stats, int max_seconds) {
                 }
             }
         }
-        if (tile_vars.size() > 0 && tile.get_count() > 0) {
-            ilp_wrapper_->add_constraint(
-                    Constraint(tile_vars, ConstraintSense::kLeq, tile.get_count()));
+
+        int tile_count = tile.get_count();
+        // We need to enforce the maximum tile instance count only if there is not enough tile
+        // instances to cover the entire board.
+        if (tile_count * tile.get_size() >= problem_.board_.get_size()) continue;
+        if (tile_vars.size() == 0 || tile_count == 0) continue;
+        if (exact_tile_set) {
+            // We know that each tile instance has to be used, let's tell this to the ILP solver.
+            ilp_wrapper_->add_constraint(Constraint(tile_vars, ConstraintSense::kEq, tile_count));
+        } else {
+            ilp_wrapper_->add_constraint(Constraint(tile_vars, ConstraintSense::kLeq, tile_count));
         }
     }
 

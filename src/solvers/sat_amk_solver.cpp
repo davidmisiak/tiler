@@ -34,6 +34,7 @@ Solution SatAmkSolver::solve(bool print_stats, int max_seconds) {
 
     int w = problem_.board_.get_width();
     int h = problem_.board_.get_height();
+    bool exact_tile_set = problem_.extra_tile_square_count() == 0;
     std::vector<std::pair<Clause, int>> tile_clauses;
     std::vector<std::vector<Clause>> cell_clauses(h, std::vector<Clause>(w, Clause{}));
     std::vector<PlacedRegion> placed_regions;
@@ -55,11 +56,21 @@ Solution SatAmkSolver::solve(bool print_stats, int max_seconds) {
                 }
             }
         }
-        tile_clauses.push_back({tile_clause, tile.get_count()});
+        int tile_count = tile.get_count();
+        if (tile_count * tile.get_size() < problem_.board_.get_size()) {
+            // We need to enforce the maximum tile instance count only if there is not enough tile
+            // instances to cover the entire board.
+            tile_clauses.push_back({tile_clause, tile_count});
+        }
     }
 
     for (const auto& [tile_clause, tile_count] : tile_clauses) {
-        if (tile_clause.size() > 0 && tile_count > 0) {
+        if (tile_clause.size() == 0 || tile_count == 0) continue;
+        if (exact_tile_set) {
+            // We know that each tile instance has to be used, let's tell this to the SAT
+            // solver.
+            pblib_wrapper_.exactly_k(tile_clause, sat_wrapper_, tile_count);
+        } else {
             pblib_wrapper_.at_most_k(tile_clause, sat_wrapper_, tile_count);
         }
     }
