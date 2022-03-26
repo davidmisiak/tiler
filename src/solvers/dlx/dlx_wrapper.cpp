@@ -45,4 +45,4 @@ std::vector<int> DlxWrapper::solve() {
         if (cover_index > static_cast<int>(cover.size())) break;
     }
     return tags;
-};
+}
