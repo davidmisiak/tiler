@@ -25,6 +25,7 @@ build:
     - ./scripts/build-cadical.sh
     - ./scripts/build-breakid.sh
     - ./scripts/build-pblib.sh
+    - ./scripts/build-dlx.sh
     - ./scripts/dev-setup.sh -DGUROBI=OFF
     - ./scripts/dev-build.sh
   artifacts:
