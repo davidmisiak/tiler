@@ -3,3 +3,4 @@
 ./scripts/build-cryptominisat.sh
 ./scripts/build-pblib.sh
 ./scripts/build-breakid.sh
+./scripts/build-dlx.sh
