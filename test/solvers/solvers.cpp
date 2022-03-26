@@ -118,7 +118,7 @@ TEST_CASE("Solvers return correct solutions (benchmark problems)") {
             Problem problem = problem_parser::parse_from_file(filepath, reflection);
             [[maybe_unused]] const int kMaxSeconds = 100;  // 0 for unlimited
             // Warning: This would take several hours, commented out by default.
-            // test_solving(problem, filepath, is_solvable, kMaxSeconds);
+            test_solving(problem, filepath, is_solvable, kMaxSeconds);
         }
     }
 }

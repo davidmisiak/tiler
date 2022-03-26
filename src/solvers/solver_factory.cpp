@@ -8,41 +8,41 @@
 #include "boost/algorithm/string.hpp"
 #include "errors/solve_error.hpp"
 #include "problem/problem.hpp"
-#include "solvers/dlx_solver.hpp"
-#include "solvers/ilp_solver.hpp"
-#include "solvers/ilp_utils/coin_cbc_wrapper.hpp"
-#include "solvers/ilp_utils/ilp_utils.hpp"
-#include "solvers/ilp_utils/ilp_wrapper.hpp"
-#include "solvers/sat_amk_solver.hpp"
-#include "solvers/sat_amo_ordered_solver.hpp"
-#include "solvers/sat_amo_solver.hpp"
-#include "solvers/sat_utils/symmetry_breaker.hpp"
-#include "solvers/simple_solver.hpp"
+#include "solvers/dlx/dlx_solver.hpp"
+#include "solvers/ilp/coin_cbc_wrapper.hpp"
+#include "solvers/ilp/ilp_solver.hpp"
+#include "solvers/ilp/ilp_utils.hpp"
+#include "solvers/ilp/ilp_wrapper.hpp"
+#include "solvers/sat/sat_amk_solver.hpp"
+#include "solvers/sat/sat_amo_ordered_solver.hpp"
+#include "solvers/sat/sat_amo_solver.hpp"
+#include "solvers/sat/symmetry_breaker.hpp"
+#include "solvers/simple/simple_solver.hpp"
 #include "solvers/solver.hpp"
 
 #ifdef CADICAL
-#include "solvers/sat_utils/cadical_wrapper.hpp"
+#include "solvers/sat/cadical_wrapper.hpp"
 #endif
 
 #ifdef CRYPTOMINISAT
-#include "solvers/sat_utils/cryptominisat_wrapper.hpp"
+#include "solvers/sat/cryptominisat_wrapper.hpp"
 #endif
 
 #if defined(CADICAL) || defined(CRYPTOMINISAT)
 #include "pb2cnf.h"
-#include "solvers/sat_utils/pblib_wrapper.hpp"
+#include "solvers/sat/pblib_wrapper.hpp"
 #endif
 
 #ifdef BREAKID
-#include "solvers/sat_utils/breakid_wrapper.hpp"
+#include "solvers/sat/breakid_wrapper.hpp"
 #endif
 
 #ifdef GUROBI
-#include "solvers/ilp_utils/gurobi_wrapper.hpp"
+#include "solvers/ilp/gurobi_wrapper.hpp"
 #endif
 
 #ifdef DLX
-#include "solvers/dlx_utils/dlx_wrapper.hpp"
+#include "solvers/dlx/dlx_wrapper.hpp"
 #endif
 
 std::vector<std::string> solver_factory::get_solver_names() {
