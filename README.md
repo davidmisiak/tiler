@@ -51,6 +51,9 @@ Here are some example outputs of the solver.
 
 ## Build Instructions
 
+Before building and running Tiler, always run `source scripts/load-env.sh` to load the environment
+variables required by some dependencies.
+
 ### Dependencies
 
 There are several optional open-source dependencies (git submodules):
@@ -62,18 +65,19 @@ There are several optional open-source dependencies (git submodules):
   (required when either CaDiCaL or CryptoMiniSat is present)
 - [DLX1](https://www-cs-faculty.stanford.edu/~knuth/programs.html) exact cover finding algorithm by
   Donald Knuth
+- [MiniZinc](https://www.minizinc.org/) constraint modelling framework
+- [Gecode](https://www.gecode.org/) constraint solver (required when MiniZinc is present)
 
 Run `./scripts/build-all-deps.sh` to clone and build them. You can select only some of them by
 running a subset of `./scripts/build-*.sh` scripts and setting CMake options `-DCADICAL=OFF` /
-`-DCRYPTOMINISAT=OFF` / `-DBREAKID=OFF` / `-DDLX=OFF`. Having the libraries installed system-wide
-should work as well.
+`-DCRYPTOMINISAT=OFF` / `-DBREAKID=OFF` / `-DDLX=OFF` / `-DMINIZINC=OFF`. Having the libraries
+installed system-wide should work as well.
 
 Additionally, Tiler can be dynamically linked against the
 [Gurobi](https://www.gurobi.com/products/gurobi-optimizer/) (v9.5.1) ILP solver. If you have an
 appropriate license, follow the official Gurobi
-[installation guide](https://www.gurobi.com/documentation/9.5/quickstart_linux/index.html) and run
-`source scripts/gurobi-env.sh` in the shell where you intend to build and run Tiler. Otherwise, set
-the CMake options `-DGUROBI=OFF`.
+[installation guide](https://www.gurobi.com/documentation/9.5/quickstart_linux/index.html).
+Otherwise, set the CMake option `-DGUROBI=OFF`.
 
 ### Building Tiler
 

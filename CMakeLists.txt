@@ -80,6 +80,18 @@ else()
     list(REMOVE_ITEM PROJECT_SOURCE "${SOLVERS_DIR}/dlx/dlx_wrapper.cpp")
 endif()
 
+option(MINIZINC "Include the MiniZinc and Gecode constraint solving tools." ON)
+if(MINIZINC)
+    add_compile_definitions(MINIZINC)
+    include_directories(SYSTEM "${EXTERNAL_DIR}/libminizinc/include")
+    include_directories(SYSTEM "${EXTERNAL_DIR}/libminizinc/build/include")
+    link_directories("${EXTERNAL_DIR}/libminizinc/build")
+    link_directories("${EXTERNAL_DIR}/gecode/build")
+    set(MY_LINK_OPTIONS ${MY_LINK_OPTIONS} mzn gecodedriver gecodeflatzinc gecodefloat gecodeint gecodekernel gecodeminimodel gecodesearch gecodeset gecodesupport)
+else()
+    list(REMOVE_ITEM PROJECT_SOURCE "${SOLVERS_DIR}/csp/minizinc_wrapper.cpp")
+endif()
+
 # compile "tilerlib" - entire source without main.cpp so we don't have to recompile
 # it when building tests
 add_library(tilerlib STATIC ${PROJECT_SOURCE})

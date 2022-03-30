@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source scripts/gurobi-env.sh
+source scripts/load-env.sh
 
 [[ -e build ]] && rm -r build
 mkdir build

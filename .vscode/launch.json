@@ -10,7 +10,7 @@
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Dev: Build",
-            "environment": [],
+            "envFile": "${workspaceFolder}/scripts/.env",
             "externalConsole": false,
             "MIMode": "gdb",
             "setupCommands": [

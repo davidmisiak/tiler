@@ -10,3 +10,9 @@
 [submodule "external/breakid"]
 	path = external/breakid
 	url = https://github.com/meelgroup/breakid.git
+[submodule "external/libminizinc"]
+	path = external/libminizinc
+	url = https://github.com/MiniZinc/libminizinc.git
+[submodule "external/gecode"]
+	path = external/gecode
+	url = https://github.com/Gecode/gecode.git

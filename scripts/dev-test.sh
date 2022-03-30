@@ -1,5 +1,5 @@
 #!/bin/bash
 
-source scripts/gurobi-env.sh
+source scripts/load-env.sh
 
 ./build/bin/tilertest

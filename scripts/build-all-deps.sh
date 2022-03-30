@@ -4,3 +4,5 @@
 ./scripts/build-pblib.sh
 ./scripts/build-breakid.sh
 ./scripts/build-dlx.sh
+./scripts/build-gecode.sh
+./scripts/build-minizinc.sh
