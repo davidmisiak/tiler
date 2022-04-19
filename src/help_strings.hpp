@@ -41,49 +41,54 @@ const std::string kNamedTilesList =
         "     x                                                           \n"
         "     x                                                           \n";
 
+// clang-format off
 const std::string kInputFormats =
-        "A shape has to be in one of these formats:\n"
-        "- name, eg. \"3L\" (see the 'list' command)\n"
-        "- dimensions, eg. \"2x4\" (only for rectangles)\n"
-        "- map, eg. \"  xx \"\n"
-        "           \" xx  \" (useful with the -f option)\n"
-        "- perimeter, eg. \"DDRUUL\" (no crossing allowed)\n"
-        "You should provide list of shapes, where the\n"
-        "first one represents the board and the others\n"
-        "the tiles. Tile shape may be prefixed with \"N:\"\n"
-        "where N is the available number of such tiles\n"
-        "(unlimited if not provided). See the 'example'\n"
-        "command for input examples.";
+R"R(A shape has to be in one of these formats:
+- name, eg. "3L" (see the 'list' command)
+- dimensions, eg. "2x4" (only for rectangles)
+- map, eg. "  xx "
+           " xx  " (useful with the -f option)
+- perimeter, eg. "DDRUUL" (no crossing allowed)
+You should provide list of shapes, where the
+first one represents the board and the others
+the tiles. Tile shape may be prefixed with "N:"
+where N is the available number of such tiles
+(unlimited if not provided). See the 'example'
+command for input examples.)R";
+// clang-format on
 
+// clang-format off
 const std::string kExampleInput =
-        "Here are a few input examples.\n"
-        "\n"
-        "8x10 4x2\n"
-        "- board 8 by 10, unlimited number of 4 by 2 tiles\n"
-        "\n"
-        "50x5 2:1x1 4I\n"
-        "- board 50 by 5, two 1 by 1 tiles and unlimited number of 4 by 1 tiles\n"
-        "\n"
-        "5P 1:1 2:4O\n"
-        "- board in the \"5P\" shape (3 by 2 without one corner, see the 'list'\n"
-        "  command), one 1 by 1 tile and two 2 by 2 tiles\n"
-        "\n"
-        "========== start of 'problem.txt' file ==========\n"
-        "10x10\n"
-        "\n"
-        "3I\n"
-        "\n"
-        "5:6x1\n"
-        "\n"
-        "10:LLUURRDD\n"
-        "\n"
-        "5:\n"
-        "xxxxx\n"
-        "xxxx\n"
-        "=========== end of 'problem.txt' file ===========\n"
-        "- board 10 by 10, unlimited number of 3 by 1 tiles, five 6 by 1 tiles,\n"
-        "  ten 2 by 2 tiles and five 5 by 2 tiles without one corner\n"
-        "  - usage: 'tiler solve -f problem.txt'\n";
+R"R(Here are a few input examples.
+
+8x10 4x2
+- board 8 by 10, unlimited number of 4 by 2 tiles
+
+50x5 2:1x1 4I
+- board 50 by 5, two 1 by 1 tiles and unlimited number of 4 by 1 tiles
+
+5P 1:1 2:4O
+- board in the "5P" shape (3 by 2 without one corner, see the 'list'
+  command), one 1 by 1 tile and two 2 by 2 tiles
+
+========== start of 'problem.txt' file ==========
+10x10
+
+3I
+
+5:6x1
+
+10:LLUURRDD
+
+5:
+xxxxx
+xxxx
+=========== end of 'problem.txt' file ===========
+- board 10 by 10, unlimited number of 3 by 1 tiles, five 6 by 1 tiles,
+  ten 2 by 2 tiles and five 5 by 2 tiles without one corner
+  - usage: 'tiler solve -f problem.txt'
+)R";
+// clang-format on
 
 }  // namespace help_strings
 
