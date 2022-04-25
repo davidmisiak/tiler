@@ -60,6 +60,10 @@ public:
     // surrounding rectangle has coordinates (0, 0).
     std::vector<std::pair<int, int>> get_cells() const;
 
+    // Returns the list of coordinates of the cells missing from the region's surrounding rectangle.
+    // Top-left corner of the region's surrounding rectangle has coordinates (0, 0).
+    std::vector<std::pair<int, int>> get_missing_cells() const;
+
     // Returs the list of edges defining the region.
     std::vector<utils::Edge> get_edges() const;
 

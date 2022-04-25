@@ -104,6 +104,18 @@ std::vector<std::pair<int, int>> Region::get_cells() const {
     return cells;
 }
 
+std::vector<std::pair<int, int>> Region::get_missing_cells() const {
+    std::vector<std::pair<int, int>> cells;
+    for (int y = 0; y < h_; y++) {
+        for (int x = 0; x < w_; x++) {
+            if (!matrix_[y][x]) {
+                cells.push_back({x, y});
+            }
+        }
+    }
+    return cells;
+}
+
 std::vector<utils::Edge> Region::get_edges() const {
     std::vector<utils::Edge> edges;
     for (int y = 0; y <= h_; y++) {
