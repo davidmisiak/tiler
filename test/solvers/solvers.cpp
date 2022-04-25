@@ -5,6 +5,7 @@
 
 #include "boost/algorithm/string.hpp"
 #include "catch2/catch.hpp"
+#include "errors/not_implemented_error.hpp"
 #include "errors/time_limit_error.hpp"
 #include "parsers/problem_parser.hpp"
 #include "print.hpp"
@@ -52,6 +53,8 @@ void test_solving(Problem problem, std::string problem_ref, bool result, int max
         } catch (const TimeLimitError& e) {
             print::normal() << "  timeout: " << solver_name << std::endl;
             // If you don't want this to ever happed, set `max_seconds` to 0 (disabled).
+        } catch (const NotImplementedError& e) {
+            print::normal() << "  not implemented: " << solver_name << std::endl;
         }
     }
 }
