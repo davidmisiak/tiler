@@ -8,6 +8,7 @@
 #include "boost/algorithm/string.hpp"
 #include "errors/solve_error.hpp"
 #include "problem/problem.hpp"
+#include "solvers/csp/csp_solver.hpp"
 #include "solvers/dlx/dlx_solver.hpp"
 #include "solvers/ilp/coin_cbc_wrapper.hpp"
 #include "solvers/ilp/ilp_solver.hpp"
@@ -45,6 +46,10 @@
 #include "solvers/dlx/dlx_wrapper.hpp"
 #endif
 
+#ifdef MINIZINC
+#include "solvers/csp/minizinc_wrapper.hpp"
+#endif
+
 std::vector<std::string> solver_factory::get_solver_names() {
     using namespace solver_factory;
 
@@ -77,6 +82,9 @@ std::vector<std::string> solver_factory::get_solver_names() {
 
     // dlx
     solver_names.push_back(kDlxSolver);
+
+    // csp
+    solver_names.push_back(kCspSolver);
 
     return solver_names;
 }
@@ -249,9 +257,18 @@ std::unique_ptr<Solver> solver_factory::create(const std::string& solver_name,
     }
 
     // dlx
+#ifdef DLX
     if (words.size() == 1 && words[0] == kDlxSolver) {
         return std::make_unique<DlxSolver>(problem, DlxWrapper{});
     }
+#endif
+
+    // csp
+#ifdef MINIZINC
+    if (words.size() == 1 && words[0] == kCspSolver) {
+        return std::make_unique<CspSolver>(problem, MinizincWrapper{});
+    }
+#endif
 
     throw SolverNotFound;
 }

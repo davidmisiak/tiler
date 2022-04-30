@@ -100,6 +100,8 @@ const std::vector<std::string> kIlpObjectiveNames = {
 
 const std::string kDlxSolver = "dlx";
 
+const std::string kCspSolver = "csp";
+
 }  // namespace solver_factory
 
 #endif  // TILER_SOLVERS_SOLVER_FACTORY_HPP_

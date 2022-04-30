@@ -8,7 +8,15 @@
 #include "problem/problem.hpp"
 #include "solvers/solver_factory.hpp"
 
-int main(int argc, char** argv) {
+#ifdef MINIZINC
+#include "minizinc/solver.hh"
+#endif
+
+int main(int argc, const char** argv) {
+#ifdef MINIZINC
+    MiniZinc::OverflowHandler::install(argv);
+#endif
+
     const int kMaxSeconds = 1000;  // 0 for unlimited
 
     auto solve = [](benchmark::State& state, const Problem& problem,
@@ -40,7 +48,7 @@ int main(int argc, char** argv) {
         }
     }
 
-    benchmark::Initialize(&argc, argv);
-    if (benchmark::ReportUnrecognizedArguments(argc, argv)) return 1;
+    benchmark::Initialize(&argc, const_cast<char**>(argv));
+    if (benchmark::ReportUnrecognizedArguments(argc, const_cast<char**>(argv))) return 1;
     benchmark::RunSpecifiedBenchmarks();
 }

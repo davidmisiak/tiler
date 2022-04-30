@@ -15,6 +15,10 @@
 #include "solvers/solver.hpp"
 #include "solvers/solver_factory.hpp"
 
+#ifdef MINIZINC
+#include "minizinc/solver.hh"
+#endif
+
 namespace {
 
 struct Options {
@@ -57,7 +61,13 @@ void solve_action(Options options) {
 
 }  // namespace
 
-int main(int argc, char **argv) {
+int main(int argc, const char **argv) {
+#ifdef MINIZINC
+    // TODO investigate whether this is necessary / what is the best place where to put it
+    // (also in benchmark.cpp and test.cpp)
+    MiniZinc::OverflowHandler::install(argv);
+#endif
+
     Options options;
 
     CLI::App app{"Tiler - tool for automated solving of polyomino tiling problems\n"};
