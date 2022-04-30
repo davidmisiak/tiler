@@ -10,7 +10,7 @@
 #include "problem/problem.hpp"
 #include "solvers/csp/csp_solver.hpp"
 #include "solvers/dlx/dlx_solver.hpp"
-#include "solvers/ilp/coin_cbc_wrapper.hpp"
+#include "solvers/ilp/cbc_wrapper.hpp"
 #include "solvers/ilp/ilp_solver.hpp"
 #include "solvers/ilp/ilp_utils.hpp"
 #include "solvers/ilp/ilp_wrapper.hpp"
@@ -224,8 +224,8 @@ std::unique_ptr<Solver> solver_factory::create(const std::string& solver_name,
 
         std::string ilp_wrapper_name = words[1];
         std::unique_ptr<IlpWrapper> ilp_wrapper;
-        if (ilp_wrapper_name == kIlpCoinCbc) {
-            ilp_wrapper = std::make_unique<CoinCbcWrapper>(adjusted_params);
+        if (ilp_wrapper_name == kIlpCbc) {
+            ilp_wrapper = std::make_unique<CbcWrapper>(adjusted_params);
         }
 #ifdef GUROBI
         if (ilp_wrapper_name == kIlpGurobi) {

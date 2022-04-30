@@ -1,4 +1,4 @@
-#include "solvers/ilp/coin_cbc_wrapper.hpp"
+#include "solvers/ilp/cbc_wrapper.hpp"
 
 #include <algorithm>
 #include <vector>
@@ -8,7 +8,7 @@
 #include "errors/time_limit_error.hpp"
 #include "solvers/ilp/ilp_utils.hpp"
 
-CoinCbcWrapper::CoinCbcWrapper(bool adjusted_params) {
+CbcWrapper::CbcWrapper(bool adjusted_params) {
     model_ = Cbc_newModel();
 
     // We don't want a benchmark problem run to be dependent on the other selected problems, so we
@@ -26,10 +26,10 @@ CoinCbcWrapper::CoinCbcWrapper(bool adjusted_params) {
     }
 }
 
-CoinCbcWrapper::~CoinCbcWrapper() { Cbc_deleteModel(model_); }
+CbcWrapper::~CbcWrapper() { Cbc_deleteModel(model_); }
 
-bool CoinCbcWrapper::solve(ilp_utils::ObjectiveSense obj_sense, double obj_limit, bool print_stats,
-                           int max_seconds) {
+bool CbcWrapper::solve(ilp_utils::ObjectiveSense obj_sense, double obj_limit, bool print_stats,
+                       int max_seconds) {
     if (!print_stats) {
         Cbc_setLogLevel(model_, 0);
     }
@@ -66,10 +66,10 @@ bool CoinCbcWrapper::solve(ilp_utils::ObjectiveSense obj_sense, double obj_limit
     if (max_seconds && Cbc_status(model_) == 1 && Cbc_secondaryStatus(model_) == 4) {
         throw TimeLimitError();
     }
-    throw SolveError("Unknown COIN-CBC error occured.");
+    throw SolveError("Unknown CBC error occured.");
 }
 
-std::vector<double> CoinCbcWrapper::get_solution() {
+std::vector<double> CbcWrapper::get_solution() {
     const double *cbc_var_values = Cbc_getColSolution(model_);
     std::vector<double> var_values(cbc_var_values, cbc_var_values + objective_.size());
     return var_values;

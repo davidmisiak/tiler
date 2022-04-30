@@ -71,10 +71,10 @@ const std::vector<std::string> kSatPBLibWrapperNames = {
 
 const std::string kIlpPrefix = "ilp";
 
-const std::string kIlpCoinCbc = "coin";
+const std::string kIlpCbc = "cbc";
 const std::string kIlpGurobi = "gurobi";
 const std::vector<std::string> kIlpWrapperNames = {
-        kIlpCoinCbc,
+        kIlpCbc,
 #ifdef GUROBI
         kIlpGurobi,
 #endif
