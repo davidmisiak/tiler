@@ -16,3 +16,6 @@
 [submodule "external/gecode"]
 	path = external/gecode
 	url = https://github.com/Gecode/gecode.git
+[submodule "external/chuffed"]
+	path = external/chuffed
+	url = https://github.com/chuffed/chuffed.git
