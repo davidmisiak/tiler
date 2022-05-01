@@ -29,7 +29,7 @@
 #include "solvers/sat/cryptominisat_wrapper.hpp"
 #endif
 
-#if defined(CADICAL) || defined(CRYPTOMINISAT)
+#ifdef PBLIB
 #include "pb2cnf.h"
 #include "solvers/sat/pblib_wrapper.hpp"
 #endif
@@ -84,7 +84,10 @@ std::vector<std::string> solver_factory::get_solver_names() {
     solver_names.push_back(kDlxSolver);
 
     // csp
-    solver_names.push_back(kCspSolver);
+    for (std::string flat_solver_name : kCspFlatSolverNames) {
+        std::vector<std::string> words{kCspPrefix, flat_solver_name};
+        solver_names.push_back(boost::algorithm::join(words, "_"));
+    }
 
     return solver_names;
 }
@@ -265,8 +268,20 @@ std::unique_ptr<Solver> solver_factory::create(const std::string& solver_name,
 
     // csp
 #ifdef MINIZINC
-    if (words.size() == 1 && words[0] == kCspSolver) {
-        return std::make_unique<CspSolver>(problem, MinizincWrapper{});
+    if (words.size() == 2 && words[0] == kCspPrefix) {
+        std::string flat_solver_name = words[1];
+        std::string flat_solver;
+        if (flat_solver_name == kCspGecode) {
+            flat_solver = "Gecode";
+        } else if (flat_solver_name == kCspChuffed) {
+            flat_solver = "Chuffed";
+        } else if (flat_solver_name == kCspGurobi) {
+            flat_solver = "Gurobi";
+        } else {
+            throw SolverNotFound;
+        }
+
+        return std::make_unique<CspSolver>(problem, MinizincWrapper(flat_solver));
     }
 #endif
 

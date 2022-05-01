@@ -98,7 +98,7 @@ TEST_CASE("Solvers return correct solutions") {
             {{"4L", "1:4J"}, false, false},
             {{"5P", "1:xxx\nx x\nxxx", "1:1"}, false, false},
             {{"5P", "1:xxx\nx x\nxxx", "1:2"}, false, false},
-            {{"DDDRDRRRUUULULLL", "2"}, false, false},
+            {{"DDDRDRUUULUL", "2"}, false, false},
             {{"4L", "3L"}, false, false},
 
             {{"3x4", "4L"}, true, false},

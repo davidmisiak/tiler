@@ -26,6 +26,8 @@ nlohmann::json serialize_sets(std::vector<std::set<int>> sets) {
 
 }  // namespace
 
+MinizincWrapper::MinizincWrapper(std::string flat_solver) : flat_solver_(flat_solver){};
+
 std::pair<MinizincWrapper::Positions, MinizincWrapper::Kinds> MinizincWrapper::solve(
         int w, int h, std::vector<std::pair<int, int>> missingCells,
         std::vector<std::set<int>> variants, std::vector<std::set<int>> tiles, bool print_stats,
@@ -52,18 +54,15 @@ std::pair<MinizincWrapper::Positions, MinizincWrapper::Kinds> MinizincWrapper::s
         MiniZinc::Timer startTime;
         MiniZinc::MznSolver solver(output_stream, print::stats(), startTime);
         std::vector<std::string> args{
-                "--json-stream",
-                "--cmdline-json-data",
-                input_json.dump(),
-                "--output-mode",
-                "json",
-                "--time-limit",
-                std::to_string(max_seconds * 1000),
-                "--solver",
-                "Gecode",
+                "--json-stream", "--cmdline-json-data", input_json.dump(), "--output-mode", "json",
+                "--solver",      flat_solver_,
         };
         if (print_stats) {
             args.push_back("-v");
+        }
+        if (max_seconds) {
+            args.push_back("--time-limit");
+            args.push_back(std::to_string(max_seconds * 1000));
         }
         status = solver.run(args, minizinc_models::kMinizincModel);
     } catch (...) {

@@ -67,11 +67,13 @@ There are several optional open-source dependencies (git submodules):
   Donald Knuth
 - [MiniZinc](https://www.minizinc.org/) constraint modelling framework
 - [Gecode](https://www.gecode.org/) constraint solver (required when MiniZinc is present)
+- [Chuffed](https://github.com/chuffed/chuffed) constraint solver (optional when MiniZinc is
+  present)
 
 Run `./scripts/build-all-deps.sh` to clone and build them. You can select only some of them by
 running a subset of `./scripts/build-*.sh` scripts and setting CMake options `-DCADICAL=OFF` /
-`-DCRYPTOMINISAT=OFF` / `-DBREAKID=OFF` / `-DDLX=OFF` / `-DMINIZINC=OFF`. Having the libraries
-installed system-wide should work as well.
+`-DCRYPTOMINISAT=OFF` / `-DBREAKID=OFF` / `-DDLX=OFF` / `-DMINIZINC=OFF` / `-DCHUFFED=OFF`. Having
+the libraries installed system-wide should work as well.
 
 Additionally, Tiler can be dynamically linked against the
 [Gurobi](https://www.gurobi.com/products/gurobi-optimizer/) (v9.5.1) ILP solver. If you have an

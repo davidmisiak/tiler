@@ -18,8 +18,10 @@ std::vector<std::string> get_solver_names();
 // by `solver_factory::solver_names()`).
 std::unique_ptr<Solver> create(const std::string& solver_name, const Problem& problem);
 
+// simple
 const std::string kSimpleSolver = "simple";
 
+// sat
 const std::string kSatPrefix = "sat";
 
 const std::string kSatCadical = "cadical";
@@ -69,6 +71,7 @@ const std::vector<std::string> kSatPBLibWrapperNames = {
         kSatAmkCard,
 };
 
+// ilp
 const std::string kIlpPrefix = "ilp";
 
 const std::string kIlpCbc = "cbc";
@@ -98,9 +101,26 @@ const std::vector<std::string> kIlpObjectiveNames = {
         kIlpLeqMaximize,
 };
 
+// dlx
 const std::string kDlxSolver = "dlx";
 
-const std::string kCspSolver = "csp";
+// csp
+const std::string kCspPrefix = "csp";
+
+const std::string kCspGecode = "gecode";
+const std::string kCspChuffed = "chuffed";
+const std::string kCspGurobi = "gurobi";
+const std::vector<std::string> kCspFlatSolverNames = {
+#ifdef MINIZINC
+        kCspGecode,
+#ifdef CHUFFED
+        kCspChuffed,
+#endif
+#ifdef GUROBI
+        kCspGurobi,
+#endif
+#endif  // MINIZINC
+};
 
 }  // namespace solver_factory
 

@@ -55,6 +55,7 @@ else()
 endif()
 
 if(CADICAL OR CRYPTOMINISAT)
+    add_compile_definitions(PBLIB)
     include_directories(SYSTEM "${EXTERNAL_DIR}/pblib/pblib")
     link_directories("${EXTERNAL_DIR}/pblib/build")
     set(MY_LINK_OPTIONS ${MY_LINK_OPTIONS} pb)
@@ -90,6 +91,11 @@ if(MINIZINC)
     set(MY_LINK_OPTIONS ${MY_LINK_OPTIONS} mzn gecodedriver gecodeflatzinc gecodefloat gecodeint gecodekernel gecodeminimodel gecodesearch gecodeset gecodesupport)
 else()
     list(REMOVE_ITEM PROJECT_SOURCE "${SOLVERS_DIR}/csp/minizinc_wrapper.cpp")
+endif()
+
+option(CHUFFED "In addition to MiniZinc with Gecode, include also the Chuffed solver." ON)
+if(CHUFFED)
+    add_compile_definitions(CHUFFED)
 endif()
 
 # compile "tilerlib" - entire source without main.cpp so we don't have to recompile
