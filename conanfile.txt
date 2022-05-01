@@ -8,6 +8,7 @@
     coin-cbc/2.10.5
     icecream-cpp/0.3.1
     nlohmann_json/3.10.5
+    zlib/1.2.12
 
 [generators]
     cmake
