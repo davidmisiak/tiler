@@ -17,10 +17,10 @@
 namespace {
 
 nlohmann::json serialize_sets(std::vector<std::set<int>> sets) {
-    nlohmann::json j = {};
-    for (const auto& s : sets) {
-        j.push_back({{"set", s}});
-    }
+    nlohmann::json j;
+    std::transform(sets.begin(), sets.end(), std::back_inserter(j), [&](const std::set<int>& s) {
+        return nlohmann::json{{"set", s}};
+    });
     return j;
 }
 
