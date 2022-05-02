@@ -25,7 +25,7 @@ struct Options {
     std::vector<std::string> tiles;
     std::string input_file = "";
     std::string image_file = "";
-    std::string solver_name = solver_factory::kSimpleSolver;
+    std::string solver_name = solver_factory::get_solver_names()[0];
     int max_seconds = 0;
     bool allow_reflection = false;
     bool print_problem = false;

@@ -116,6 +116,16 @@ std::vector<std::pair<int, int>> Region::get_missing_cells() const {
     return cells;
 }
 
+int Region::get_row_cell_count(int y) const {
+    int count = 0;
+    for (int x = 0; x < w_; x++) {
+        if (!matrix_[y][x]) {
+            count++;
+        }
+    }
+    return count;
+}
+
 std::vector<utils::Edge> Region::get_edges() const {
     std::vector<utils::Edge> edges;
     for (int y = 0; y <= h_; y++) {

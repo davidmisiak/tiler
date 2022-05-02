@@ -19,6 +19,7 @@
 #include "solvers/sat/sat_amo_solver.hpp"
 #include "solvers/sat/symmetry_breaker.hpp"
 #include "solvers/simple/simple_solver.hpp"
+#include "solvers/simple/variant_ordering.hpp"
 #include "solvers/solver.hpp"
 
 #ifdef CADICAL
@@ -56,7 +57,10 @@ std::vector<std::string> solver_factory::get_solver_names() {
     std::vector<std::string> solver_names;
 
     // simple
-    solver_names.push_back(kSimpleSolver);
+    for (std::string ordering_name : kSimpleOrderingNames) {
+        std::vector<std::string> words{kSimplePrefix, ordering_name};
+        solver_names.push_back(boost::algorithm::join(words, "_"));
+    }
 
     // sat
     for (std::string sat_wrapper_name : kSatWrapperNames) {
@@ -108,8 +112,22 @@ std::unique_ptr<Solver> solver_factory::create(const std::string& solver_name,
     boost::split(words, solver_name, boost::is_any_of("_"));
 
     // simple
-    if (words.size() == 1 && words[0] == kSimpleSolver) {
-        return std::make_unique<SimpleSolver>(problem);
+    if (words.size() == 2 && words[0] == kSimplePrefix) {
+        std::string ordering_name = words[1];
+        variant_ordering::Ordering ordering;
+        if (ordering_name == kSimpleDefault) {
+            ordering = variant_ordering::kDefault;
+        } else if (ordering_name == kSimpleFrequentFirst) {
+            ordering = variant_ordering::kFrequentFirst;
+        } else if (ordering_name == kSimpleRareFirst) {
+            ordering = variant_ordering::kRareFirst;
+        } else if (ordering_name == kSimpleFillTopRow) {
+            ordering = variant_ordering::kFillTopRow;
+        } else {
+            throw SolverNotFound;
+        }
+
+        return std::make_unique<SimpleSolver>(problem, ordering);
     }
 
     // sat

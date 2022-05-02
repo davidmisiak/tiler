@@ -19,7 +19,18 @@ std::vector<std::string> get_solver_names();
 std::unique_ptr<Solver> create(const std::string& solver_name, const Problem& problem);
 
 // simple
-const std::string kSimpleSolver = "simple";
+const std::string kSimplePrefix = "simple";
+
+const std::string kSimpleDefault = "default";
+const std::string kSimpleFrequentFirst = "frequent";
+const std::string kSimpleRareFirst = "rare";
+const std::string kSimpleFillTopRow = "fill-row";
+const std::vector<std::string> kSimpleOrderingNames = {
+        kSimpleDefault,
+        kSimpleFrequentFirst,
+        kSimpleRareFirst,
+        kSimpleFillTopRow,
+};
 
 // sat
 const std::string kSatPrefix = "sat";

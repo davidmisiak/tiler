@@ -64,6 +64,9 @@ public:
     // Top-left corner of the region's surrounding rectangle has coordinates (0, 0).
     std::vector<std::pair<int, int>> get_missing_cells() const;
 
+    // Returns the cell count in the row `y`.
+    int get_row_cell_count(int y) const;
+
     // Returs the list of edges defining the region.
     std::vector<utils::Edge> get_edges() const;
 
