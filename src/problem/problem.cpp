@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "errors/solve_error.hpp"
 #include "print.hpp"
 #include "problem/board.hpp"
 #include "problem/tile.hpp"
@@ -18,6 +19,9 @@ void Problem::limit_tile_counts() {
 int Problem::extra_tile_square_count() {
     int tile_square_count = 0;
     for (Tile& tile : tiles_) {
+        if (tile.get_count() == Tile::kCountInfinity) {
+            throw SolveError("Infinite extra tile square count reached.");
+        }
         tile_square_count += tile.get_count() * tile.get_size();
     }
     return tile_square_count - board_.get_size();

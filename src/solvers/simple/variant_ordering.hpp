@@ -32,6 +32,9 @@ static const Ordering kFrequentFirst = [](const std::vector<Tile>& tiles) {
             [&tiles](const VariantRef& a, const VariantRef& b) {
                 int a_count = tiles[a.second].get_count();
                 int b_count = tiles[b.second].get_count();
+
+                if (b_count == Tile::kCountInfinity) return false;
+                if (a_count == Tile::kCountInfinity) return true;
                 return a_count > b_count;
             },
     };
@@ -44,6 +47,9 @@ static const Ordering kRareFirst = [](const std::vector<Tile>& tiles) {
             [&tiles](const VariantRef& a, const VariantRef& b) {
                 int a_count = tiles[a.second].get_count();
                 int b_count = tiles[b.second].get_count();
+
+                if (a_count == Tile::kCountInfinity) return false;
+                if (b_count == Tile::kCountInfinity) return true;
                 return a_count < b_count;
             },
     };
