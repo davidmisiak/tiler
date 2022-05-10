@@ -62,6 +62,9 @@ std::vector<std::string> solver_factory::get_solver_names() {
         solver_names.push_back(boost::algorithm::join(words, "_"));
     }
 
+    // dlx
+    solver_names.push_back(kDlxSolver);
+
     // sat
     for (std::string sat_wrapper_name : kSatWrapperNames) {
         for (std::string symmetry_breaker_name : kSatSymmetryBreakerNames) {
@@ -83,9 +86,6 @@ std::vector<std::string> solver_factory::get_solver_names() {
             }
         }
     }
-
-    // dlx
-    solver_names.push_back(kDlxSolver);
 
     // csp
     for (std::string flat_solver_name : kCspFlatSolverNames) {
@@ -129,6 +129,13 @@ std::unique_ptr<Solver> solver_factory::create(const std::string& solver_name,
 
         return std::make_unique<SimpleSolver>(problem, ordering);
     }
+
+    // dlx
+#ifdef DLX
+    if (words.size() == 1 && words[0] == kDlxSolver) {
+        return std::make_unique<DlxSolver>(problem, DlxWrapper{});
+    }
+#endif
 
     // sat
     if (words.size() == 4 && words[0] == kSatPrefix) {
@@ -276,13 +283,6 @@ std::unique_ptr<Solver> solver_factory::create(const std::string& solver_name,
         }
         throw SolverNotFound;
     }
-
-    // dlx
-#ifdef DLX
-    if (words.size() == 1 && words[0] == kDlxSolver) {
-        return std::make_unique<DlxSolver>(problem, DlxWrapper{});
-    }
-#endif
 
     // csp
 #ifdef MINIZINC

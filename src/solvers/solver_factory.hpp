@@ -32,6 +32,9 @@ const std::vector<std::string> kSimpleOrderingNames = {
         kSimpleFillTopRow,
 };
 
+// dlx
+const std::string kDlxSolver = "dlx";
+
 // sat
 const std::string kSatPrefix = "sat";
 
@@ -57,7 +60,7 @@ const std::vector<std::string> kSatSymmetryBreakerNames = {
 
 const std::string kSatAmoAuto = "amo-auto";
 const std::string kSatAmoNested = "amo-nested";
-const std::string kSatAmoBDD = "amo-bdd";
+const std::string kSatAmoBDD = "amo-seq";
 const std::string kSatAmoBimander = "amo-bimander";
 const std::string kSatAmoCommander = "amo-commander";
 const std::string kSatAmoKProduct = "amo-kproduct";
@@ -111,9 +114,6 @@ const std::vector<std::string> kIlpObjectiveNames = {
         kIlpGeqMinimize,
         kIlpLeqMaximize,
 };
-
-// dlx
-const std::string kDlxSolver = "dlx";
 
 // csp
 const std::string kCspPrefix = "csp";
