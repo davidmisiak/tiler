@@ -4,8 +4,8 @@
 # lines in `src/solvers/ilp_utils/gurobi_wrapper.cpp`. Recommended parameters for each of the
 # selected problems will be saved in the `tune/` directory.
 
-for PROBLEM in "individual/2-3-4-5-09x14_s" "individual/5r-H-08x09'_u" \
-    "individual/5r-diamond'_u" "individual/5r-skew-06x10'_u" "mixed/3L-4J-10x14_s"
+for PROBLEM in "many-unique/2-3-4-5-09x14_s" "many-unique/5r-H-08x09'_u" \
+    "many-unique/5r-diamond'_u" "many-unique/5r-skew-06x10'_u" "mixed/3L-4J-10x14_s"
 do
     for SOLVER in "eq-ign" "eq-min" "geq-min" "leq-max"
     do

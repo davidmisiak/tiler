@@ -135,23 +135,23 @@ The following books were used as sources of some problems:
 2nd edition, 1994.
 
 ```txt
-individual/4r-5r-04x20'_s
-individual/4r-5r-05x16'_s
-individual/4r-5r-08x10'_s
-individual/5r-03x20'_s
-individual/5r-04x15'_s
-individual/5r-05x12'_s
-individual/5r-06x10'_s
-individual/5r-diamond'_u
-individual/5r-fcr'_s
-individual/5r-H-08x09'_s
-individual/5r-hskew-06x10'_u
-individual/5r-plus'_u
-individual/5r-sideways'_u
-individual/5r-skew-03x20'_s
-individual/5r-skew-04x15'_s
-individual/5r-skew-05x12'_s
-individual/5r-skew-06x10'_s
+many-unique/4r-5r-04x20'_s
+many-unique/4r-5r-05x16'_s
+many-unique/4r-5r-08x10'_s
+many-unique/5r-03x20'_s
+many-unique/5r-04x15'_s
+many-unique/5r-05x12'_s
+many-unique/5r-06x10'_s
+many-unique/5r-diamond'_u
+many-unique/5r-fcr'_s
+many-unique/5r-H-08x09'_s
+many-unique/5r-hskew-06x10'_u
+many-unique/5r-plus'_u
+many-unique/5r-sideways'_u
+many-unique/5r-skew-03x20'_s
+many-unique/5r-skew-04x15'_s
+many-unique/5r-skew-05x12'_s
+many-unique/5r-skew-06x10'_s
 ```
 
 > G. E. Martin. *Polyominoes: a Guide to Puzzles and Problems in Tiling*. Mathematical Association of
