@@ -1,11 +1,19 @@
 # Tiler
 
 Tiler is a CLI tool for automated solving of [polyomino](https://en.wikipedia.org/wiki/Polyomino)
-tiling problems. It features multiple solver backends.
+tiling problems.
+
+Currently, it features the following solver backends:
+
+- **simple backtracking** (with a few tile selection heuristics)
+- Donald Knuth's **Algorithm X** (Dancing Links)
+- conversion to the **SAT problem** (several modifications)
+- conversion to the **ILP problem**
+- conversion to a **MiniZinc constraint satisfaction problem**
 
 ## Usage
 
-The CLI takes input (either from command-line or from a file) which defines a board (region
+The CLI takes input (either from the command line or from a file) which defines a board (a region
 consisting of unit squares) and polyomino tiles and tries to find a perfect tiling of the board with
 the tiles.
 
@@ -65,7 +73,7 @@ There are several optional open-source dependencies (git submodules):
   (required when either CaDiCaL or CryptoMiniSat is present)
 - [DLX1](https://www-cs-faculty.stanford.edu/~knuth/programs.html) exact cover finding algorithm by
   Donald Knuth
-- [MiniZinc](https://www.minizinc.org/) constraint modelling framework
+- [MiniZinc](https://www.minizinc.org/) constraint modeling framework
 - [Gecode](https://www.gecode.org/) constraint solver (required when MiniZinc is present)
 - [Chuffed](https://github.com/chuffed/chuffed) constraint solver (optional when MiniZinc is
   present)
@@ -73,7 +81,7 @@ There are several optional open-source dependencies (git submodules):
 Run `./scripts/build-all-deps.sh` to clone and build them. You can select only some of them by
 running a subset of `./scripts/build-*.sh` scripts and setting CMake options `-DCADICAL=OFF` /
 `-DCRYPTOMINISAT=OFF` / `-DBREAKID=OFF` / `-DDLX=OFF` / `-DMINIZINC=OFF` / `-DCHUFFED=OFF`. Having
-the libraries installed system-wide should work as well.
+the libraries installed system-wide should work as well (at least for some of them).
 
 Additionally, Tiler can be dynamically linked against the
 [Gurobi](https://www.gurobi.com/products/gurobi-optimizer/) (v9.5.1) ILP solver. If you have an
@@ -89,7 +97,7 @@ Building Tiler requires these dependencies:
 - [Conan](https://conan.io/) package manager
 - a C/C++ compiler (a recent version of GCC is recommended, C++17 support is required)
 
-Build the exacutable by running `./scripts/release-setup.sh` and `./scripts/release-build.sh`. You
+Build the executable by running `./scripts/release-setup.sh` and `./scripts/release-build.sh`. You
 can configure build options using eg. `ccmake` before running `release-build.sh` or by adding
 appropriate `-D` flags to `release-setup.sh` (they will be passed on to CMake).
 
