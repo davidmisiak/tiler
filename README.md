@@ -127,7 +127,7 @@ commands to run can be found at [tasks.json](./.vscode/tasks.json).
 To run the benchmarking suite on all problems in the `problems` directory, run
 `./scripts/release-benchmark.sh` (however, note that this will take several hours; you can edit the
 `benchmark_filter` parameter in the script to select only some problems or solvers). You can use
-`./benchmark/show.py` to plot the measured data.
+`./benchmark/plot.py` to plot the measured data.
 
 ## Problems
 
