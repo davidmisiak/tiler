@@ -8,6 +8,8 @@ release/
 *.svg
 
 benchmark/**/*.json
+benchmark/**/*.svg
+benchmark/**/*.pdf
 
 tune/
 model.mps
