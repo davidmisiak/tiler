@@ -84,9 +84,9 @@ running a subset of `./scripts/build-*.sh` scripts and setting CMake options `-D
 the libraries installed system-wide should work as well (at least for some of them).
 
 Additionally, Tiler can be dynamically linked against the
-[Gurobi](https://www.gurobi.com/products/gurobi-optimizer/) (v9.5.1) ILP solver. If you have an
+[Gurobi](https://www.gurobi.com/products/gurobi-optimizer/) (v10.0.2) ILP solver. If you have an
 appropriate license, follow the official Gurobi
-[installation guide](https://www.gurobi.com/documentation/9.5/quickstart_linux/index.html).
+[installation guide](https://www.gurobi.com/documentation/10.0/quickstart_linux/index.html).
 Otherwise, set the CMake option `-DGUROBI=OFF`.
 
 ### Building Tiler

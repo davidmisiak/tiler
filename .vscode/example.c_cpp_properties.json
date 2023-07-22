@@ -6,7 +6,7 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "~/.conan/data/**",
-                "/opt/gurobi951/linux64/**",
+                "/opt/gurobi1002/linux64/**",
                 // source code of these libaries is not contained in additional subfolders, so they
                 // have to be listed on their own
                 "~/.conan/data/rang/3.1.0/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include",
