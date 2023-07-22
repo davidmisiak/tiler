@@ -4,8 +4,7 @@
 #include <memory>
 #include <vector>
 
-#include "breakid/breakid.hpp"
-#include "breakid/solvertypesmini.hpp"
+#include "breakid.hpp"
 #include "print.hpp"
 #include "solvers/sat/sat_utils.hpp"
 #include "solvers/sat/sat_wrapper.hpp"

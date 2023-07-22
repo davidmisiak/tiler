@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "breakid/breakid.hpp"
+#include "breakid.hpp"
 #include "solvers/sat/sat_utils.hpp"
 #include "solvers/sat/sat_wrapper.hpp"
 #include "solvers/sat/symmetry_breaker.hpp"

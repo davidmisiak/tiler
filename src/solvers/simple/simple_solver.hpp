@@ -1,6 +1,7 @@
 #ifndef TILER_SOLVERS_SIMPLE_SIMPLE_SOLVER_HPP_
 #define TILER_SOLVERS_SIMPLE_SIMPLE_SOLVER_HPP_
 
+#include <cstdint>
 #include <vector>
 
 #include "problem/problem.hpp"
