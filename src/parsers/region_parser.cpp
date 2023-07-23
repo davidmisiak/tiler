@@ -73,6 +73,7 @@ Region region_parser::parse_raw(const std::string s) {
         boost::split(lines, s, boost::is_any_of("\n"));
         int w = 0;
         for (const std::string& line : lines) {
+            // cppcheck-suppress useStlAlgorithm
             w = std::max(w, static_cast<int>(line.size()));
         }
         int h = static_cast<int>(lines.size());

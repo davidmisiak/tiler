@@ -121,10 +121,10 @@ int main(int argc, const char **argv) {
                             "If present, additional solver stats will be\nprinted.");
 
     // list command definition
-    CLI::App *list_command = app.add_subcommand("list", "List all named tiles");
+    const CLI::App *list_command = app.add_subcommand("list", "List all named tiles");
 
     // example command definition
-    CLI::App *example_command = app.add_subcommand("example", "Show an input example");
+    const CLI::App *example_command = app.add_subcommand("example", "Show an input example");
 
     // parse
     std::atexit([]() { print::normal(); });
@@ -136,7 +136,7 @@ int main(int argc, const char **argv) {
     }
 
     // execute
-    CLI::App *command = app.get_subcommands()[0];  // there is always exactly one command
+    const CLI::App *command = app.get_subcommands()[0];  // there is always exactly one command
     if (command == solve_command) {
         try {
             solve_action(options);
