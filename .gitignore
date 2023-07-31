@@ -14,3 +14,4 @@ benchmark/**/*.pdf
 tune/
 model.mps
 model.prm
+grbtune.log
