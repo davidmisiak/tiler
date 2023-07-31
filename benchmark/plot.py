@@ -74,13 +74,15 @@ def show_data(df, sort_by="", cumulative=False, figsize=FIGSIZE_LARGE, file_name
     if cumulative:
         df = df.cumsum()
 
-    dmin, dmax = df.min().min() / 2, df.max().max() * 2
+    # dmin, dmax = df.min().min() / 2, df.max().max() * 2
+    dmin, dmax = 0.005, MAX_MILLIS * 2
 
     plots_fig, plots_ax = plt.subplots(figsize=figsize)
     plot = df.plot(ax=plots_ax, grid=True, logy=True)
 
     plt.xticks(range(len(df)), df.index, rotation="vertical")
     plt.yticks([10**i for i in range(-10, 10)])
+    plt.yticks([j * 10**i for i in range(-10, 10) for j in range(10)], minor=True)
     plt.xlim(-1, len(df))
     plt.ylim(dmin, dmax)
     plt.ylabel("time (ms)")
