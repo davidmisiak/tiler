@@ -19,7 +19,7 @@ static const Ordering kDefault = [](const std::vector<Tile>& tiles [[maybe_unuse
     return std::pair{
             false,
             [](const VariantRef& a [[maybe_unused]], const VariantRef& b [[maybe_unused]]) {
-                throw SolveError("Thse default variant ordering comparator should not be used.");
+                throw SolveError("The default variant ordering comparator should not be used.");
                 return false;
             },
     };
