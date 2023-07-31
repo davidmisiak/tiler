@@ -53,7 +53,8 @@ def load_data(paths):
         dfs.append(df)
     merged_df = pd.concat(dfs)
     columns = merged_df["solver"].unique()  # to keep the solver order
-    merged_df = merged_df.pivot("problem", "solver", "cpu_time")[columns]
+    merged_df = merged_df.pivot(index="problem", columns="solver", values="cpu_time")
+    merged_df = merged_df[columns]
     if NAN_IS_TIMEOUT:
         merged_df = merged_df.fillna(MAX_MILLIS)
     return merged_df.clip(upper=MAX_MILLIS)
@@ -162,7 +163,7 @@ if not INTERACTIVE:
     shutil.rmtree(IMAGES_DIR, True)
     os.makedirs(IMAGES_DIR)
 
-for (problem_regex, solver_regex, file_name, figsize) in image_configs:
+for problem_regex, solver_regex, file_name, figsize in image_configs:
     df = filter_data(data, problem_regex=problem_regex, solver_regex=solver_regex)
     show_data(
         df,
