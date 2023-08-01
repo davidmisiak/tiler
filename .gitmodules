@@ -19,3 +19,6 @@
 [submodule "external/chuffed"]
 	path = external/chuffed
 	url = https://github.com/chuffed/chuffed.git
+[submodule "external/kissat"]
+	path = external/kissat
+	url = https://github.com/arminbiere/kissat.git

@@ -30,6 +30,10 @@
 #include "solvers/sat/cryptominisat_wrapper.hpp"
 #endif
 
+#ifdef KISSAT
+#include "solvers/sat/kissat_wrapper.hpp"
+#endif
+
 #ifdef PBLIB
 #include "pb2cnf.h"
 #include "solvers/sat/pblib_wrapper.hpp"
@@ -152,6 +156,11 @@ std::unique_ptr<Solver> solver_factory::create(const std::string& solver_name,
 #ifdef CRYPTOMINISAT
         if (sat_wrapper_name == kSatCryptominisat) {
             sat_wrapper = std::make_unique<CryptominisatWrapper>();
+        }
+#endif
+#ifdef KISSAT
+        if (sat_wrapper_name == kSatKissat) {
+            sat_wrapper = std::make_unique<KissatWrapper>();
         }
 #endif
         if (sat_wrapper.get() == nullptr) {

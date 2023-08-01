@@ -40,12 +40,16 @@ const std::string kSatPrefix = "sat";
 
 const std::string kSatCadical = "cadical";
 const std::string kSatCryptominisat = "cms";
+const std::string kSatKissat = "kissat";
 const std::vector<std::string> kSatWrapperNames = {
 #ifdef CADICAL
         kSatCadical,
 #endif
 #ifdef CRYPTOMINISAT
         kSatCryptominisat,
+#endif
+#ifdef KISSAT
+        kSatKissat,
 #endif
 };
 

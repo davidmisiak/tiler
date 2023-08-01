@@ -68,9 +68,10 @@ There are several optional open-source dependencies (git submodules):
 
 - [CaDiCaL](https://github.com/arminbiere/cadical) SAT solver
 - [CryptoMiniSat](https://github.com/msoos/cryptominisat) SAT solver
+- [Kissat](https://github.com/arminbiere/kissat) SAT solver
 - [BreakID](https://github.com/meelgroup/breakid) CNF symmetry breaking library
 - [PBLib](https://github.com/master-keying/pblib) pseudo-boolean constraint encoding library
-  (required when either CaDiCaL or CryptoMiniSat is present)
+  (required when either CaDiCaL, CryptoMiniSat or Kissat is present)
 - [DLX1](https://www-cs-faculty.stanford.edu/~knuth/programs.html) exact cover finding algorithm by
   Donald Knuth
 - [MiniZinc](https://www.minizinc.org/) constraint modeling framework
@@ -80,8 +81,9 @@ There are several optional open-source dependencies (git submodules):
 
 Run `./scripts/build-all-deps.sh` to clone and build them. You can select only some of them by
 running a subset of `./scripts/build-*.sh` scripts and setting CMake options `-DCADICAL=OFF` /
-`-DCRYPTOMINISAT=OFF` / `-DBREAKID=OFF` / `-DDLX=OFF` / `-DMINIZINC=OFF` / `-DCHUFFED=OFF`. Having
-the libraries installed system-wide should work as well (at least for some of them).
+`-DCRYPTOMINISAT=OFF` / `-DKISSAT=OFF` / `-DBREAKID=OFF`/ `-DDLX=OFF` /
+`-DMINIZINC=OFF` / `-DCHUFFED=OFF`. Having the libraries installed system-wide should work as well
+(at least for some of them).
 
 Additionally, Tiler can be dynamically linked against the
 [Gurobi](https://www.gurobi.com/products/gurobi-optimizer/) (v10.0.2) ILP solver. If you have an
