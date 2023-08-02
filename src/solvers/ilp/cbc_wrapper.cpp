@@ -11,8 +11,6 @@
 CbcWrapper::CbcWrapper(bool adjusted_params) {
     model_ = Cbc_newModel();
 
-    // We don't want a benchmark problem run to be dependent on the other selected problems, so we
-    // need to set fixed seeds before each solver run.
     Cbc_setParameter(model_, "randomSeed", "1234");
     Cbc_setParameter(model_, "randomCbcSeed", "5678");
 

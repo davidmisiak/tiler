@@ -21,6 +21,7 @@ KissatWrapper::~KissatWrapper() { kissat_release(solver_); }
 
 bool KissatWrapper::solve(int max_seconds) {
     kissat_set_option(solver_, "quiet", 1);  // in case Kissat was build without the QUIET flag
+    kissat_set_option(solver_, "seed", 1234);
 
     if (max_seconds) {
         solver_to_terminate_ = solver_;

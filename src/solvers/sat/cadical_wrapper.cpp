@@ -10,6 +10,7 @@
 
 bool CadicalWrapper::solve(int max_seconds) {
     solver_.set("quiet", 1);  // in case CaDiCaL was build without the QUIET flag
+    solver_.set("seed", 1234);
 
     if (max_seconds) {
         CaDiCaL::Signal::set(this);  // `this` implements CaDiCaL::Handler interface

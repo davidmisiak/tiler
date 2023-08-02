@@ -9,6 +9,8 @@
 #include "solvers/sat/sat_utils.hpp"
 
 bool CryptominisatWrapper::solve(int max_seconds) {
+    solver_.set_seed(1234);
+
     if (max_seconds) {
         solver_.set_max_time(max_seconds);
     }
@@ -23,6 +25,7 @@ bool CryptominisatWrapper::solve(int max_seconds) {
     }
 
     CMSat::lbool result = solver_.solve();
+
     if (result == CMSat::l_False) return false;
     if (result == CMSat::l_True) return true;
     if (max_seconds) throw TimeLimitError();
