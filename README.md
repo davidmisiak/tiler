@@ -64,8 +64,10 @@ variables required by some dependencies.
 
 ### Dependencies
 
-There are several optional open-source dependencies (git submodules):
+There are several optional open-source dependencies (in the `external` directory):
 
+- [DLX1](https://www-cs-faculty.stanford.edu/~knuth/programs.html) exact cover finding algorithm by
+  Donald Knuth
 - [CaDiCaL](https://github.com/arminbiere/cadical) SAT solver
 - [CryptoMiniSat](https://github.com/msoos/cryptominisat) SAT solver
 - [Kissat](https://github.com/arminbiere/kissat) SAT solver
@@ -73,16 +75,14 @@ There are several optional open-source dependencies (git submodules):
 - [SBVA](https://github.com/hgarrereyn/SBVA) CNF preprocessor
 - [PBLib](https://github.com/master-keying/pblib) pseudo-boolean constraint encoding library
   (required when either CaDiCaL, CryptoMiniSat or Kissat is present)
-- [DLX1](https://www-cs-faculty.stanford.edu/~knuth/programs.html) exact cover finding algorithm by
-  Donald Knuth
 - [MiniZinc](https://www.minizinc.org/) constraint modeling framework
 - [Gecode](https://www.gecode.org/) constraint solver (required when MiniZinc is present)
 - [Chuffed](https://github.com/chuffed/chuffed) constraint solver (optional when MiniZinc is
   present)
 
 Run `./scripts/build-all-deps.sh` to clone and build them. You can select only some of them by
-running a subset of `./scripts/build-*.sh` scripts and setting CMake options `-DCADICAL=OFF` /
-`-DCRYPTOMINISAT=OFF` / `-DKISSAT=OFF` / `-DBREAKID=OFF` / `-DSBVA=OFF` / `-DDLX=OFF` /
+running a subset of `./scripts/build-*.sh` scripts and setting CMake options `-DDLX=OFF` /
+`-DCADICAL=OFF` / `-DCRYPTOMINISAT=OFF` / `-DKISSAT=OFF` / `-DBREAKID=OFF` / `-DSBVA=OFF` /
 `-DMINIZINC=OFF` / `-DCHUFFED=OFF`. Having the libraries installed system-wide should work as well
 (at least for some of them).
 

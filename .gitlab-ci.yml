@@ -22,12 +22,12 @@ build:
     - pip3 install conan
     - conan profile new default --detect
     - conan profile update settings.compiler.libcxx=libstdc++11 default
+    - ./scripts/build-dlx.sh
     - ./scripts/build-cadical.sh
     - ./scripts/build-kissat.sh
-    - ./scripts/build-pblib.sh
     - ./scripts/build-breakid.sh
     - ./scripts/build-sbva.sh
-    - ./scripts/build-dlx.sh
+    - ./scripts/build-pblib.sh
     - ./scripts/dev-setup.sh -DGUROBI=OFF -DMINIZINC=OFF
     - ./scripts/dev-build.sh
   artifacts:
@@ -51,13 +51,13 @@ release:
     - pip3 install conan
     - conan profile new default --detect
     - conan profile update settings.compiler.libcxx=libstdc++11 default
+    - ./scripts/build-dlx.sh
     - ./scripts/build-cadical.sh
     - ./scripts/build-cryptominisat.sh
     - ./scripts/build-kissat.sh
-    - ./scripts/build-pblib.sh
     - ./scripts/build-breakid.sh
     - ./scripts/build-sbva.sh
-    - ./scripts/build-dlx.sh
+    - ./scripts/build-pblib.sh
     - ./scripts/release-setup.sh -DGUROBI=OFF -DMINIZINC=OFF
     - ./scripts/release-build.sh
   artifacts:

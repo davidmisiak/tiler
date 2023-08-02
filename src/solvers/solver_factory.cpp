@@ -22,6 +22,10 @@
 #include "solvers/simple/variant_ordering.hpp"
 #include "solvers/solver.hpp"
 
+#ifdef DLX
+#include "solvers/dlx/dlx_wrapper.hpp"
+#endif
+
 #ifdef CADICAL
 #include "solvers/sat/cadical_wrapper.hpp"
 #endif
@@ -34,11 +38,6 @@
 #include "solvers/sat/kissat_wrapper.hpp"
 #endif
 
-#ifdef PBLIB
-#include "pb2cnf.h"
-#include "solvers/sat/pblib_wrapper.hpp"
-#endif
-
 #ifdef BREAKID
 #include "solvers/sat/breakid_wrapper.hpp"
 #endif
@@ -47,12 +46,13 @@
 #include "solvers/sat/sbva_wrapper.hpp"
 #endif
 
-#ifdef GUROBI
-#include "solvers/ilp/gurobi_wrapper.hpp"
+#ifdef PBLIB
+#include "pb2cnf.h"
+#include "solvers/sat/pblib_wrapper.hpp"
 #endif
 
-#ifdef DLX
-#include "solvers/dlx/dlx_wrapper.hpp"
+#ifdef GUROBI
+#include "solvers/ilp/gurobi_wrapper.hpp"
 #endif
 
 #ifdef MINIZINC
