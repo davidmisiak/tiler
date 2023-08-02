@@ -14,7 +14,7 @@ int kissat_solve(kissat*);
 int kissat_value(kissat*, int);
 void kissat_terminate(kissat*);
 void kissat_release(kissat*);
-};
+}
 
 class KissatWrapper : public SatWrapper {
 public:

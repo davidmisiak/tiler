@@ -4,7 +4,7 @@ stages:
   - test
 
 default:
-  image: ubuntu:21.04 # we use cryptominisat from Ubuntu's repository
+  image: ubuntu:20.04
   before_script:
     - apt-get update --yes
 
@@ -18,12 +18,13 @@ lint:
 build:
   stage: build
   script:
-    - DEBIAN_FRONTEND=noninteractive apt-get install --yes python3-pip cmake libcryptominisat5-dev git make
-    - pip3 install conan
+    - DEBIAN_FRONTEND=noninteractive apt-get install --yes python3-pip cmake git make
+    - pip3 install conan==1.60.2
     - conan profile new default --detect
     - conan profile update settings.compiler.libcxx=libstdc++11 default
     - ./scripts/build-dlx.sh
     - ./scripts/build-cadical.sh
+    - ./scripts/build-cryptominisat.sh
     - ./scripts/build-kissat.sh
     - ./scripts/build-breakid.sh
     - ./scripts/build-sbva.sh
@@ -33,22 +34,20 @@ build:
   artifacts:
     paths:
       - build
-  timeout: 8 minutes
+  timeout: 10 minutes
 
 test:
   stage: test
   script:
-    - apt-get install --yes libcryptominisat5-dev
     - ./scripts/dev-test.sh
   timeout: 3 minutes
 
 release:
   when: manual
-  image: ubuntu:20.04
   stage: lint
   script:
     - DEBIAN_FRONTEND=noninteractive apt-get install --yes python3-pip cmake git make
-    - pip3 install conan
+    - pip3 install conan==1.60.2
     - conan profile new default --detect
     - conan profile update settings.compiler.libcxx=libstdc++11 default
     - ./scripts/build-dlx.sh
