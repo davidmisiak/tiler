@@ -9,17 +9,17 @@
 #include "problem/tile.hpp"
 #include "solution/placed_region.hpp"
 #include "solution/solution.hpp"
+#include "solvers/sat/sat_preprocessor.hpp"
 #include "solvers/sat/sat_utils.hpp"
 #include "solvers/sat/sat_wrapper.hpp"
-#include "solvers/sat/symmetry_breaker.hpp"
 #include "utils.hpp"
 
 SatAmoSolver::SatAmoSolver(Problem problem, std::unique_ptr<SatWrapper> sat_wrapper,
-                           std::unique_ptr<SymmetryBreaker> symmetry_breaker,
+                           std::unique_ptr<SatPreprocessor> preprocessor,
                            PBLibWrapper pblib_wrapper)
         : problem_(problem),
           sat_wrapper_(std::move(sat_wrapper)),
-          symmetry_breaker_(std::move(symmetry_breaker)),
+          preprocessor_(std::move(preprocessor)),
           pblib_wrapper_(std::move(pblib_wrapper)) {
     problem_.limit_tile_counts();
 }
@@ -100,12 +100,12 @@ Solution SatAmoSolver::solve(bool print_stats, int max_seconds) {
         pblib_wrapper_.exactly_k(cell_clauses[y][x], sat_wrapper_, 1);
     }
 
-    symmetry_breaker_->break_symmetries(sat_wrapper_);
+    preprocessor_->run(sat_wrapper_, max_seconds);
 
     if (print_stats) {
         print::stats() << placed_regions.size() << " placed regions\n";
         sat_wrapper_->print_stats();
-        symmetry_breaker_->print_stats();
+        preprocessor_->print_stats();
     }
 
     bool result = sat_wrapper_->solve(max_seconds);

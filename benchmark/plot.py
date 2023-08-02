@@ -141,23 +141,26 @@ def compare_all_solvers(df):
 paths = sorted(glob.glob("benchmark/*.json"))
 data = load_data(paths)
 
-reprs = "simple_default|dlx|sat_cadical_no-breaker_amk-card|ilp_gurobi_adjusted_eq-ign"
+reprs = "simple_default|dlx|sat_cadical_noprep_amk-card|ilp_gurobi_adjusted_eq-ign"
 image_configs = [
     ("", "simple|dlx", "01-simple-dlx", FIGSIZE_LARGE),
-    ("", "sat_cadical_no-breaker", "02-sat-cadical-no-breaker", FIGSIZE_LARGE),
+    ("", "sat_cadical_noprep", "02-sat-cadical-noprep", FIGSIZE_LARGE),
     ("", "sat_cadical_breakid", "03-sat-cadical-breakid", FIGSIZE_LARGE),
-    ("", "sat_cms_no-breaker", "04-sat-cms-no-breaker", FIGSIZE_LARGE),
-    ("", "sat_cms_breakid", "05-sat-cms-breakid", FIGSIZE_LARGE),
-    ("", "sat_kissat_no-breaker", "06-sat-kissat-no-breaker", FIGSIZE_LARGE),
-    ("", "sat_kissat_breakid", "07-sat-kissat-breakid", FIGSIZE_LARGE),
-    ("", "sat_.*_amo-bimander", "08-sat-amo-bimander", FIGSIZE_LARGE),
-    ("", "sat_.*_amk-card", "09-sat-amk-card", FIGSIZE_LARGE),
-    ("", "ilp_cbc_default", "10-ilp-cbc-default", FIGSIZE_LARGE),
-    ("", "ilp_cbc_adjusted", "11-ilp-cbc-adjusted", FIGSIZE_LARGE),
-    ("", "ilp_gurobi_default", "12-ilp-gurobi-default", FIGSIZE_LARGE),
-    ("", "ilp_gurobi_adjusted", "13-ilp-gurobi-adjusted", FIGSIZE_LARGE),
-    ("", "ilp_.*_eq-ign", "14-ilp-eq-ign", FIGSIZE_LARGE),
-    ("", reprs, "15-representants", FIGSIZE_LARGE),
+    ("", "sat_cadical_sbva", "04-sat-cadical-sbva", FIGSIZE_LARGE),
+    ("", "sat_cms_noprep", "05-sat-cms-noprep", FIGSIZE_LARGE),
+    ("", "sat_cms_breakid", "06-sat-cms-breakid", FIGSIZE_LARGE),
+    ("", "sat_cms_sbva", "07-sat-cms-sbva", FIGSIZE_LARGE),
+    ("", "sat_kissat_noprep", "08-sat-kissat-noprep", FIGSIZE_LARGE),
+    ("", "sat_kissat_breakid", "09-sat-kissat-breakid", FIGSIZE_LARGE),
+    ("", "sat_kissat_sbva", "10-sat-kissat-sbva", FIGSIZE_LARGE),
+    ("", "sat_.*_amo-bimander", "11-sat-amo-bimander", FIGSIZE_LARGE),
+    ("", "sat_.*_amk-card", "12-sat-amk-card", FIGSIZE_LARGE),
+    ("", "ilp_cbc_default", "13-ilp-cbc-default", FIGSIZE_LARGE),
+    ("", "ilp_cbc_adjusted", "14-ilp-cbc-adjusted", FIGSIZE_LARGE),
+    ("", "ilp_gurobi_default", "15-ilp-gurobi-default", FIGSIZE_LARGE),
+    ("", "ilp_gurobi_adjusted", "16-ilp-gurobi-adjusted", FIGSIZE_LARGE),
+    ("", "ilp_.*_eq-ign", "17-ilp-eq-ign", FIGSIZE_LARGE),
+    ("", reprs, "18-representants", FIGSIZE_LARGE),
     ("many-unique/[0-9]", reprs, "case-study-many-unique", FIGSIZE_PAGE),
     ("2/corners|3I/L-square|4I/|4L/", reprs, "case-study-coloring", FIGSIZE_PAGE),
 ]

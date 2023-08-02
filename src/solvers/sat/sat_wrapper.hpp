@@ -30,6 +30,9 @@ public:
     // Get currently present CNF clauses.
     inline std::vector<sat_utils::Clause> get_clauses() { return clauses_; }
 
+    // Set the CNF clauses.
+    inline void set_clauses(const std::vector<sat_utils::Clause>& clauses) { clauses_ = clauses; }
+
     // Prints current info about variables and clauses.
     inline void print_stats() {
         print::stats() << get_var_count() << " variables\n"

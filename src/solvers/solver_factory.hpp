@@ -33,7 +33,9 @@ const std::vector<std::string> kSimpleOrderingNames = {
 };
 
 // dlx
+#ifdef DLX
 const std::string kDlxSolver = "dlx";
+#endif
 
 // sat
 const std::string kSatPrefix = "sat";
@@ -53,12 +55,16 @@ const std::vector<std::string> kSatWrapperNames = {
 #endif
 };
 
-const std::string kSatNoSymmetryBreaker = "no-breaker";
+const std::string kSatNoPreprocessor = "noprep";
 const std::string kSatBreakid = "breakid";
-const std::vector<std::string> kSatSymmetryBreakerNames = {
-        kSatNoSymmetryBreaker,
+const std::string kSatSbva = "sbva";
+const std::vector<std::string> kSatPreprocessorNames = {
+        kSatNoPreprocessor,
 #ifdef BREAKID
         kSatBreakid,
+#endif
+#ifdef SBVA
+        kSatSbva,
 #endif
 };
 

@@ -26,6 +26,7 @@ build:
     - ./scripts/build-kissat.sh
     - ./scripts/build-pblib.sh
     - ./scripts/build-breakid.sh
+    - ./scripts/build-sbva.sh
     - ./scripts/build-dlx.sh
     - ./scripts/dev-setup.sh -DGUROBI=OFF -DMINIZINC=OFF
     - ./scripts/dev-build.sh
@@ -55,6 +56,7 @@ release:
     - ./scripts/build-kissat.sh
     - ./scripts/build-pblib.sh
     - ./scripts/build-breakid.sh
+    - ./scripts/build-sbva.sh
     - ./scripts/build-dlx.sh
     - ./scripts/release-setup.sh -DGUROBI=OFF -DMINIZINC=OFF
     - ./scripts/release-build.sh

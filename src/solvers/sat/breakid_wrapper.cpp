@@ -8,9 +8,9 @@
 #include "print.hpp"
 #include "solvers/sat/sat_utils.hpp"
 #include "solvers/sat/sat_wrapper.hpp"
-#include "solvers/sat/symmetry_breaker.hpp"
 
-void BreakIDWrapper::break_symmetries(std::unique_ptr<SatWrapper>& sat_wrapper) {
+void BreakIDWrapper::run(std::unique_ptr<SatWrapper>& sat_wrapper,
+                         [[maybe_unused]] int max_seconds) {
     breakid.set_verbosity(0);
 
     // pass sat_wrapper's clauses to breakid

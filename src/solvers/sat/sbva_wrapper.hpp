@@ -1,5 +1,5 @@
-#ifndef TILER_SOLVERS_SAT_BREAKID_WRAPPER_HPP_
-#define TILER_SOLVERS_SAT_BREAKID_WRAPPER_HPP_
+#ifndef TILER_SOLVERS_SAT_SBVA_WRAPPER_HPP_
+#define TILER_SOLVERS_SAT_SBVA_WRAPPER_HPP_
 
 #include <memory>
 
@@ -8,15 +8,16 @@
 #include "solvers/sat/sat_utils.hpp"
 #include "solvers/sat/sat_wrapper.hpp"
 
-// BreakID library wrapper for breaking CNF symmetries.
-class BreakIDWrapper : public SatPreprocessor {
+// SBVA library wrapper for preprocessing CNF formulas.
+class SbvaWrapper : public SatPreprocessor {
 public:
     virtual void run(std::unique_ptr<SatWrapper>& sat_wrapper, int max_seconds);
 
     virtual void print_stats();
 
 private:
-    BID::BreakID breakid;
+    int added_vars_;
+    int removed_clauses_;
 };
 
-#endif  // TILER_SOLVERS_SAT_BREAKID_WRAPPER_HPP_
+#endif  // TILER_SOLVERS_SAT_SBVA_WRAPPER_HPP_

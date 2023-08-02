@@ -17,7 +17,7 @@
 #include "solvers/sat/sat_amk_solver.hpp"
 #include "solvers/sat/sat_amo_ordered_solver.hpp"
 #include "solvers/sat/sat_amo_solver.hpp"
-#include "solvers/sat/symmetry_breaker.hpp"
+#include "solvers/sat/sat_preprocessor.hpp"
 #include "solvers/simple/simple_solver.hpp"
 #include "solvers/simple/variant_ordering.hpp"
 #include "solvers/solver.hpp"
@@ -41,6 +41,10 @@
 
 #ifdef BREAKID
 #include "solvers/sat/breakid_wrapper.hpp"
+#endif
+
+#ifdef SBVA
+#include "solvers/sat/sbva_wrapper.hpp"
 #endif
 
 #ifdef GUROBI
@@ -67,13 +71,15 @@ std::vector<std::string> solver_factory::get_solver_names() {
     }
 
     // dlx
+#ifdef DLX
     solver_names.push_back(kDlxSolver);
+#endif
 
     // sat
     for (std::string sat_wrapper_name : kSatWrapperNames) {
-        for (std::string symmetry_breaker_name : kSatSymmetryBreakerNames) {
+        for (std::string preprocessor_name : kSatPreprocessorNames) {
             for (std::string pblib_wrapper_name : kSatPBLibWrapperNames) {
-                std::vector<std::string> words{kSatPrefix, sat_wrapper_name, symmetry_breaker_name,
+                std::vector<std::string> words{kSatPrefix, sat_wrapper_name, preprocessor_name,
                                                pblib_wrapper_name};
                 solver_names.push_back(boost::algorithm::join(words, "_"));
             }
@@ -167,79 +173,84 @@ std::unique_ptr<Solver> solver_factory::create(const std::string& solver_name,
             throw SolverNotFound;
         }
 
-        std::string symmetry_breaker_name = words[2];
-        std::unique_ptr<SymmetryBreaker> symmetry_breaker;
-        if (symmetry_breaker_name == kSatNoSymmetryBreaker) {
-            symmetry_breaker = std::make_unique<SymmetryBreaker>();
+        std::string preprocessor_name = words[2];
+        std::unique_ptr<SatPreprocessor> preprocessor;
+        if (preprocessor_name == kSatNoPreprocessor) {
+            preprocessor = std::make_unique<SatPreprocessor>();
         }
 #ifdef BREAKID
-        if (symmetry_breaker_name == kSatBreakid) {
-            symmetry_breaker = std::make_unique<BreakIDWrapper>();
+        if (preprocessor_name == kSatBreakid) {
+            preprocessor = std::make_unique<BreakIDWrapper>();
         }
 #endif
-        if (symmetry_breaker.get() == nullptr) {
+#ifdef SBVA
+        if (preprocessor_name == kSatSbva) {
+            preprocessor = std::make_unique<SbvaWrapper>();
+        }
+#endif
+        if (preprocessor.get() == nullptr) {
             throw SolverNotFound;
         }
 
         std::string pblib_wrapper_name = words[3];
         if (pblib_wrapper_name == kSatAmoAuto) {
             return std::make_unique<SatAmoSolver>(
-                    problem, std::move(sat_wrapper), std::move(symmetry_breaker),
+                    problem, std::move(sat_wrapper), std::move(preprocessor),
                     PBLibWrapper(PB2CNF_AMO_Encoder::BEST, PB2CNF_AMK_Encoder::BEST));
         }
         if (pblib_wrapper_name == kSatAmoNested) {
             return std::make_unique<SatAmoSolver>(
-                    problem, std::move(sat_wrapper), std::move(symmetry_breaker),
+                    problem, std::move(sat_wrapper), std::move(preprocessor),
                     PBLibWrapper(PB2CNF_AMO_Encoder::NESTED, PB2CNF_AMK_Encoder::BEST));
         }
         if (pblib_wrapper_name == kSatAmoBDD) {
             return std::make_unique<SatAmoSolver>(
-                    problem, std::move(sat_wrapper), std::move(symmetry_breaker),
+                    problem, std::move(sat_wrapper), std::move(preprocessor),
                     PBLibWrapper(PB2CNF_AMO_Encoder::BDD, PB2CNF_AMK_Encoder::BEST));
         }
         if (pblib_wrapper_name == kSatAmoBimander) {
             return std::make_unique<SatAmoSolver>(
-                    problem, std::move(sat_wrapper), std::move(symmetry_breaker),
+                    problem, std::move(sat_wrapper), std::move(preprocessor),
                     PBLibWrapper(PB2CNF_AMO_Encoder::BIMANDER, PB2CNF_AMK_Encoder::BEST));
         }
         if (pblib_wrapper_name == kSatAmoCommander) {
             return std::make_unique<SatAmoSolver>(
-                    problem, std::move(sat_wrapper), std::move(symmetry_breaker),
+                    problem, std::move(sat_wrapper), std::move(preprocessor),
                     PBLibWrapper(PB2CNF_AMO_Encoder::COMMANDER, PB2CNF_AMK_Encoder::BEST));
         }
         if (pblib_wrapper_name == kSatAmoKProduct) {
             return std::make_unique<SatAmoSolver>(
-                    problem, std::move(sat_wrapper), std::move(symmetry_breaker),
+                    problem, std::move(sat_wrapper), std::move(preprocessor),
                     PBLibWrapper(PB2CNF_AMO_Encoder::KPRODUCT, PB2CNF_AMK_Encoder::BEST));
         }
         if (pblib_wrapper_name == kSatAmoBinary) {
             return std::make_unique<SatAmoSolver>(
-                    problem, std::move(sat_wrapper), std::move(symmetry_breaker),
+                    problem, std::move(sat_wrapper), std::move(preprocessor),
                     PBLibWrapper(PB2CNF_AMO_Encoder::BINARY, PB2CNF_AMK_Encoder::BEST));
         }
         if (pblib_wrapper_name == kSatAmoPairwise) {
             return std::make_unique<SatAmoSolver>(
-                    problem, std::move(sat_wrapper), std::move(symmetry_breaker),
+                    problem, std::move(sat_wrapper), std::move(preprocessor),
                     PBLibWrapper(PB2CNF_AMO_Encoder::PAIRWISE, PB2CNF_AMK_Encoder::BEST));
         }
         if (pblib_wrapper_name == kSatAmoOrdered) {
             return std::make_unique<SatAmoOrderedSolver>(
-                    problem, std::move(sat_wrapper), std::move(symmetry_breaker),
+                    problem, std::move(sat_wrapper), std::move(preprocessor),
                     PBLibWrapper(PB2CNF_AMO_Encoder::BDD, PB2CNF_AMK_Encoder::BEST));
         }
         if (pblib_wrapper_name == kSatAmkAuto) {
             return std::make_unique<SatAmkSolver>(
-                    problem, std::move(sat_wrapper), std::move(symmetry_breaker),
+                    problem, std::move(sat_wrapper), std::move(preprocessor),
                     PBLibWrapper(PB2CNF_AMO_Encoder::BEST, PB2CNF_AMK_Encoder::BEST));
         }
         if (pblib_wrapper_name == kSatAmkBDD) {
             return std::make_unique<SatAmkSolver>(
-                    problem, std::move(sat_wrapper), std::move(symmetry_breaker),
+                    problem, std::move(sat_wrapper), std::move(preprocessor),
                     PBLibWrapper(PB2CNF_AMO_Encoder::BEST, PB2CNF_AMK_Encoder::BDD));
         }
         if (pblib_wrapper_name == kSatAmkCard) {
             return std::make_unique<SatAmkSolver>(
-                    problem, std::move(sat_wrapper), std::move(symmetry_breaker),
+                    problem, std::move(sat_wrapper), std::move(preprocessor),
                     PBLibWrapper(PB2CNF_AMO_Encoder::BEST, PB2CNF_AMK_Encoder::CARD));
         }
         throw SolverNotFound;

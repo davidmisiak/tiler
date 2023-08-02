@@ -7,6 +7,7 @@
 ./scripts/build-kissat.sh
 ./scripts/build-pblib.sh
 ./scripts/build-breakid.sh
+./scripts/build-sbva.sh
 ./scripts/build-dlx.sh
 ./scripts/build-gecode.sh
 ./scripts/build-chuffed.sh
