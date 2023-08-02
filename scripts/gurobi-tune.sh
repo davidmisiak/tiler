@@ -14,7 +14,7 @@ do
         echo "$RESULTS"
         echo "========================================"
         mkdir -p "$RESULTS"
-        ./build/bin/tiler solve -a -b "ilp_gurobi_default_$SOLVER" -f "problems/$PROBLEM"
+        ./build/bin/tiler solve -v -b "ilp_gurobi_default_$SOLVER" -i "problems/$PROBLEM"
         grbtune ResultFile="$RESULTS/tune" TuneTimeLimit=600 $(sed "s/  /=/" "model.prm") "model.mps"
     done
 done

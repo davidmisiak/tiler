@@ -9,7 +9,7 @@ namespace help_strings {
 // elsewhere.
 const int kMaxWidth = 80;
 
-const std::string kNamedTilesList =
+const std::string kNamedShapesList =
         "Monomino          Domino             Trominoes                   \n"
         "                                                                 \n"
         " 1: x             2: x               3I: x    3L: x              \n"
@@ -42,12 +42,47 @@ const std::string kNamedTilesList =
         "     x                                                           \n";
 
 // clang-format off
+const std::string kSolverBackends =
+R"R(Each backend identifier consists of several parts separated by
+an underscore. The leading part determines the backend category, and
+the subsequent parts determine the specific backend configuration.
+The categories and their configurations are:
+
+'simple': simple backtracking
+- first part: next tile selection heuristic, one of 'default',
+  'frequent', 'rare', 'fill-row'
+
+'dlx': Dancing Links
+[no configuration options]
+
+'sat': conversion to SAT
+- first part: SAT solver, one of 'cadical', 'cms', 'kissat'
+- second part: preprocessor, one of 'noprep', 'breakid', 'sbva'
+- third part: problem encoding, one of 'amo-auto', 'amo-seq',
+  'amo-bimander', 'amo-commander', 'amo-kproduct', 'amo-binary',
+  'amo-ordered', 'amk-auto', 'amk-bdd', 'amk-card'
+
+'ilp': conversion to ILP
+- first part: ILP solver, one of 'cbc', 'gurobi'
+- second part: solver parameters, one of 'default', 'adjusted'
+- third part: solving objective, one of 'eq-ign', 'eq-min',
+  'geq-min', 'leq-max'
+
+'csp': conversion to MiniZinc CSP
+- first part: MiniZinc flat solver, one of 'gecode', 'chuffed',
+  'gurobi'
+
+List of all available identifiers:
+)R";
+// clang-format on
+
+// clang-format off
 const std::string kInputFormats =
 R"R(A shape has to be in one of these formats:
-- name, eg. "3L" (see the 'list' command)
+- name, eg. "3L" (see the 'shapes' command)
 - dimensions, eg. "2x4" (only for rectangles)
 - map, eg. "  xx "
-           " xx  " (useful with the -f option)
+           " xx  " (useful with the -i option)
 - perimeter, eg. "DDRUUL" (no crossing allowed)
 You should provide list of shapes, where the
 first one represents the board and the others
@@ -86,7 +121,7 @@ xxxx
 =========== end of 'problem.txt' file ===========
 - board 10 by 10, unlimited number of 3 by 1 tiles, five 6 by 1 tiles,
   ten 2 by 2 tiles and five 5 by 2 tiles without one corner
-  - usage: 'tiler solve -f problem.txt'
+  - usage: 'tiler solve -i problem.txt'
 )R";
 // clang-format on
 

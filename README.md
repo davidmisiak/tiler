@@ -19,7 +19,7 @@ the tiles.
 
 The shape of the board as well as of each tile can be provided in any of these formats:
 
-- **name**, eg. `3L` (see the `list` command for the list of all named shapes)
+- **name**, eg. `3L` (see the `shapes` command for the list of all named shapes)
 
 - **dimensions**, eg. `2x4` (applicable only for rectangles)
 
@@ -30,7 +30,7 @@ The shape of the board as well as of each tile can be provided in any of these f
   xxx
   ```
 
-  (useful with the `-f` option)
+  (useful with the `-i` option)
 
 - **perimeter**, eg. `DDRRULUL` - an equivalent of `3L` (crossings of the perimeter are not allowed,
   applicable only for shapes without holes)
@@ -51,10 +51,10 @@ The solver may rotate the tiles. There is a CLI flag to allow reflections (flipp
 
 Here are some example outputs of the solver.
 
-`tiler solve -s 01.svg 11x7 4T 3:3I`\
+`tiler solve -o 01.svg 11x7 4T 3:3I`\
 ![Example 1](examples/01.svg)
 
-`tiler solve -s 02.svg 10x9 1:5A 1:5F 1:5G 1:5J 1:5P 1:5S 1:5Y 1:5R 1:5N 1:5L 1:5Q 1:5Z 1:5I 1:5T 1:5U 1:5V 1:5W 1:5X`\
+`tiler solve -o 02.svg 10x9 1:5A 1:5F 1:5G 1:5J 1:5P 1:5S 1:5Y 1:5R 1:5N 1:5L 1:5Q 1:5Z 1:5I 1:5T 1:5U 1:5V 1:5W 1:5X`\
 ![Example 2](examples/02.svg)
 
 ## Build Instructions

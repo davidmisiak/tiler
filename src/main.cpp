@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "CLI/CLI.hpp"
+#include "boost/algorithm/string.hpp"
 #include "errors/parse_error.hpp"
 #include "errors/solve_error.hpp"
 #include "errors/time_limit_error.hpp"
@@ -83,22 +84,25 @@ int main(int argc, const char **argv) {
             "Definition of the board and tile shapes.\n" + help_strings::kInputFormats);
     tiles_option->expected(-2);  // at least 2 - one board and one or more tile shapes
     CLI::Option *input_file_option =
-            input_group->add_option("-f,--from-file", options.input_file,
+            input_group->add_option("-i,--from-file", options.input_file,
                                     "Path to file containing the problem assignment.\n"
                                     "Same input format, but shapes must be separated\n"
                                     "by an empty line and the optional \"N:\" may be\n"
                                     "on a separate line.");
     input_file_option->check(CLI::ExistingFile);
 
-    solve_command->add_option("-s,--save-image", options.image_file,
+    solve_command->add_option("-o,--save-image", options.image_file,
                               "Path to the file where the solution (if it exists)\n"
                               "will be saved as an SVG image. If the file exists,\n"
                               "it will be overwritten.");
 
     solve_command
-            ->add_option("-b,--backend", options.solver_name,
+            ->add_option("-b,--solver-backend", options.solver_name,
                          "Selected solver backend (default is " + options.solver_name + ").")
-            ->transform(CLI::IsMember(solver_factory::get_solver_names()));
+            ->transform(
+                    CLI::IsMember(solver_factory::get_solver_names())
+                            .description(
+                                    "{list of all options available under 'backends' command}"));
 
     solve_command->add_option("-t,--time-limit", options.max_seconds,
                               "Soft time limit for the solver backend in seconds.\n"
@@ -114,14 +118,17 @@ int main(int argc, const char **argv) {
             "If present, the problem summarization will be\nprinted before solving.");
 
     solve_command->add_flag(
-            "-c,--print-solution", options.print_solution,
+            "-s,--print-solution", options.print_solution,
             "If present, the solution (if it exists) will be\nprinted after solving.");
 
-    solve_command->add_flag("-a,--print-stats", options.print_stats,
+    solve_command->add_flag("-v,--print-stats", options.print_stats,
                             "If present, additional solver stats will be\nprinted.");
 
-    // list command definition
-    const CLI::App *list_command = app.add_subcommand("list", "List all named tiles");
+    // shapes command definition
+    const CLI::App *shapes_command = app.add_subcommand("shapes", "List all named tiles");
+
+    // backends command definition
+    const CLI::App *backends_command = app.add_subcommand("backends", "List all solver backends");
 
     // example command definition
     const CLI::App *example_command = app.add_subcommand("example", "Show an input example");
@@ -150,8 +157,11 @@ int main(int argc, const char **argv) {
             print::error() << e.what() << std::endl;
             return 3;
         }
-    } else if (command == list_command) {
-        print::normal() << help_strings::kNamedTilesList;
+    } else if (command == shapes_command) {
+        print::normal() << help_strings::kNamedShapesList;
+    } else if (command == backends_command) {
+        print::normal() << help_strings::kSolverBackends
+                        << boost::algorithm::join(solver_factory::get_solver_names(), "\n") << "\n";
     } else if (command == example_command) {
         print::normal() << help_strings::kExampleInput;
     }
