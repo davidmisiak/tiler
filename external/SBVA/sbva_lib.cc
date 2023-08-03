@@ -5,10 +5,12 @@
 
 #include <Eigen/SparseCore>
 #include <algorithm>
+#include <chrono>
 #include <cstdint>
 #include <cstdlib>
 #include <cstring>
 #include <iostream>
+#include <memory>
 #include <queue>
 #include <set>
 #include <tuple>
@@ -20,7 +22,7 @@
 
 using namespace std;
 
-static time_t end_time = 0;
+static unique_ptr<std::chrono::high_resolution_clock::time_point> end_time = nullptr;
 
 struct Clause {
     bool deleted;
@@ -322,8 +324,8 @@ public:
         while (pq.size() > 0) {
             // check timeout
             if (end_time != 0) {
-                time_t curr = time(0);
-                if (curr >= end_time) {
+                auto curr = std::chrono::high_resolution_clock::now();
+                if (curr >= *end_time) {
                     return;
                 }
             }
@@ -635,9 +637,10 @@ private:
 };
 
 pair<int, vector<vector<int>>> runBVA(vector<vector<int>> cnf, int max_seconds) {
-    end_time = 0;
+    end_time = nullptr;
     if (max_seconds) {
-        end_time = time(NULL) + max_seconds;
+        end_time = make_unique<std::chrono::high_resolution_clock::time_point>(
+                std::chrono::high_resolution_clock::now() + std::chrono::seconds(max_seconds));
     }
     Formula f;
     f.read_cnf(cnf);
