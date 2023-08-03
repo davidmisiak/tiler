@@ -6,4 +6,4 @@ cd external/pblib
 mkdir build
 cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release -DPBLIB_BUILD_BINARIES=OFF
-cmake --build .
+cmake --build . -j 4

@@ -3,4 +3,4 @@
 source scripts/load-env.sh
 
 cd release
-cmake --build .
+cmake --build . -j 4

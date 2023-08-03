@@ -11,4 +11,4 @@ sed -i '1s;^/;#include <cstdint>\n/;' src/breakid.hpp
 mkdir build
 cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release -DSTATICCOMPILE=ON
-cmake --build .
+cmake --build . -j 4

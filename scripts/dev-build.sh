@@ -3,4 +3,4 @@
 source scripts/load-env.sh
 
 cd build
-cmake --build .
+cmake --build . -j 4

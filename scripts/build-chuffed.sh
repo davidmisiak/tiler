@@ -11,4 +11,4 @@ sed -i '/^find_package(FLEX)/s/^/#/' CMakeLists.txt
 mkdir build
 cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release -DBISON_FOUND=false -DFLEX_FOUND=false
-cmake --build .
+cmake --build . -j 4

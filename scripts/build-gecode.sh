@@ -6,7 +6,7 @@ cd external/gecode
 mkdir build
 cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release
-cmake --build .
+cmake --build . -j 4
 
 mkdir include
 cp -r ../gecode include/gecode

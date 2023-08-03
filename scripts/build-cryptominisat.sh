@@ -6,4 +6,4 @@ cd external/cryptominisat
 mkdir build
 cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release -DSTATICCOMPILE=ON
-cmake --build .
+cmake --build . -j 4
