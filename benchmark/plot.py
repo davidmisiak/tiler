@@ -96,10 +96,14 @@ def show_data(df, sort_by="", cumulative=False, figsize=FIGSIZE_LARGE, file_name
     lines = plot.lines
     _, check_ax = plt.subplots(figsize=(5, 1 + 0.3 * len(lines)))
     labels = [str(line.get_label()) for line in lines]
-    visibility = [True for _ in lines]
+    visibility = [False for _ in lines]
+    visibility[0] = True
 
     global check  # checkboxes lose interactivity if this gets garbage-collected
     check = mpl.widgets.CheckButtons(check_ax, labels, visibility)
+
+    for i in range(len(lines)):
+        lines[i].set_visible(visibility[i])
 
     def toggle_line(label):
         index = labels.index(label)
