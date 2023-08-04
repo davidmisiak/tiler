@@ -145,7 +145,7 @@ def compare_all_solvers(df):
 paths = sorted(glob.glob("benchmark/*.json"))
 data = load_data(paths)
 
-reprs = "simple_default|dlx|sat_cadical_noprep_amk-card|ilp_gurobi_adjusted_eq-ign"
+reprs = "simple_default|dlx|sat_kissat_noprep_amk-card|ilp_gurobi_adjusted_eq-ign"
 image_configs = [
     ("", "simple|dlx", "01-simple-dlx", FIGSIZE_LARGE),
     ("", "sat_cadical_noprep", "02-sat-cadical-noprep", FIGSIZE_LARGE),
@@ -157,7 +157,7 @@ image_configs = [
     ("", "sat_kissat_noprep", "08-sat-kissat-noprep", FIGSIZE_LARGE),
     ("", "sat_kissat_breakid", "09-sat-kissat-breakid", FIGSIZE_LARGE),
     ("", "sat_kissat_sbva", "10-sat-kissat-sbva", FIGSIZE_LARGE),
-    ("", "sat_.*_amo-bimander", "11-sat-amo-bimander", FIGSIZE_LARGE),
+    ("", "sat_.*_amo-commander", "11-sat-amo-commander", FIGSIZE_LARGE),
     ("", "sat_.*_amk-card", "12-sat-amk-card", FIGSIZE_LARGE),
     ("", "ilp_cbc_default", "13-ilp-cbc-default", FIGSIZE_LARGE),
     ("", "ilp_cbc_adjusted", "14-ilp-cbc-adjusted", FIGSIZE_LARGE),
