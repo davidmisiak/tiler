@@ -9,8 +9,8 @@
 #include "solvers/sat/sat_utils.hpp"
 #include "solvers/sat/sat_wrapper.hpp"
 
-extern std::pair<int, std::vector<std::vector<int>>> runBVA(std::vector<std::vector<int>> cnf,
-                                                            int max_seconds);
+extern std::pair<int, std::vector<std::vector<int>>> runBVA(
+        const std::vector<std::vector<int>>& cnf, int max_seconds);
 
 void SbvaWrapper::run(std::unique_ptr<SatWrapper>& sat_wrapper, int max_seconds) {
     // convert sat_utils::Clause to DIMACS input for SBVA

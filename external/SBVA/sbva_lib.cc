@@ -76,7 +76,7 @@ class Formula {
 public:
     Formula() { adj_deleted = 0; }
 
-    void read_cnf(vector<vector<int>> cnf) {
+    void read_cnf(const vector<vector<int>> &cnf) {
         ClauseCache cache;
 
         int curr_clause = 0;
@@ -91,7 +91,7 @@ public:
             }
         }
         clauses = vector<Clause>(num_clauses);
-        clauses.reserve(num_clauses * 10);
+        // clauses.reserve(num_clauses * 10);
         lit_to_clauses = vector<vector<int>>(num_vars * 2);
         lit_count_adjust = vector<int>(num_vars * 2);
         adjacency_matrix_width = num_vars * 4;
@@ -258,19 +258,19 @@ public:
         vector<int> matched_clauses_swap = vector<int>();
         vector<int> matched_clauses_id = vector<int>();
         vector<int> matched_clauses_id_swap = vector<int>();
-        matched_lits.reserve(10000);
-        matched_clauses.reserve(10000);
-        matched_clauses_swap.reserve(10000);
-        matched_clauses_id.reserve(10000);
-        matched_clauses_id_swap.reserve(10000);
+        // matched_lits.reserve(10000);
+        // matched_clauses.reserve(10000);
+        // matched_clauses_swap.reserve(10000);
+        // matched_clauses_id.reserve(10000);
+        // matched_clauses_id_swap.reserve(10000);
 
         // Track the index of the matched clauses from every literal that is added to matched_lits.
         vector<tuple<int, int>> clauses_to_remove = vector<tuple<int, int>>();
-        clauses_to_remove.reserve(10000);
+        // clauses_to_remove.reserve(10000);
 
         // Used for computing clause differences
         vector<int> diff = vector<int>();
-        diff.reserve(10000);
+        // diff.reserve(10000);
 
         // Keep track of the matrix of swaps that we can perform.
         // Each entry is of the form (literal, <clause index>, <index in matched_clauses>)
@@ -308,15 +308,15 @@ public:
         //              (C v E)  (C v F)  (C v H)
         //
         vector<tuple<int, int, int>> matched_entries = vector<tuple<int, int, int>>();
-        matched_entries.reserve(10000);
+        // matched_entries.reserve(10000);
 
         // Keep a list of the literals that are matched so we can sort and count later.
         vector<int> matched_entries_lits = vector<int>();
-        matched_entries_lits.reserve(10000);
+        // matched_entries_lits.reserve(10000);
 
         // Used for priority queue updates.
         unordered_set<int> lits_to_update;
-        lits_to_update.reserve(10000);
+        // lits_to_update.reserve(10000);
 
         // Track number of replacements (new auxiliary variables).
         int num_replacements = 0;
@@ -636,7 +636,7 @@ private:
     map<int, int> tmp_heuristic_cache_full;
 };
 
-pair<int, vector<vector<int>>> runBVA(vector<vector<int>> cnf, int max_seconds) {
+pair<int, vector<vector<int>>> runBVA(const vector<vector<int>> &cnf, int max_seconds) {
     end_time = nullptr;
     if (max_seconds) {
         end_time = make_unique<std::chrono::high_resolution_clock::time_point>(
